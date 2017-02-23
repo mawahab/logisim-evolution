@@ -14,6 +14,7 @@ The project is currently maintained by the [REDS Institute](http://reds.heig-vd.
 We have decided to release this new Logisim version under the name logisim-evolution, to highlight the large number of changes that occurred in these years, and **we actively seek the contribution of the community**.
 
 ## What's new in logisim-evolution
+* [NEW !] state machine -- to specify FSM without the need for implementing them at the gate level and/or rely on VHDL and third party software.
 * chronogram -- to see the evolution of signals in your circuit
 * electronic board integration -- schematics can now be simulated on real hardware!
 * board editor -- to add new electronic boards
@@ -38,7 +39,11 @@ You can also compile it by yourself by cloning the repository on your local mach
 ```bash
 ant run
 ```
-This also creates locally a .jar file, that you can distribute and use on other machines.
+This also creates locally a .jar file, which needs to be fixed due to some library issue. To do so you must run the following command in the project folder containing the jar file.
+
+```zip -d logisim-extra.jar 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*SF'
+``
+This jar can be distributed and uses on other machines.
 
 ## Documentation
 [Here](http://reds-data.heig-vd.ch/logisim-evolution/IntroToLogisimEnglish.pdf)  you can find a tutorial (French version [here](http://reds-data.heig-vd.ch/logisim-evolution/tutoLogisim.pdf)) that explains some basic usage of Logisim. The electronic card referenced in the tutorial is a small card we use in our laboratories -- you won't be able to buy it in a store -- but the descriptions should be good enough to be used for another generic board.

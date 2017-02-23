@@ -33,7 +33,7 @@ package com.cburch.logisim.std.memory;
 import com.cburch.logisim.data.Value;
 import com.cburch.logisim.instance.StdAttr;
 
-class ClockState implements Cloneable {
+public class ClockState implements Cloneable {
 	private Value lastClock;
 
 	public ClockState() {
