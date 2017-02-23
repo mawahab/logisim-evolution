@@ -1,35 +1,10 @@
-logisim-evolution
+logisim-evolution with fsm library
 =================
-[![Codewake](https://www.codewake.com/badges/codewake.svg)](https://www.codewake.com/p/logisim-evolution)
-[![Codewake](https://www.codewake.com/badges/codewake2.svg)](https://www.codewake.com/p/logisim-evolution)
+This repository is a fork from the official logisim-evolution repository (see official repository for more information) and host an early version of the tool with support for editing/analyzing and simulating Finite State Machines. 
 
-Logisim is an educational tool for designing and simulating digital logic circuits.
-It has been originally created by [Dr. Carl Burch](http://www.cburch.com/logisim/) and actively developed until 2011.
-After this date the author focused on other projects, and recently the development has been officially stopped  [(see his message here)](http://www.cburch.com/logisim/retire-note.html).
+## How to install this version of logisim-evolution
+You can find an already compiled **stable** version of the code [here](http://www.irisa.fr/cosi/HOMEPAGE/Derrien/logisim/logisim-evolution.jar).
 
-In the meantime, people from a group of swiss institutes ([Haute École Spécialisée Bernoise](http://www.bfh.ch), [Haute École du paysage, d'ingénierie et d'architecture de Genève](http://hepia.hesge.ch), and [Haute École d'Ingénierie et de Gestion du Canton de Vaud](http://www.heig-vd.ch)) started developing a version of Logisim that fitted their courses, integrating several tools -- for instance a chronogram, the possibility to test the schematics directly on an electronic board, TCL/TK consoles, ...
-
-The project is currently maintained by the [REDS Institute](http://reds.heig-vd.ch), which is part of the [Haute École d'Ingénierie et de Gestion du Canton de Vaud](http://www.heig-vd.ch), Yverdon-les-Bains, Switzerland.
-
-We have decided to release this new Logisim version under the name logisim-evolution, to highlight the large number of changes that occurred in these years, and **we actively seek the contribution of the community**.
-
-## What's new in logisim-evolution
-* [NEW !] state machine -- to specify FSM without the need for implementing them at the gate level and/or rely on VHDL and third party software.
-* chronogram -- to see the evolution of signals in your circuit
-* electronic board integration -- schematics can now be simulated on real hardware!
-* board editor -- to add new electronic boards
-* VHDL component -- a new component type whose behavior is specified in VHDL
-* TCL/TK console -- interfaces between the circuit and the user
-* DIP switches
-* RGB LEDs
-* large number of bug-fixes
-* GUI improvements
-* automatic updates
-* code refactoring
-* ...
-
-## How to install logisim-evolution
-You can find an already compiled **stable** version of the code [here](http://reds-data.heig-vd.ch/logisim-evolution/logisim-evolution.jar).
 To execute it, click on the downloaded file or type in a console
 ```bash
 java -jar logisim-evolution.jar
@@ -41,14 +16,22 @@ ant run
 ```
 This also creates locally a .jar file, which needs to be fixed due to some library issue. To do so you must run the following command in the project folder containing the jar file.
 
-```zip -d logisim-extra.jar 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*SF'
-``
-This jar can be distributed and uses on other machines.
+```zip -d logisim-evolution.jar 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*SF'
+```
+This jar can be distributed and used on other machines.
 
-## Documentation
-[Here](http://reds-data.heig-vd.ch/logisim-evolution/IntroToLogisimEnglish.pdf)  you can find a tutorial (French version [here](http://reds-data.heig-vd.ch/logisim-evolution/tutoLogisim.pdf)) that explains some basic usage of Logisim. The electronic card referenced in the tutorial is a small card we use in our laboratories -- you won't be able to buy it in a store -- but the descriptions should be good enough to be used for another generic board.
+## Use the FSM editor
 
-Another good reference is [this book](http://www.lulu.com/shop/george-self/exploring-digital-logic-with-logisim-ebook/ebook/product-21118223.html), where basic electronics is explained with the help of Logisim.
+* Menu *project->Add Library choose internal library, there should be only a single choice (FSM library) that should be selected for loading.
+* Once the library is loaded, a new entry named FSM Tools should appear on the Toolbox menu, with the Finite State Machine component available.
+* You can then instanciate a FSM component in you Schematic. This FSM corresponds to a default implementation (one input A, one output X). It can be modified by clicking on the Content attribute, which will open the FSM diagram editor :
+
+<img src="doc/en/html/guide/fsm/Screenshot.jpg"/>    
+
+* The editor is in alpha stage, it allows you to add ports (click on the left/right boundaries ) , add states (click inside the main rounded rectangle) and create transitions by using drap and drop from one state to the other. It is also possible to configure every element by double clicking on it.
+
+* Commands and predicate are specified using boolean expressions (+=OR,.=AND,/=NOT,"1"= true,"0=false) which are parsed by the editor, which also checks for satisfiable predicate (not always equals to false).      
+
 
 ## Editing logisim-evolution in Eclipse
 To import directly logisim-evolution in Eclipse, you can use Eclipse's import wizard:
