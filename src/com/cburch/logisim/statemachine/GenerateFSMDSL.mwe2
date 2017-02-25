@@ -15,33 +15,30 @@ Workflow {
     bean = StandaloneSetup {
     	scanClassPath = true
     	platformUri = "${runtimeProject}/.."
-    	// The following two lines can be removed, if Xbase is not used.
-    	registerGeneratedEPackage = "org.eclipse.xtext.xbase.XbasePackage"
-    	registerGenModelFile = "platform:/resource/org.eclipse.xtext.xbase/model/Xbase.genmodel"
     }
     
-    component = DirectoryCleaner {
-    	directory = "${runtimeProject}/src-gen"
-    }
-    
-    component = DirectoryCleaner {
-    	directory = "${runtimeProject}/model/generated"
-    }
-    
-    component = DirectoryCleaner {
-    	directory = "${runtimeProject}.ui/src-gen"
-    }  
-    
-    component = DirectoryCleaner {
-    	directory = "${runtimeProject}.tests/src-gen"
-    }
-    
+//    component = DirectoryCleaner {
+//    	directory = "${runtimeProject}/src-gen"
+//    }
+//    
+//    component = DirectoryCleaner {
+//    	directory = "${runtimeProject}/model/generated"
+//    }
+//    
+//    component = DirectoryCleaner {
+//    	directory = "${runtimeProject}.ui/src-gen"
+//    }  
+//    
+//    component = DirectoryCleaner {
+//    	directory = "${runtimeProject}.tests/src-gen"
+//    }
+//    
     component = Generator {
     	pathRtProject = runtimeProject
-    	pathUiProject = "${runtimeProject}.ui"
-    	pathTestProject = "${runtimeProject}.tests"
+    	//pathUiProject = "${runtimeProject}"
+    	//pathTestProject = "${runtimeProject}"
     	projectNameRt = projectName
-    	projectNameUi = "${projectName}.ui"
+    	//projectNameUi = "${projectName}"
     	encoding = encoding
     	language = auto-inject {
     		uri = grammarURI
@@ -92,41 +89,41 @@ Workflow {
     		fragment = formatting.FormatterFragment auto-inject {}
     
     		// labeling API
-    		fragment = labeling.LabelProviderFragment auto-inject {}
+    		//fragment = labeling.LabelProviderFragment auto-inject {}
     
-    		// outline API
-    		fragment = outline.OutlineTreeProviderFragment auto-inject {}
-    		fragment = outline.QuickOutlineFragment auto-inject {}
-    
-    		// quickfix API
-    		fragment = quickfix.QuickfixProviderFragment auto-inject {}
-    
-    		// content assist API
-    		fragment = contentAssist.ContentAssistFragment auto-inject {}
-    
+//    		// outline API
+//    		fragment = outline.OutlineTreeProviderFragment auto-inject {}
+//    		fragment = outline.QuickOutlineFragment auto-inject {}
+//    
+//    		// quickfix API
+//    		fragment = quickfix.QuickfixProviderFragment auto-inject {}
+//    
+//    		// content assist API
+//    		fragment = contentAssist.ContentAssistFragment auto-inject {}
+//    
     		// generates a more lightweight Antlr parser and lexer tailored for content assist
-    		fragment = parser.antlr.XtextAntlrUiGeneratorFragment auto-inject {}
+    		//fragment = parser.antlr.XtextAntlrUiGeneratorFragment auto-inject {}
     
-    		// generates junit test support classes into Generator#pathTestProject
-    		fragment = junit.Junit4Fragment auto-inject {}
-    
-    		// rename refactoring
-    		fragment = refactoring.RefactorElementNameFragment auto-inject {}
-    
-    		// provides the necessary bindings for java types integration
-    		fragment = types.TypesGeneratorFragment auto-inject {}
-    
-    		// generates the required bindings only if the grammar inherits from Xbase
-    		fragment = xbase.XbaseGeneratorFragment auto-inject {}
-    		
-    		// generates the required bindings only if the grammar inherits from Xtype
-    		fragment = xbase.XtypeGeneratorFragment auto-inject {}
-    
-    		// provides a preference page for template proposals
-    		fragment = templates.CodetemplatesGeneratorFragment auto-inject {}
-    
-    		// provides a compare view
-    		fragment = compare.CompareFragment auto-inject {}
+//    		// generates junit test support classes into Generator#pathTestProject
+//    		fragment = junit.Junit4Fragment auto-inject {}
+//    
+//    		// rename refactoring
+//    		fragment = refactoring.RefactorElementNameFragment auto-inject {}
+//    
+//    		// provides the necessary bindings for java types integration
+//    		fragment = types.TypesGeneratorFragment auto-inject {}
+//    
+//    		// generates the required bindings only if the grammar inherits from Xbase
+//    		fragment = xbase.XbaseGeneratorFragment auto-inject {}
+//    		
+//    		// generates the required bindings only if the grammar inherits from Xtype
+//    		fragment = xbase.XtypeGeneratorFragment auto-inject {}
+//    
+//    		// provides a preference page for template proposals
+//    		fragment = templates.CodetemplatesGeneratorFragment auto-inject {}
+//    
+//    		// provides a compare view
+//    		fragment = compare.CompareFragment auto-inject {}
     	}
     }
 }

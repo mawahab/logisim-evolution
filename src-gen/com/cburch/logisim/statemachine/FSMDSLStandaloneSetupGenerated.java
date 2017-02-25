@@ -40,6 +40,5 @@ public class FSMDSLStandaloneSetupGenerated implements ISetup {
 		org.eclipse.xtext.resource.IResourceServiceProvider.Registry.INSTANCE.getExtensionToFactoryMap().put("fsm", serviceProvider);
 		
 
-
 	}
 }

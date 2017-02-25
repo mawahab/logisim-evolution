@@ -72,9 +72,7 @@ public class FSMEditorWindow extends Panel implements IFSMEditor,IEditorDialog{
 		System.out.println(this.toString()+":"+getWidth()+"x"+getHeight());
 
 		Panel shapePanel = new Panel(); // holds buttons for adding shapes
-		Label shapeLabel = new Label("Add shape:");
 		shapePanel.setLayout(new FlowLayout());
-		shapePanel.add(shapeLabel);
 		shapePanel.add(fsmOutpuButton);
 		shapePanel.add(fSMInputButton);
 		shapePanel.add(stateButton);

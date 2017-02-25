@@ -72,12 +72,30 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 			if (source == validate) {  
 				FSMValidation validator = new FSMValidation(content.getFsm());
 				validator.validate(content.getFsm());
-				String message = validator.getErrors().stream().map((x)->("Error:"+x)).reduce((x,y)->(x+'\n'+y)).get();
-				message+=validator.getErrors().stream().map((x)->("Warning :"+x)).reduce((x,y)->(x+'\n'+y)).get();
-				JOptionPane.showMessageDialog(FSMContentVisualEditor.this,
-						message,
-						Strings.get("fsmValidationWarning"),
-						JOptionPane.INFORMATION_MESSAGE);
+				int nbErrors = validator.getErrors().size();
+				int nbWarnings = validator.getWarnings().size();
+				if((nbErrors>0) || (nbWarnings>0)) {
+					
+					StringBuffer message = new StringBuffer();
+					
+					for(String err : validator.getErrors()) {
+						message.append("Error :"+ err+"\n");
+					}
+					for(String err : validator.getErrors()) {
+						message.append("Warning:"+ err+"\n");
+					}
+					
+					JOptionPane.showMessageDialog(FSMContentVisualEditor.this,
+							message,
+							Strings.get("fsmValidationWarning"),
+							JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(FSMContentVisualEditor.this,
+							"No Errors/Warning detected",
+							Strings.get("fsmValidationWarning"),
+							JOptionPane.INFORMATION_MESSAGE);
+				}
+				
 			}
 			if (source == switchView) {
 				JOptionPane.showMessageDialog(FSMContentVisualEditor.this,

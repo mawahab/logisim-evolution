@@ -62,15 +62,15 @@ public class InternalFSMDSLLexer extends Lexer {
         super(input,state);
 
     }
-    public String getGrammarFileName() { return "../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g"; }
+    public String getGrammarFileName() { return "../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g"; }
 
     // $ANTLR start "T__12"
     public final void mT__12() throws RecognitionException {
         try {
             int _type = T__12;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:11:7: ( '[' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:11:9: '['
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:11:7: ( '[' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:11:9: '['
             {
             match('['); 
 
@@ -89,8 +89,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__13;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:12:7: ( ',' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:12:9: ','
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:12:7: ( ',' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:12:9: ','
             {
             match(','); 
 
@@ -109,8 +109,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__14;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:13:7: ( ']' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:13:9: ']'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:13:7: ( ']' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:13:9: ']'
             {
             match(']'); 
 
@@ -129,8 +129,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__15;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:14:7: ( ';' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:14:9: ';'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:14:7: ( ';' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:14:9: ';'
             {
             match(';'); 
 
@@ -149,8 +149,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__16;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:15:7: ( 'fsm' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:15:9: 'fsm'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:15:7: ( 'fsm' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:15:9: 'fsm'
             {
             match("fsm"); 
 
@@ -170,8 +170,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__17;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:16:7: ( '{' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:16:9: '{'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:16:7: ( '{' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:16:9: '{'
             {
             match('{'); 
 
@@ -190,8 +190,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__18;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:17:7: ( 'codeWidth' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:17:9: 'codeWidth'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:17:7: ( 'codeWidth' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:17:9: 'codeWidth'
             {
             match("codeWidth"); 
 
@@ -211,8 +211,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__19;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:18:7: ( '=' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:18:9: '='
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:18:7: ( '=' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:18:9: '='
             {
             match('='); 
 
@@ -231,8 +231,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__20;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:19:7: ( 'reset' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:19:9: 'reset'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:19:7: ( 'reset' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:19:9: 'reset'
             {
             match("reset"); 
 
@@ -252,8 +252,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__21;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:20:7: ( '}' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:20:9: '}'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:20:7: ( '}' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:20:9: '}'
             {
             match('}'); 
 
@@ -272,8 +272,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__22;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:21:7: ( 'in' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:21:9: 'in'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:21:7: ( 'in' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:21:9: 'in'
             {
             match("in"); 
 
@@ -293,8 +293,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__23;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:22:7: ( 'out' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:22:9: 'out'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:22:7: ( 'out' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:22:9: 'out'
             {
             match("out"); 
 
@@ -314,8 +314,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__24;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:23:7: ( 'commands' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:23:9: 'commands'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:23:7: ( 'commands' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:23:9: 'commands'
             {
             match("commands"); 
 
@@ -335,8 +335,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__25;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:24:7: ( '@[' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:24:9: '@['
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:24:7: ( '@[' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:24:9: '@['
             {
             match("@["); 
 
@@ -356,8 +356,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__26;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:25:7: ( 'state' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:25:9: 'state'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:25:7: ( 'state' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:25:9: 'state'
             {
             match("state"); 
 
@@ -377,8 +377,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__27;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:26:7: ( 'code' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:26:9: 'code'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:26:7: ( 'code' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:26:9: 'code'
             {
             match("code"); 
 
@@ -398,8 +398,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__28;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:27:7: ( 'transitions' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:27:9: 'transitions'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:27:7: ( 'transitions' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:27:9: 'transitions'
             {
             match("transitions"); 
 
@@ -419,8 +419,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__29;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:28:7: ( '->' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:28:9: '->'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:28:7: ( '->' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:28:9: '->'
             {
             match("->"); 
 
@@ -440,8 +440,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__30;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:29:7: ( 'goto' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:29:9: 'goto'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:29:7: ( 'goto' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:29:9: 'goto'
             {
             match("goto"); 
 
@@ -461,8 +461,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__31;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:30:7: ( 'when' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:30:9: 'when'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:30:7: ( 'when' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:30:9: 'when'
             {
             match("when"); 
 
@@ -482,8 +482,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__32;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:31:7: ( ':' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:31:9: ':'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:31:7: ( ':' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:31:9: ':'
             {
             match(':'); 
 
@@ -502,8 +502,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__33;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:32:7: ( 'default' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:32:9: 'default'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:32:7: ( 'default' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:32:9: 'default'
             {
             match("default"); 
 
@@ -523,8 +523,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__34;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:33:7: ( '+' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:33:9: '+'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:33:7: ( '+' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:33:9: '+'
             {
             match('+'); 
 
@@ -543,8 +543,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__35;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:34:7: ( '.' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:34:9: '.'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:34:7: ( '.' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:34:9: '.'
             {
             match('.'); 
 
@@ -563,8 +563,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__36;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:35:7: ( '==' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:35:9: '=='
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:35:7: ( '==' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:35:9: '=='
             {
             match("=="); 
 
@@ -584,8 +584,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__37;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:36:7: ( '/=' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:36:9: '/='
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:36:7: ( '/=' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:36:9: '/='
             {
             match("/="); 
 
@@ -605,8 +605,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__38;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:37:7: ( '(' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:37:9: '('
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:37:7: ( '(' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:37:9: '('
             {
             match('('); 
 
@@ -625,8 +625,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__39;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:38:7: ( ')' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:38:9: ')'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:38:7: ( ')' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:38:9: ')'
             {
             match(')'); 
 
@@ -645,8 +645,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = T__40;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:39:7: ( '/' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:39:9: '/'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:39:7: ( '/' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:39:9: '/'
             {
             match('/'); 
 
@@ -665,11 +665,11 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = RULE_BIN;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2039:10: ( '\"' ( '0' | '1' )+ '\"' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2039:12: '\"' ( '0' | '1' )+ '\"'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2039:10: ( '\"' ( '0' | '1' )+ '\"' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2039:12: '\"' ( '0' | '1' )+ '\"'
             {
             match('\"'); 
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2039:16: ( '0' | '1' )+
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2039:16: ( '0' | '1' )+
             int cnt1=0;
             loop1:
             do {
@@ -683,7 +683,7 @@ public class InternalFSMDSLLexer extends Lexer {
 
                 switch (alt1) {
             	case 1 :
-            	    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:
+            	    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:
             	    {
             	    if ( (input.LA(1)>='0' && input.LA(1)<='1') ) {
             	        input.consume();
@@ -724,10 +724,10 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = RULE_ID;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2041:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2041:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2041:9: ( ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )* )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2041:11: ( '^' )? ( 'a' .. 'z' | 'A' .. 'Z' | '_' ) ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             {
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2041:11: ( '^' )?
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2041:11: ( '^' )?
             int alt2=2;
             int LA2_0 = input.LA(1);
 
@@ -736,7 +736,7 @@ public class InternalFSMDSLLexer extends Lexer {
             }
             switch (alt2) {
                 case 1 :
-                    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2041:11: '^'
+                    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2041:11: '^'
                     {
                     match('^'); 
 
@@ -754,7 +754,7 @@ public class InternalFSMDSLLexer extends Lexer {
                 recover(mse);
                 throw mse;}
 
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2041:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2041:40: ( 'a' .. 'z' | 'A' .. 'Z' | '_' | '0' .. '9' )*
             loop3:
             do {
                 int alt3=2;
@@ -767,7 +767,7 @@ public class InternalFSMDSLLexer extends Lexer {
 
                 switch (alt3) {
             	case 1 :
-            	    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:
+            	    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:
             	    {
             	    if ( (input.LA(1)>='0' && input.LA(1)<='9')||(input.LA(1)>='A' && input.LA(1)<='Z')||input.LA(1)=='_'||(input.LA(1)>='a' && input.LA(1)<='z') ) {
             	        input.consume();
@@ -803,10 +803,10 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = RULE_INT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2043:10: ( ( '0' .. '9' )+ )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2043:12: ( '0' .. '9' )+
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2043:10: ( ( '0' .. '9' )+ )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2043:12: ( '0' .. '9' )+
             {
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2043:12: ( '0' .. '9' )+
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2043:12: ( '0' .. '9' )+
             int cnt4=0;
             loop4:
             do {
@@ -820,7 +820,7 @@ public class InternalFSMDSLLexer extends Lexer {
 
                 switch (alt4) {
             	case 1 :
-            	    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2043:13: '0' .. '9'
+            	    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2043:13: '0' .. '9'
             	    {
             	    matchRange('0','9'); 
 
@@ -852,10 +852,10 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = RULE_STRING;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:13: ( ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:15: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:13: ( ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' ) )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:15: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             {
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:15: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:15: ( '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"' | '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\'' )
             int alt7=2;
             int LA7_0 = input.LA(1);
 
@@ -873,10 +873,10 @@ public class InternalFSMDSLLexer extends Lexer {
             }
             switch (alt7) {
                 case 1 :
-                    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:16: '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
+                    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:16: '\"' ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )* '\"'
                     {
                     match('\"'); 
-                    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:20: ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )*
+                    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:20: ( '\\\\' . | ~ ( ( '\\\\' | '\"' ) ) )*
                     loop5:
                     do {
                         int alt5=3;
@@ -892,7 +892,7 @@ public class InternalFSMDSLLexer extends Lexer {
 
                         switch (alt5) {
                     	case 1 :
-                    	    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:21: '\\\\' .
+                    	    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:21: '\\\\' .
                     	    {
                     	    match('\\'); 
                     	    matchAny(); 
@@ -900,7 +900,7 @@ public class InternalFSMDSLLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:28: ~ ( ( '\\\\' | '\"' ) )
+                    	    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:28: ~ ( ( '\\\\' | '\"' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='!')||(input.LA(1)>='#' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -925,10 +925,10 @@ public class InternalFSMDSLLexer extends Lexer {
                     }
                     break;
                 case 2 :
-                    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:48: '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
+                    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:48: '\\'' ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )* '\\''
                     {
                     match('\''); 
-                    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:53: ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )*
+                    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:53: ( '\\\\' . | ~ ( ( '\\\\' | '\\'' ) ) )*
                     loop6:
                     do {
                         int alt6=3;
@@ -944,7 +944,7 @@ public class InternalFSMDSLLexer extends Lexer {
 
                         switch (alt6) {
                     	case 1 :
-                    	    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:54: '\\\\' .
+                    	    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:54: '\\\\' .
                     	    {
                     	    match('\\'); 
                     	    matchAny(); 
@@ -952,7 +952,7 @@ public class InternalFSMDSLLexer extends Lexer {
                     	    }
                     	    break;
                     	case 2 :
-                    	    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:61: ~ ( ( '\\\\' | '\\'' ) )
+                    	    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2045:61: ~ ( ( '\\\\' | '\\'' ) )
                     	    {
                     	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='&')||(input.LA(1)>='(' && input.LA(1)<='[')||(input.LA(1)>=']' && input.LA(1)<='\uFFFF') ) {
                     	        input.consume();
@@ -995,12 +995,12 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = RULE_ML_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2047:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2047:19: '/*' ( options {greedy=false; } : . )* '*/'
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2047:17: ( '/*' ( options {greedy=false; } : . )* '*/' )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2047:19: '/*' ( options {greedy=false; } : . )* '*/'
             {
             match("/*"); 
 
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2047:24: ( options {greedy=false; } : . )*
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2047:24: ( options {greedy=false; } : . )*
             loop8:
             do {
                 int alt8=2;
@@ -1025,7 +1025,7 @@ public class InternalFSMDSLLexer extends Lexer {
 
                 switch (alt8) {
             	case 1 :
-            	    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2047:52: .
+            	    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2047:52: .
             	    {
             	    matchAny(); 
 
@@ -1055,12 +1055,12 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = RULE_SL_COMMENT;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:17: ( '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )? )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:19: '//' (~ ( ( '\\n' | '\\r' ) ) )* ( ( '\\r' )? '\\n' )?
             {
             match("//"); 
 
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:24: (~ ( ( '\\n' | '\\r' ) ) )*
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:24: (~ ( ( '\\n' | '\\r' ) ) )*
             loop9:
             do {
                 int alt9=2;
@@ -1073,7 +1073,7 @@ public class InternalFSMDSLLexer extends Lexer {
 
                 switch (alt9) {
             	case 1 :
-            	    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:24: ~ ( ( '\\n' | '\\r' ) )
+            	    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:24: ~ ( ( '\\n' | '\\r' ) )
             	    {
             	    if ( (input.LA(1)>='\u0000' && input.LA(1)<='\t')||(input.LA(1)>='\u000B' && input.LA(1)<='\f')||(input.LA(1)>='\u000E' && input.LA(1)<='\uFFFF') ) {
             	        input.consume();
@@ -1093,7 +1093,7 @@ public class InternalFSMDSLLexer extends Lexer {
                 }
             } while (true);
 
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:40: ( ( '\\r' )? '\\n' )?
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:40: ( ( '\\r' )? '\\n' )?
             int alt11=2;
             int LA11_0 = input.LA(1);
 
@@ -1102,9 +1102,9 @@ public class InternalFSMDSLLexer extends Lexer {
             }
             switch (alt11) {
                 case 1 :
-                    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:41: ( '\\r' )? '\\n'
+                    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:41: ( '\\r' )? '\\n'
                     {
-                    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:41: ( '\\r' )?
+                    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:41: ( '\\r' )?
                     int alt10=2;
                     int LA10_0 = input.LA(1);
 
@@ -1113,7 +1113,7 @@ public class InternalFSMDSLLexer extends Lexer {
                     }
                     switch (alt10) {
                         case 1 :
-                            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:41: '\\r'
+                            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2049:41: '\\r'
                             {
                             match('\r'); 
 
@@ -1145,10 +1145,10 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = RULE_WS;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2051:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2051:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2051:9: ( ( ' ' | '\\t' | '\\r' | '\\n' )+ )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2051:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             {
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2051:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2051:11: ( ' ' | '\\t' | '\\r' | '\\n' )+
             int cnt12=0;
             loop12:
             do {
@@ -1162,7 +1162,7 @@ public class InternalFSMDSLLexer extends Lexer {
 
                 switch (alt12) {
             	case 1 :
-            	    // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:
+            	    // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:
             	    {
             	    if ( (input.LA(1)>='\t' && input.LA(1)<='\n')||input.LA(1)=='\r'||input.LA(1)==' ' ) {
             	        input.consume();
@@ -1202,8 +1202,8 @@ public class InternalFSMDSLLexer extends Lexer {
         try {
             int _type = RULE_ANY_OTHER;
             int _channel = DEFAULT_TOKEN_CHANNEL;
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2053:16: ( . )
-            // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2053:18: .
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2053:16: ( . )
+            // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:2053:18: .
             {
             matchAny(); 
 
@@ -1218,264 +1218,264 @@ public class InternalFSMDSLLexer extends Lexer {
     // $ANTLR end "RULE_ANY_OTHER"
 
     public void mTokens() throws RecognitionException {
-        // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:8: ( T__12 | T__13 | T__14 | T__15 | T__16 | T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | RULE_BIN | RULE_ID | RULE_INT | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ANY_OTHER )
+        // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:8: ( T__12 | T__13 | T__14 | T__15 | T__16 | T__17 | T__18 | T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | RULE_BIN | RULE_ID | RULE_INT | RULE_STRING | RULE_ML_COMMENT | RULE_SL_COMMENT | RULE_WS | RULE_ANY_OTHER )
         int alt13=37;
         alt13 = dfa13.predict(input);
         switch (alt13) {
             case 1 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:10: T__12
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:10: T__12
                 {
                 mT__12(); 
 
                 }
                 break;
             case 2 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:16: T__13
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:16: T__13
                 {
                 mT__13(); 
 
                 }
                 break;
             case 3 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:22: T__14
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:22: T__14
                 {
                 mT__14(); 
 
                 }
                 break;
             case 4 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:28: T__15
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:28: T__15
                 {
                 mT__15(); 
 
                 }
                 break;
             case 5 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:34: T__16
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:34: T__16
                 {
                 mT__16(); 
 
                 }
                 break;
             case 6 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:40: T__17
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:40: T__17
                 {
                 mT__17(); 
 
                 }
                 break;
             case 7 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:46: T__18
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:46: T__18
                 {
                 mT__18(); 
 
                 }
                 break;
             case 8 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:52: T__19
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:52: T__19
                 {
                 mT__19(); 
 
                 }
                 break;
             case 9 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:58: T__20
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:58: T__20
                 {
                 mT__20(); 
 
                 }
                 break;
             case 10 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:64: T__21
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:64: T__21
                 {
                 mT__21(); 
 
                 }
                 break;
             case 11 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:70: T__22
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:70: T__22
                 {
                 mT__22(); 
 
                 }
                 break;
             case 12 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:76: T__23
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:76: T__23
                 {
                 mT__23(); 
 
                 }
                 break;
             case 13 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:82: T__24
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:82: T__24
                 {
                 mT__24(); 
 
                 }
                 break;
             case 14 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:88: T__25
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:88: T__25
                 {
                 mT__25(); 
 
                 }
                 break;
             case 15 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:94: T__26
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:94: T__26
                 {
                 mT__26(); 
 
                 }
                 break;
             case 16 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:100: T__27
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:100: T__27
                 {
                 mT__27(); 
 
                 }
                 break;
             case 17 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:106: T__28
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:106: T__28
                 {
                 mT__28(); 
 
                 }
                 break;
             case 18 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:112: T__29
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:112: T__29
                 {
                 mT__29(); 
 
                 }
                 break;
             case 19 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:118: T__30
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:118: T__30
                 {
                 mT__30(); 
 
                 }
                 break;
             case 20 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:124: T__31
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:124: T__31
                 {
                 mT__31(); 
 
                 }
                 break;
             case 21 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:130: T__32
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:130: T__32
                 {
                 mT__32(); 
 
                 }
                 break;
             case 22 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:136: T__33
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:136: T__33
                 {
                 mT__33(); 
 
                 }
                 break;
             case 23 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:142: T__34
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:142: T__34
                 {
                 mT__34(); 
 
                 }
                 break;
             case 24 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:148: T__35
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:148: T__35
                 {
                 mT__35(); 
 
                 }
                 break;
             case 25 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:154: T__36
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:154: T__36
                 {
                 mT__36(); 
 
                 }
                 break;
             case 26 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:160: T__37
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:160: T__37
                 {
                 mT__37(); 
 
                 }
                 break;
             case 27 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:166: T__38
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:166: T__38
                 {
                 mT__38(); 
 
                 }
                 break;
             case 28 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:172: T__39
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:172: T__39
                 {
                 mT__39(); 
 
                 }
                 break;
             case 29 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:178: T__40
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:178: T__40
                 {
                 mT__40(); 
 
                 }
                 break;
             case 30 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:184: RULE_BIN
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:184: RULE_BIN
                 {
                 mRULE_BIN(); 
 
                 }
                 break;
             case 31 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:193: RULE_ID
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:193: RULE_ID
                 {
                 mRULE_ID(); 
 
                 }
                 break;
             case 32 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:201: RULE_INT
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:201: RULE_INT
                 {
                 mRULE_INT(); 
 
                 }
                 break;
             case 33 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:210: RULE_STRING
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:210: RULE_STRING
                 {
                 mRULE_STRING(); 
 
                 }
                 break;
             case 34 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:222: RULE_ML_COMMENT
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:222: RULE_ML_COMMENT
                 {
                 mRULE_ML_COMMENT(); 
 
                 }
                 break;
             case 35 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:238: RULE_SL_COMMENT
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:238: RULE_SL_COMMENT
                 {
                 mRULE_SL_COMMENT(); 
 
                 }
                 break;
             case 36 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:254: RULE_WS
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:254: RULE_WS
                 {
                 mRULE_WS(); 
 
                 }
                 break;
             case 37 :
-                // ../com.cburch.logisim.statemachine/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:262: RULE_ANY_OTHER
+                // ../logisim-evolution/src-gen/com/cburch/logisim/statemachine/parser/antlr/internal/InternalFSMDSL.g:1:262: RULE_ANY_OTHER
                 {
                 mRULE_ANY_OTHER(); 
 
