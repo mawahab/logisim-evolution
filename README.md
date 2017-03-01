@@ -26,7 +26,7 @@ This jar can be distributed and used on other machines.
 * The tool menu contains an entry named FSM Tools, with the Finite State Machine component available for instanciation in the design.
 * The default instanciation corresponds to an example FSM with two states S0,S1, one input A, and one output X. The FSM transition diagram can be viewed and modified within a graphical editor which is opened by clicking on the Content attribute.
 
-<img src="doc/en/html/guide/fsm/Screenshot.jpg"/>    
+<img src="doc/en/html/guide/fsm/Screenshot.jpg" width="50%" height="50%" />    
 
 The editor is in beta stage, it supports adding/editing/deleting elements through a context menu (use right click to make it appear). Elements can be selected (left click) and moved to make the diagram more readable.
 
