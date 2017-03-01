@@ -3,7 +3,7 @@ logisim-evolution with fsm library
 This repository is a fork from the official logisim-evolution repository (see official repository for more information) and host an early version of the tool with support for editing/analyzing and simulating Finite State Machines. 
 
 ## How to install this version of logisim-evolution
-You can find an already compiled **stable** version of the code [here](http://www.irisa.fr/cosi/HOMEPAGE/Derrien/logisim/logisim-evolution.jar).
+You can find an already compiled **stable** version of the code [here](http://www.irisa.fr/cosi/HOMEPAGE/Derrien/logisim/logisim-evolution.jar). [updated on march 1st, 2017]
 
 To execute it, click on the downloaded file or type in a console
 ```bash
