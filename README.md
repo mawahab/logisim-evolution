@@ -23,16 +23,31 @@ This jar can be distributed and used on other machines.
 
 ## Use the FSM editor
 
-* Menu *project->Add Library choose internal library, there should be only a single choice (FSM library) that should be selected for loading.
-* Once the library is loaded, a new entry named FSM Tools should appear on the Toolbox menu, with the Finite State Machine component available.
-* You can then instanciate a FSM component in you Schematic. This FSM corresponds to a default implementation (one input A, one output X). It can be modified by clicking on the Content attribute, which will open the FSM diagram editor :
+* The tool menu contains an entry named FSM Tools, with the Finite State Machine component available for instanciation in the design.
+* The default instanciation corresponds to an example FSM with two states S0,S1, one input A, and one output X. The FSM transition diagram can be viewed and modified within a graphical editor which is opened by clicking on the Content attribute.
 
 <img src="doc/en/html/guide/fsm/Screenshot.jpg"/>    
 
-* The editor is in alpha stage, it allows you to add ports (click on the left/right boundaries ) , add states (click inside the main rounded rectangle) and create transitions by using drap and drop from one state to the other. It is also possible to configure every element by double clicking on it.
+The editor is in beta stage, it supports adding/editing/deleting elements through a context menu (use right click to make it appear). Elements can be selected (left click) and moved to make the diagram more readable.
 
-* Commands and predicate are specified using boolean expressions (+=OR,.=AND,/=NOT,"1"= true,"0=false) which are parsed by the editor, which also checks for satisfiable predicate (not always equals to false).      
+* Commands (outputs) value are specified using boolean expressions involving constants ("0","1"), inputs, and boolean operators (+=OR,.=AND,/=NOT,"1"= true,"0=false). The expression is analyzed for correctness  by the editor.
 
+* Transition predicates are also specified using boolean expression, which involves only input and boolean operators (i.e constants "0" and "1" are not allowed). In addition, it is also possible to use a "default" predicate which is evaluated to true when all other transition predicates for a given state are evaluated to false.  
+
+In addition to syntactic analysis, the editor also checks that transitions from a given state have all their predicates mutually exclusive to guarantee the the fSM is deterministic. This is achieved using the jdd library, which we use to perform a simple boolean SAT check.
+
+
+## Missing/untested features
+
+* The current version also support VHDL generation although the correctness of generated VHDL was not tested yet.
+
+* The editor does not fully supports input/outputs with wordlength greater than one, especially for SAT checks
+
+* Checker does not verify that all states have different binary codes, not that code size (in # bits) is consistent with the number of state on the FSM.
+ 
+
+
+ 
 
 ## Editing logisim-evolution in Eclipse
 To import directly logisim-evolution in Eclipse, you can use Eclipse's import wizard:
