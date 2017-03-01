@@ -1,20 +1,43 @@
 package com.cburch.logisim.statemachine.editor.view;
 
+import com.cburch.logisim.statemachine.editor.FSMEditorController;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.FSMElement;
 import com.cburch.logisim.statemachine.fSMDSL.InputPort;
 import com.cburch.logisim.statemachine.fSMDSL.LayoutInfo;
 import com.cburch.logisim.statemachine.fSMDSL.OutputPort;
+import com.cburch.logisim.statemachine.fSMDSL.Port;
 import com.cburch.logisim.statemachine.fSMDSL.State;
 import com.cburch.logisim.statemachine.fSMDSL.Transition;
 import com.google.common.base.Objects;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class FSMZones {
+  public enum AreaType {
+    INPUT,
+    
+    OUTPUT,
+    
+    STATE,
+    
+    TRANSITION,
+    
+    NONE;
+  }
+  
+  private FSMEditorController ctrl;
+  
+  public FSMZones(final FSMEditorController ctrl) {
+    this.ctrl = ctrl;
+  }
+  
   public FSMElement getSelectedElement(final Point p, final FSMElement e) {
     FSMElement _xifexpression = null;
     boolean _isWithinElement = this.isWithinElement(p, e);
@@ -24,6 +47,123 @@ public class FSMZones {
       _xifexpression = null;
     }
     return _xifexpression;
+  }
+  
+  private int xmin;
+  
+  private int ymin;
+  
+  private int xmax;
+  
+  private int ymax;
+  
+  public int updateBoundingBox(final FSMElement e) {
+    int _xblockexpression = (int) 0;
+    {
+      LayoutInfo _layout = e.getLayout();
+      int _x = _layout.getX();
+      int _min = Math.min(this.xmin, _x);
+      this.xmin = _min;
+      LayoutInfo _layout_1 = e.getLayout();
+      int _y = _layout_1.getY();
+      int _min_1 = Math.min(this.ymin, _y);
+      this.ymin = _min_1;
+      LayoutInfo _layout_2 = e.getLayout();
+      int _x_1 = _layout_2.getX();
+      LayoutInfo _layout_3 = e.getLayout();
+      int _width = _layout_3.getWidth();
+      int _plus = (_x_1 + _width);
+      int _max = Math.max(this.xmax, _plus);
+      this.xmax = _max;
+      LayoutInfo _layout_4 = e.getLayout();
+      int _y_1 = _layout_4.getY();
+      LayoutInfo _layout_5 = e.getLayout();
+      int _height = _layout_5.getHeight();
+      int _plus_1 = (_y_1 + _height);
+      int _max_1 = Math.max(this.ymax, _plus_1);
+      _xblockexpression = this.ymax = _max_1;
+    }
+    return _xblockexpression;
+  }
+  
+  public void computeBoundingBox(final FSM fsm) {
+    this.xmin = Integer.MAX_VALUE;
+    this.ymin = Integer.MAX_VALUE;
+    this.xmax = 0;
+    this.ymax = 0;
+    this.updateBoundingBox(fsm);
+    EList<State> _states = fsm.getStates();
+    for (final State s : _states) {
+      {
+        this.updateBoundingBox(s);
+        EList<Transition> _transition = s.getTransition();
+        for (final Transition t : _transition) {
+          this.updateBoundingBox(t);
+        }
+      }
+    }
+  }
+  
+  public void detectElement(final Point p, final FSMElement o, final List<FSMElement> l) {
+    final boolean isWithinElement = this.isWithinElement(p, o);
+    if (((isWithinElement && (o != null)) && (l != null))) {
+      l.add(o);
+    }
+  }
+  
+  public List<FSMElement> getActiveElement(final Point p) {
+    List<FSMElement> candidates = new ArrayList<FSMElement>();
+    final FSM fsm = this.ctrl.getFSM();
+    this.detectElement(p, fsm, candidates);
+    EList<Port> _in = fsm.getIn();
+    for (final Port ip : _in) {
+      this.detectElement(p, ip, candidates);
+    }
+    EList<Port> _out = fsm.getOut();
+    for (final Port op : _out) {
+      this.detectElement(p, op, candidates);
+    }
+    EList<State> _states = fsm.getStates();
+    for (final State s : _states) {
+      {
+        this.detectElement(p, s, candidates);
+        CommandList _commandList = s.getCommandList();
+        this.detectElement(p, _commandList, candidates);
+        EList<Transition> _transition = s.getTransition();
+        for (final Transition t : _transition) {
+          this.detectElement(p, t, candidates);
+        }
+      }
+    }
+    int nbmatch = candidates.size();
+    InputOutput.<List<FSMElement>>println(candidates);
+    return candidates;
+  }
+  
+  public FSMZones.AreaType getAreaType(final Point p, final FSM fsm) {
+    final List<FSMElement> selection = this.getActiveElement(p);
+    int _size = selection.size();
+    boolean _greaterThan = (_size > 0);
+    if (_greaterThan) {
+      final FSMElement first = selection.get(0);
+      if ((first instanceof State)) {
+        return FSMZones.AreaType.TRANSITION;
+      }
+    }
+    this.computeBoundingBox(fsm);
+    if (((p.y > this.ymin) && (p.y < this.ymax))) {
+      if ((p.x < this.xmin)) {
+        return FSMZones.AreaType.INPUT;
+      } else {
+        if ((p.x > this.xmax)) {
+          return FSMZones.AreaType.OUTPUT;
+        } else {
+          return FSMZones.AreaType.STATE;
+        }
+      }
+    } else {
+      return FSMZones.AreaType.NONE;
+    }
   }
   
   protected boolean _isWithinElement(final Point p, final FSMElement e) {
@@ -131,6 +271,17 @@ public class FSMZones {
     int _plus_1 = (_y + radius);
     final int dy = (p.y - _plus_1);
     final double distance = Math.sqrt(((dx * dx) + (dy * dy)));
+    int _x_1 = l.getX();
+    int _plus_2 = (_x_1 + radius);
+    String _plus_3 = ((((((("(" + Integer.valueOf(p.x)) + ",") + Integer.valueOf(p.y)) + ") distant from ") + Double.valueOf(distance)) + " to circle[") + Integer.valueOf(_plus_2));
+    String _plus_4 = (_plus_3 + ",");
+    int _y_1 = l.getY();
+    int _plus_5 = (_y_1 + radius);
+    String _plus_6 = (_plus_4 + Integer.valueOf(_plus_5));
+    String _plus_7 = (_plus_6 + ",");
+    String _plus_8 = (_plus_7 + Integer.valueOf(radius));
+    String _plus_9 = (_plus_8 + "]");
+    InputOutput.<String>println(_plus_9);
     return (distance < radius);
   }
   

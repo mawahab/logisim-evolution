@@ -76,17 +76,17 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 				int nbWarnings = validator.getWarnings().size();
 				if((nbErrors>0) || (nbWarnings>0)) {
 					
-					StringBuffer message = new StringBuffer();
-					
+					StringBuffer message = new StringBuffer("Validation results :\n\n");
 					for(String err : validator.getErrors()) {
+						
 						message.append("Error :"+ err+"\n");
 					}
-					for(String err : validator.getErrors()) {
+					for(String err : validator.getWarnings()) {
 						message.append("Warning:"+ err+"\n");
 					}
 					
 					JOptionPane.showMessageDialog(FSMContentVisualEditor.this,
-							message,
+							message.toString(),
 							Strings.get("fsmValidationWarning"),
 							JOptionPane.INFORMATION_MESSAGE);
 				} else {
@@ -212,7 +212,6 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 		setSize(APPLET_WIDTH, APPLET_HEIGHT);	
 
 		pack(); 
-		System.out.println(this.toString()+":"+getWidth()+"x"+getHeight());
 
 	}
 

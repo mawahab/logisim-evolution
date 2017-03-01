@@ -8,8 +8,7 @@ import java.awt.RenderingHints
 import java.awt.Graphics2D
 import java.awt.geom.RoundRectangle2D
 import com.cburch.logisim.statemachine.PrettyPrinter
-import com.cburch.logisim.statemachine.editor.shapes.CommandShape
-import com.cburch.logisim.statemachine.editor.shapes.FSMStateShape
+ 
 import org.eclipse.emf.ecore.util.EcoreUtil
 import com.cburch.logisim.statemachine.fSMDSL.FSM
 

@@ -11,7 +11,7 @@ import org.eclipse.emf.ecore.EObject;
 
 import com.cburch.logisim.statemachine.PrettyPrinter;
 import com.cburch.logisim.statemachine.FSMExample;
-import com.cburch.logisim.statemachine.editor.shapes.FSMStateShape;
+
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;

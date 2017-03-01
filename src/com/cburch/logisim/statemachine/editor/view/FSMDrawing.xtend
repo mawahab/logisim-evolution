@@ -1,8 +1,7 @@
 package com.cburch.logisim.statemachine.editor.view
 
 import com.cburch.logisim.statemachine.PrettyPrinter
-import com.cburch.logisim.statemachine.editor.shapes.CommandShape
-import com.cburch.logisim.statemachine.editor.shapes.FSMStateShape
+
 import com.cburch.logisim.statemachine.fSMDSL.*
 import java.awt.Color
 import java.awt.Graphics
@@ -228,16 +227,16 @@ class FSMDrawing {
 			page.drawString(label, l.x + 3, l.y + l.height);
 			DrawUtils.drawArrowLine(page, l.x-INPUT_X/2, l.y+PORT_HEIGHT/2, l.x, l.y+PORT_HEIGHT/2, 8, 8, false);
 		} else {
-			l.x = INPUT_X+gwidth
+			l.x = INPUT_X+gwidth-l.width
 			l.height = PORT_HEIGHT
-			page.drawRect(l.x-l.width, l.y, l.width, l.height + 4);
-			page.drawString(label, l.x-l.width + 3, l.y + l.height);
-			DrawUtils.drawArrowLine(page, l.x, l.y+PORT_HEIGHT/2, l.x+INPUT_X/2, l.y+PORT_HEIGHT/2, 8, 8, false);
+			page.drawRect(l.x, l.y, l.width, l.height + 4);
+			page.drawString(label, l.x + 3, l.y + l.height);
+			DrawUtils.drawArrowLine(page, l.x+l.width, l.y+PORT_HEIGHT/2, l.x+l.width+INPUT_X/2, l.y+PORT_HEIGHT/2, 8, 8, false);
 		}
-		showZone(e.layout,page)
 	}
 
 	def dispatch drawElement(OutputPort e, Graphics2D page) {
+		showZone(e.layout,page)
 		drawPort(e, page, false);
 
 	}

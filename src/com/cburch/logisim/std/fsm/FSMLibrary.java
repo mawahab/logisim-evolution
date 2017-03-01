@@ -63,7 +63,12 @@ public class FSMLibrary extends Library {
         return "FSM Tools";
     }
     
-    /** Returns a list of all the tools available in this library. */
+	@Override
+	public String getName() {
+		return "FSM";
+	}
+
+	/** Returns a list of all the tools available in this library. */
     public List<AddTool> getTools() {
         return tools;
     }

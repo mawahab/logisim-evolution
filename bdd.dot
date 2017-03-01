@@ -1,5 +1,5 @@
 digraph G {
 root[label="root"]
-root->n0
-n0[label="0"]
+root->n1
+n1[label="1"]
 }

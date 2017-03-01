@@ -8,9 +8,18 @@ import java.awt.Point
 import java.awt.RenderingHints
 import java.awt.geom.RoundRectangle2D
 import org.eclipse.emf.ecore.EObject
+import java.util.List
+import com.cburch.logisim.statemachine.editor.FSMEditorController
+import java.util.ArrayList
 
 class FSMZones {
 
+	FSMEditorController ctrl
+	
+	new(FSMEditorController ctrl) {
+		this.ctrl=ctrl
+	}
+	
 	def getSelectedElement(Point p,FSMElement e) {
 		if (isWithinElement(p,e)) {
 			e
@@ -19,6 +28,86 @@ class FSMZones {
 		}
 	}
 
+	int xmin;
+	int ymin;	
+	int xmax;
+	int ymax;
+
+	def updateBoundingBox(FSMElement e) {
+		xmin= Math.min(xmin, e.layout.x);
+		ymin= Math.min(ymin, e.layout.y);
+		xmax= Math.max(xmax, e.layout.x+e.layout.width);
+		ymax= Math.max(ymax, e.layout.y+e.layout.height);
+	}
+
+	def computeBoundingBox(FSM fsm) {
+		xmin=Integer.MAX_VALUE
+		ymin=Integer.MAX_VALUE;
+		xmax=0;
+		ymax=0;
+		updateBoundingBox(fsm)
+		for(s:fsm.states) {
+			
+			updateBoundingBox(s);
+			for(t:s.transition) {
+				updateBoundingBox(t)
+			}
+		}
+	} 
+	
+	public enum AreaType {INPUT,  OUTPUT, STATE, TRANSITION, NONE}
+		def void detectElement(Point p, FSMElement o, List<FSMElement> l) {
+		val isWithinElement = isWithinElement(p, o)
+		if (isWithinElement && o !== null && l !== null) {
+			l.add(o)
+		}
+
+	}
+
+	def List<FSMElement> getActiveElement(Point p) {
+		var List<FSMElement> candidates = new ArrayList<FSMElement>()
+		val fsm = ctrl.getFSM();
+		detectElement(p, fsm, candidates)
+		for (Port ip : fsm.getIn()) {
+			detectElement(p, ip, candidates)
+		}
+		for (Port op : fsm.getOut()) {
+			detectElement(p, op, candidates)
+		}
+		for (State s : fsm.getStates()) {
+			detectElement(p, s, candidates)
+			detectElement(p, s.getCommandList(), candidates)
+			for (Transition t : s.getTransition()) {
+				detectElement(p, t, candidates)
+			}
+
+		}
+		var int nbmatch = candidates.size()
+		println(candidates)
+		return candidates	
+	}
+	
+	def public AreaType getAreaType(Point p, FSM fsm) {
+		val List<FSMElement> selection = getActiveElement(p);
+		if (selection.size()>0) {
+			val first = selection.get(0)
+			if(first instanceof State) {
+				return AreaType.TRANSITION
+			}
+		}
+		computeBoundingBox(fsm);
+		if(p.y>ymin && p.y<ymax) {
+			if(p.x<xmin) {
+				return AreaType.INPUT
+			} else if(p.x>xmax) {
+				return AreaType.OUTPUT
+			} else {
+				return AreaType.STATE
+			}
+		} else {
+			return AreaType.NONE
+		}
+	}
 
 	def dispatch boolean isWithinElement(Point p,FSMElement e) {
 		false
@@ -47,7 +136,7 @@ class FSMZones {
 		val dx = (p.x - (l.x+radius)) 
 		val dy = (p.y - (l.y+radius))
 		val distance = Math.sqrt(dx*dx+dy*dy)
-		//println('('+p.x+','+p.y+") distant from "+distance+" to circle["+(l.x+radius)+","+(l.y+radius)+","+radius+"]")
+		println('('+p.x+','+p.y+") distant from "+distance+" to circle["+(l.x+radius)+","+(l.y+radius)+","+radius+"]")
 		return distance<(radius)
 	}
 

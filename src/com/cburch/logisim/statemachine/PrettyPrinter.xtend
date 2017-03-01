@@ -47,6 +47,9 @@ class PrettyPrinter {
 	def static dispatch pp(PortRef b) {
 		b.port.name
 	}
+	def static dispatch pp(DefaultPredicate b) {
+		"default"
+	}
 	def static dispatch pp(Constant b) {
 		b.value
 	}

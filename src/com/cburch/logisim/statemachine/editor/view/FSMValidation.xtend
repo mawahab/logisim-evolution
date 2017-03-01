@@ -8,8 +8,6 @@ import java.awt.RenderingHints
 import java.awt.Graphics2D
 import java.awt.geom.RoundRectangle2D
 import com.cburch.logisim.statemachine.PrettyPrinter
-import com.cburch.logisim.statemachine.editor.shapes.CommandShape
-import com.cburch.logisim.statemachine.editor.shapes.FSMStateShape
 import org.eclipse.emf.ecore.util.EcoreUtil
 import com.cburch.logisim.statemachine.fSMDSL.FSM
 import com.cburch.logisim.statemachine.editor.editpanels.FSMCommandListEditPanel
@@ -18,7 +16,7 @@ import javax.swing.JOptionPane
 import java.util.HashSet
 import java.util.List
 import java.util.ArrayList
-
+ 
 class FSMValidation{
 
 	FSM fsm
@@ -70,27 +68,35 @@ class FSMValidation{
 	}
 	public def dispatch validate(CommandList cl) {
 		for(c : cl.commands) {
+			validateExpr(c.value,false)
 			val optimizer = new BDDOptimizer(c.value);
 			optimizer.simplify
 			
 			if (optimizer.isAlwaysFalse()) {
 				warning("command "+PrettyPrinter.pp(c)+" is always evaluated to 0");
 			}
-			if (optimizer.isAlwaysTrue()) {
+			if (optimizer.isAlwaysTrue() && (!(c instanceof Constant) )) {
 				warning("command "+PrettyPrinter.pp(c)+" is always evaluated to 1");
 			}
 		}
 	}
 
 	public def dispatch validate(Transition t) {
-		val optimizer = new BDDOptimizer(t.predicate);
-		optimizer.simplify
-		if (optimizer.isAlwaysFalse()) {
-			error("Transition  "+PrettyPrinter.pp(t)+" is never taken (evaluated to 0)");
+		val p = t.predicate
+		if(t.predicate==null) {
+			throw new RuntimeException("null Predicate");
 		}
-		if (optimizer.isAlwaysTrue()) {
-			warning("Transition "+PrettyPrinter.pp(t)+" is always taken (evaluated to 1)");
-		}		
+		validateExpr(t.predicate,true)
+		if(!(t.predicate instanceof DefaultPredicate)) {
+			val optimizer = new BDDOptimizer(p);
+			optimizer.simplify
+			if (optimizer.isAlwaysFalse()) {
+				error("Transition  "+PrettyPrinter.pp(t)+" can never be taken (evaluated to 0)");
+			}
+			if (optimizer.isAlwaysTrue() && (!(t.predicate instanceof DefaultPredicate) )) {
+				warning("Transition "+PrettyPrinter.pp(t)+" is always taken (evaluated to 1)");
+			}		
+		}
 	}
 	
 	public def dispatch validate(State e) {
@@ -105,7 +111,7 @@ class FSMValidation{
 		if(e.transition.size==0) {
 			warning("State "+PrettyPrinter.pp(e)+" has no output transition");
 		}
-		val nonDefaultTransitions = e.transition.filter[t|!(t instanceof DefaultPredicate)]
+		val nonDefaultTransitions = e.transition.filter[t|!(t.predicate instanceof DefaultPredicate)].toList
 		if ((e.transition.size-nonDefaultTransitions.length)>1) {
 			error("State "+PrettyPrinter.pp(e)+" has multiple default transitions");
 		}
@@ -115,10 +121,12 @@ class FSMValidation{
 			j=0;
 			for (b: nonDefaultTransitions) {
 				if(i<j) {
-					val or = FSMCustomFactory.or(a.predicate,b.predicate) 
+					val pa= a.predicate
+					val pb= b.predicate
+					val or = FSMCustomFactory.or(EcoreUtil.copy(pa),EcoreUtil.copy(pb)) 
 					val optimizer = new BDDOptimizer(or);
 					if (!optimizer.isAlwaysFalse()) {
-						error("Transitions "+PrettyPrinter.pp(a)+" and "+PrettyPrinter.pp(a)+" are not mutually exclusive");
+						error("Transitions predicates "+PrettyPrinter.pp(pa)+" and "+PrettyPrinter.pp(pb)+" are not mutually exclusive");
 					}
 				}
 				j+=1
@@ -128,5 +136,30 @@ class FSMValidation{
 		
 	}
 
+	public def dispatch  validateExpr(BoolExpr b, boolean predicate) {}
+
+	public def  dispatch validateExpr(OrExpr b, boolean predicate) {
+		b.args.forEach[a|validateExpr(a,predicate)]
+	}
+	
+	public def dispatch validateExpr(AndExpr b, boolean predicate) {
+		b.args.forEach[a|validateExpr(a,predicate)]
+	}
+	
+	public def dispatch validateExpr(NotExpr b, boolean predicate) {
+		b.args.forEach[a|validateExpr(a,predicate)]
+	}
+	
+	public def dispatch validateExpr(Constant b, boolean predicate) {
+		if (predicate) {
+			error("\"0\" and \"1\" not allowed in predicate, use \"default\" keyword instead");
+		}
+	}
+	
+	public def dispatch validateExpr(DefaultPredicate b, boolean predicate) {
+		if (!predicate) {
+			error("keyword \"default\" not allowed in command expressions, use \"0\" or \"1\" instead");
+		}
+	}
 
 }

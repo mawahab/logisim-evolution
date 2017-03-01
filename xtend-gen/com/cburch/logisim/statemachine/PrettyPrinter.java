@@ -5,6 +5,7 @@ import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
+import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate;
 import com.cburch.logisim.statemachine.fSMDSL.FSMElement;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
@@ -143,6 +144,10 @@ public class PrettyPrinter {
     return _port.getName();
   }
   
+  protected static String _pp(final DefaultPredicate b) {
+    return "default";
+  }
+  
   protected static String _pp(final Constant b) {
     return b.getValue();
   }
@@ -154,6 +159,8 @@ public class PrettyPrinter {
       return _pp((CommandList)b);
     } else if (b instanceof Constant) {
       return _pp((Constant)b);
+    } else if (b instanceof DefaultPredicate) {
+      return _pp((DefaultPredicate)b);
     } else if (b instanceof NotExpr) {
       return _pp((NotExpr)b);
     } else if (b instanceof OrExpr) {

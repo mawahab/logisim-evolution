@@ -405,87 +405,87 @@ public class FSMDrawing {
   }
   
   protected Object _drawElement(final InputPort e, final Graphics2D page) {
-    return this.drawPort(e, page, true);
+    this.drawPort(e, page, true);
+    return null;
   }
   
-  public Object drawPort(final Port e, final Graphics2D page, final boolean left) {
-    Object _xblockexpression = null;
-    {
-      final LayoutInfo l = e.getLayout();
-      String label = e.getName();
-      int _width = e.getWidth();
-      boolean _greaterThan = (_width > 1);
-      if (_greaterThan) {
-        String _label = label;
-        int _width_1 = e.getWidth();
-        int _minus = (_width_1 - 1);
-        String _plus = ("[" + Integer.valueOf(_minus));
-        String _plus_1 = (_plus + ":0]");
-        label = (_label + _plus_1);
-      }
-      FontMetrics _fontMetrics = page.getFontMetrics();
-      int _stringWidth = _fontMetrics.stringWidth(label);
-      int _plus_2 = (6 + _stringWidth);
-      l.setWidth(_plus_2);
-      if (left) {
-        l.setX(FSMDrawing.INPUT_X);
-        l.setHeight(FSMDrawing.PORT_HEIGHT);
-        int _x = l.getX();
-        int _y = l.getY();
-        int _width_2 = l.getWidth();
-        int _height = l.getHeight();
-        int _plus_3 = (_height + 4);
-        page.drawRect(_x, _y, _width_2, _plus_3);
-        int _x_1 = l.getX();
-        int _plus_4 = (_x_1 + 3);
-        int _y_1 = l.getY();
-        int _height_1 = l.getHeight();
-        int _plus_5 = (_y_1 + _height_1);
-        page.drawString(label, _plus_4, _plus_5);
-        int _x_2 = l.getX();
-        int _minus_1 = (_x_2 - (FSMDrawing.INPUT_X / 2));
-        int _y_2 = l.getY();
-        int _plus_6 = (_y_2 + (FSMDrawing.PORT_HEIGHT / 2));
-        int _x_3 = l.getX();
-        int _y_3 = l.getY();
-        int _plus_7 = (_y_3 + (FSMDrawing.PORT_HEIGHT / 2));
-        DrawUtils.drawArrowLine(page, _minus_1, _plus_6, _x_3, _plus_7, 8, 8, false);
-      } else {
-        l.setX((FSMDrawing.INPUT_X + this.gwidth));
-        l.setHeight(FSMDrawing.PORT_HEIGHT);
-        int _x_4 = l.getX();
-        int _width_3 = l.getWidth();
-        int _minus_2 = (_x_4 - _width_3);
-        int _y_4 = l.getY();
-        int _width_4 = l.getWidth();
-        int _height_2 = l.getHeight();
-        int _plus_8 = (_height_2 + 4);
-        page.drawRect(_minus_2, _y_4, _width_4, _plus_8);
-        int _x_5 = l.getX();
-        int _width_5 = l.getWidth();
-        int _minus_3 = (_x_5 - _width_5);
-        int _plus_9 = (_minus_3 + 3);
-        int _y_5 = l.getY();
-        int _height_3 = l.getHeight();
-        int _plus_10 = (_y_5 + _height_3);
-        page.drawString(label, _plus_9, _plus_10);
-        int _x_6 = l.getX();
-        int _y_6 = l.getY();
-        int _plus_11 = (_y_6 + (FSMDrawing.PORT_HEIGHT / 2));
-        int _x_7 = l.getX();
-        int _plus_12 = (_x_7 + (FSMDrawing.INPUT_X / 2));
-        int _y_7 = l.getY();
-        int _plus_13 = (_y_7 + (FSMDrawing.PORT_HEIGHT / 2));
-        DrawUtils.drawArrowLine(page, _x_6, _plus_11, _plus_12, _plus_13, 8, 8, false);
-      }
-      LayoutInfo _layout = e.getLayout();
-      _xblockexpression = this.showZone(_layout, page);
+  public void drawPort(final Port e, final Graphics2D page, final boolean left) {
+    final LayoutInfo l = e.getLayout();
+    String label = e.getName();
+    int _width = e.getWidth();
+    boolean _greaterThan = (_width > 1);
+    if (_greaterThan) {
+      String _label = label;
+      int _width_1 = e.getWidth();
+      int _minus = (_width_1 - 1);
+      String _plus = ("[" + Integer.valueOf(_minus));
+      String _plus_1 = (_plus + ":0]");
+      label = (_label + _plus_1);
     }
-    return _xblockexpression;
+    FontMetrics _fontMetrics = page.getFontMetrics();
+    int _stringWidth = _fontMetrics.stringWidth(label);
+    int _plus_2 = (6 + _stringWidth);
+    l.setWidth(_plus_2);
+    if (left) {
+      l.setX(FSMDrawing.INPUT_X);
+      l.setHeight(FSMDrawing.PORT_HEIGHT);
+      int _x = l.getX();
+      int _y = l.getY();
+      int _width_2 = l.getWidth();
+      int _height = l.getHeight();
+      int _plus_3 = (_height + 4);
+      page.drawRect(_x, _y, _width_2, _plus_3);
+      int _x_1 = l.getX();
+      int _plus_4 = (_x_1 + 3);
+      int _y_1 = l.getY();
+      int _height_1 = l.getHeight();
+      int _plus_5 = (_y_1 + _height_1);
+      page.drawString(label, _plus_4, _plus_5);
+      int _x_2 = l.getX();
+      int _minus_1 = (_x_2 - (FSMDrawing.INPUT_X / 2));
+      int _y_2 = l.getY();
+      int _plus_6 = (_y_2 + (FSMDrawing.PORT_HEIGHT / 2));
+      int _x_3 = l.getX();
+      int _y_3 = l.getY();
+      int _plus_7 = (_y_3 + (FSMDrawing.PORT_HEIGHT / 2));
+      DrawUtils.drawArrowLine(page, _minus_1, _plus_6, _x_3, _plus_7, 8, 8, false);
+    } else {
+      int _width_3 = l.getWidth();
+      int _minus_2 = ((FSMDrawing.INPUT_X + this.gwidth) - _width_3);
+      l.setX(_minus_2);
+      l.setHeight(FSMDrawing.PORT_HEIGHT);
+      int _x_4 = l.getX();
+      int _y_4 = l.getY();
+      int _width_4 = l.getWidth();
+      int _height_2 = l.getHeight();
+      int _plus_8 = (_height_2 + 4);
+      page.drawRect(_x_4, _y_4, _width_4, _plus_8);
+      int _x_5 = l.getX();
+      int _plus_9 = (_x_5 + 3);
+      int _y_5 = l.getY();
+      int _height_3 = l.getHeight();
+      int _plus_10 = (_y_5 + _height_3);
+      page.drawString(label, _plus_9, _plus_10);
+      int _x_6 = l.getX();
+      int _width_5 = l.getWidth();
+      int _plus_11 = (_x_6 + _width_5);
+      int _y_6 = l.getY();
+      int _plus_12 = (_y_6 + (FSMDrawing.PORT_HEIGHT / 2));
+      int _x_7 = l.getX();
+      int _width_6 = l.getWidth();
+      int _plus_13 = (_x_7 + _width_6);
+      int _plus_14 = (_plus_13 + (FSMDrawing.INPUT_X / 2));
+      int _y_7 = l.getY();
+      int _plus_15 = (_y_7 + (FSMDrawing.PORT_HEIGHT / 2));
+      DrawUtils.drawArrowLine(page, _plus_11, _plus_12, _plus_14, _plus_15, 8, 8, false);
+    }
   }
   
   protected Object _drawElement(final OutputPort e, final Graphics2D page) {
-    return this.drawPort(e, page, false);
+    LayoutInfo _layout = e.getLayout();
+    this.showZone(_layout, page);
+    this.drawPort(e, page, false);
+    return null;
   }
   
   public Object drawElement(final FSMElement e, final Graphics2D page) {

@@ -56,16 +56,7 @@ class FSMCustomFactory {
 	}
 
 
-	def static transition(State src, State dst, BoolExpr pred) {
-		val factory = FSMDSLFactory.eINSTANCE
-		val t = factory.createTransition;
-		t.dst=dst
-		t.src=src
-		src.transition.add(t);
-		t.predicate=pred
-		t
-	}
-	
+
 	
 	def static transition(State src, State dst, int x, int y) {
 		val factory = FSMDSLFactory.eINSTANCE
@@ -78,7 +69,13 @@ class FSMCustomFactory {
 		t.layout.width=PRED_WIDTH
 		t.layout.height=PRED_HEIGHT
 		src.transition.add(t);
-		t.predicate=cst("\"1\"")
+		t.predicate=defaultPred()
+		t
+	}
+	
+	def static defaultPred() {
+		val factory = FSMDSLFactory.eINSTANCE
+		val t = factory.createDefaultPredicate
 		t
 	}
 

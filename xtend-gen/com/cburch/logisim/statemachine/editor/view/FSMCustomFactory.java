@@ -4,6 +4,7 @@ import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
+import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLFactory;
 import com.cburch.logisim.statemachine.fSMDSL.InputPort;
@@ -103,21 +104,6 @@ public class FSMCustomFactory {
     return _xblockexpression;
   }
   
-  public static Transition transition(final State src, final State dst, final BoolExpr pred) {
-    Transition _xblockexpression = null;
-    {
-      final FSMDSLFactory factory = FSMDSLFactory.eINSTANCE;
-      final Transition t = factory.createTransition();
-      t.setDst(dst);
-      t.setSrc(src);
-      EList<Transition> _transition = src.getTransition();
-      _transition.add(t);
-      t.setPredicate(pred);
-      _xblockexpression = t;
-    }
-    return _xblockexpression;
-  }
-  
   public static Transition transition(final State src, final State dst, final int x, final int y) {
     Transition _xblockexpression = null;
     {
@@ -137,8 +123,18 @@ public class FSMCustomFactory {
       _layout_3.setHeight(FSMCustomFactory.PRED_HEIGHT);
       EList<Transition> _transition = src.getTransition();
       _transition.add(t);
-      Constant _cst = FSMCustomFactory.cst("\"1\"");
-      t.setPredicate(_cst);
+      DefaultPredicate _defaultPred = FSMCustomFactory.defaultPred();
+      t.setPredicate(_defaultPred);
+      _xblockexpression = t;
+    }
+    return _xblockexpression;
+  }
+  
+  public static DefaultPredicate defaultPred() {
+    DefaultPredicate _xblockexpression = null;
+    {
+      final FSMDSLFactory factory = FSMDSLFactory.eINSTANCE;
+      final DefaultPredicate t = factory.createDefaultPredicate();
       _xblockexpression = t;
     }
     return _xblockexpression;

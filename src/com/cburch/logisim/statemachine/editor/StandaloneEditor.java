@@ -32,8 +32,8 @@ public class StandaloneEditor {
 			}
 		});
 			
-		EditorPanel pn = new EditorPanel();
-		mainFrame.add(pn);
+		//EditorPanel pn = new EditorPanel();
+		//mainFrame.add(pn);
 		mainFrame.setVisible(true);
 	}
 

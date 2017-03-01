@@ -9,8 +9,9 @@ import org.eclipse.emf.ecore.EObject;
 
 import com.cburch.logisim.statemachine.PrettyPrinter;
 import com.cburch.logisim.statemachine.bdd.BDDOptimizer;
-import com.cburch.logisim.statemachine.editor.shapes.FSMStateShape;
+
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
+import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLFactory;
 import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
@@ -45,16 +46,19 @@ public class FSMTransitionEditPanel extends JPanel{
 			try {
 				FSM fsm = (FSM)t.eContainer().eContainer();
 				res= (PredicateStmt) FSMSerializer.parsePredicate(fsm, txt);
-				PortReferenceFix fixer = new PortReferenceFix(fsm);
-				fixer.replaceRef(res.getPredicate());
-				BDDOptimizer optimizer = new BDDOptimizer(res.getPredicate());
-				if (optimizer.isAlwaysFalse()) {
-					JOptionPane.showConfirmDialog(null, 
-							"Warning : predicate "+PrettyPrinter.pp(res.getPredicate())+" can never be satisfied",
-							"Warning", 
-							JOptionPane.OK_OPTION);
+				BoolExpr predicate = res.getPredicate();
+				if (!(predicate instanceof DefaultPredicate)) {
+					PortReferenceFix fixer = new PortReferenceFix(fsm);
+					fixer.replaceRef(predicate);
+					BDDOptimizer optimizer = new BDDOptimizer(predicate);
+					if (optimizer.isAlwaysFalse()) {
+						JOptionPane.showConfirmDialog(null, 
+								"Warning : predicate "+PrettyPrinter.pp(predicate)+" can never be satisfied",
+								"Warning", 
+								JOptionPane.OK_OPTION);
+					}
 				}
-				return res.getPredicate();
+				return predicate;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

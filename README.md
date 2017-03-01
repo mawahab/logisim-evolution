@@ -18,6 +18,7 @@ This also creates locally a .jar file, which needs to be fixed due to some libra
 
 ```zip -d logisim-evolution.jar 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*SF'
 ```
+
 This jar can be distributed and used on other machines.
 
 ## Use the FSM editor

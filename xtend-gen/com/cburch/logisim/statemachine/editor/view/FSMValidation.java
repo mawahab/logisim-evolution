@@ -3,12 +3,15 @@ package com.cburch.logisim.statemachine.editor.view;
 import com.cburch.logisim.statemachine.PrettyPrinter;
 import com.cburch.logisim.statemachine.bdd.BDDOptimizer;
 import com.cburch.logisim.statemachine.editor.view.FSMCustomFactory;
+import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
+import com.cburch.logisim.statemachine.fSMDSL.Constant;
 import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.FSMElement;
+import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Port;
 import com.cburch.logisim.statemachine.fSMDSL.State;
@@ -18,8 +21,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -114,7 +119,9 @@ public class FSMValidation {
     for (final Command c : _commands) {
       {
         BoolExpr _value = c.getValue();
-        final BDDOptimizer optimizer = new BDDOptimizer(_value);
+        this.validateExpr(_value, false);
+        BoolExpr _value_1 = c.getValue();
+        final BDDOptimizer optimizer = new BDDOptimizer(_value_1);
         optimizer.simplify();
         boolean _isAlwaysFalse = optimizer.isAlwaysFalse();
         if (_isAlwaysFalse) {
@@ -123,8 +130,14 @@ public class FSMValidation {
           String _plus_1 = (_plus + " is always evaluated to 0");
           this.warning(_plus_1);
         }
+        boolean _and = false;
         boolean _isAlwaysTrue = optimizer.isAlwaysTrue();
-        if (_isAlwaysTrue) {
+        if (!_isAlwaysTrue) {
+          _and = false;
+        } else {
+          _and = (!(c instanceof Constant));
+        }
+        if (_and) {
           String _pp_1 = PrettyPrinter.pp(c);
           String _plus_2 = ("command " + _pp_1);
           String _plus_3 = (_plus_2 + " is always evaluated to 1");
@@ -138,23 +151,48 @@ public class FSMValidation {
   public Boolean _validate(final Transition t) {
     boolean _xblockexpression = false;
     {
+      final BoolExpr p = t.getPredicate();
       BoolExpr _predicate = t.getPredicate();
-      final BDDOptimizer optimizer = new BDDOptimizer(_predicate);
-      optimizer.simplify();
-      boolean _isAlwaysFalse = optimizer.isAlwaysFalse();
-      if (_isAlwaysFalse) {
-        String _pp = PrettyPrinter.pp(t);
-        String _plus = ("Transition  " + _pp);
-        String _plus_1 = (_plus + " is never taken (evaluated to 0)");
-        this.error(_plus_1);
+      boolean _equals = Objects.equal(_predicate, null);
+      if (_equals) {
+        throw new RuntimeException("null Predicate");
       }
+      BoolExpr _predicate_1 = t.getPredicate();
+      this.validateExpr(_predicate_1, true);
       boolean _xifexpression = false;
-      boolean _isAlwaysTrue = optimizer.isAlwaysTrue();
-      if (_isAlwaysTrue) {
-        String _pp_1 = PrettyPrinter.pp(t);
-        String _plus_2 = ("Transition " + _pp_1);
-        String _plus_3 = (_plus_2 + " is always taken (evaluated to 1)");
-        _xifexpression = this.warning(_plus_3);
+      BoolExpr _predicate_2 = t.getPredicate();
+      boolean _not = (!(_predicate_2 instanceof DefaultPredicate));
+      if (_not) {
+        boolean _xblockexpression_1 = false;
+        {
+          final BDDOptimizer optimizer = new BDDOptimizer(p);
+          optimizer.simplify();
+          boolean _isAlwaysFalse = optimizer.isAlwaysFalse();
+          if (_isAlwaysFalse) {
+            String _pp = PrettyPrinter.pp(t);
+            String _plus = ("Transition  " + _pp);
+            String _plus_1 = (_plus + " can never be taken (evaluated to 0)");
+            this.error(_plus_1);
+          }
+          boolean _xifexpression_1 = false;
+          boolean _and = false;
+          boolean _isAlwaysTrue = optimizer.isAlwaysTrue();
+          if (!_isAlwaysTrue) {
+            _and = false;
+          } else {
+            BoolExpr _predicate_3 = t.getPredicate();
+            boolean _not_1 = (!(_predicate_3 instanceof DefaultPredicate));
+            _and = _not_1;
+          }
+          if (_and) {
+            String _pp_1 = PrettyPrinter.pp(t);
+            String _plus_2 = ("Transition " + _pp_1);
+            String _plus_3 = (_plus_2 + " is always taken (evaluated to 1)");
+            _xifexpression_1 = this.warning(_plus_3);
+          }
+          _xblockexpression_1 = _xifexpression_1;
+        }
+        _xifexpression = _xblockexpression_1;
       }
       _xblockexpression = _xifexpression;
     }
@@ -194,9 +232,11 @@ public class FSMValidation {
     }
     EList<Transition> _transition_1 = e.getTransition();
     final Function1<Transition, Boolean> _function = (Transition t) -> {
-      return Boolean.valueOf((!(t instanceof DefaultPredicate)));
+      BoolExpr _predicate = t.getPredicate();
+      return Boolean.valueOf((!(_predicate instanceof DefaultPredicate)));
     };
-    final Iterable<Transition> nonDefaultTransitions = IterableExtensions.<Transition>filter(_transition_1, _function);
+    Iterable<Transition> _filter = IterableExtensions.<Transition>filter(_transition_1, _function);
+    final List<Transition> nonDefaultTransitions = IterableExtensions.<Transition>toList(_filter);
     EList<Transition> _transition_2 = e.getTransition();
     int _size_1 = _transition_2.size();
     int _length_1 = ((Object[])Conversions.unwrapArray(nonDefaultTransitions, Object.class)).length;
@@ -217,17 +257,19 @@ public class FSMValidation {
         for (final Transition b : nonDefaultTransitions) {
           {
             if ((i < j)) {
-              BoolExpr _predicate = a.getPredicate();
-              BoolExpr _predicate_1 = b.getPredicate();
-              final OrExpr or = FSMCustomFactory.or(_predicate, _predicate_1);
+              final BoolExpr pa = a.getPredicate();
+              final BoolExpr pb = b.getPredicate();
+              BoolExpr _copy = EcoreUtil.<BoolExpr>copy(pa);
+              BoolExpr _copy_1 = EcoreUtil.<BoolExpr>copy(pb);
+              final OrExpr or = FSMCustomFactory.or(_copy, _copy_1);
               final BDDOptimizer optimizer = new BDDOptimizer(or);
               boolean _isAlwaysFalse = optimizer.isAlwaysFalse();
               boolean _not = (!_isAlwaysFalse);
               if (_not) {
-                String _pp_3 = PrettyPrinter.pp(a);
-                String _plus_9 = ("Transitions " + _pp_3);
+                String _pp_3 = PrettyPrinter.pp(pa);
+                String _plus_9 = ("Transitions predicates " + _pp_3);
                 String _plus_10 = (_plus_9 + " and ");
-                String _pp_4 = PrettyPrinter.pp(a);
+                String _pp_4 = PrettyPrinter.pp(pb);
                 String _plus_11 = (_plus_10 + _pp_4);
                 String _plus_12 = (_plus_11 + " are not mutually exclusive");
                 this.error(_plus_12);
@@ -244,6 +286,53 @@ public class FSMValidation {
     return null;
   }
   
+  public Boolean _validateExpr(final BoolExpr b, final boolean predicate) {
+    return null;
+  }
+  
+  public Boolean _validateExpr(final OrExpr b, final boolean predicate) {
+    EList<BoolExpr> _args = b.getArgs();
+    final Consumer<BoolExpr> _function = (BoolExpr a) -> {
+      this.validateExpr(a, predicate);
+    };
+    _args.forEach(_function);
+    return null;
+  }
+  
+  public Boolean _validateExpr(final AndExpr b, final boolean predicate) {
+    EList<BoolExpr> _args = b.getArgs();
+    final Consumer<BoolExpr> _function = (BoolExpr a) -> {
+      this.validateExpr(a, predicate);
+    };
+    _args.forEach(_function);
+    return null;
+  }
+  
+  public Boolean _validateExpr(final NotExpr b, final boolean predicate) {
+    EList<BoolExpr> _args = b.getArgs();
+    final Consumer<BoolExpr> _function = (BoolExpr a) -> {
+      this.validateExpr(a, predicate);
+    };
+    _args.forEach(_function);
+    return null;
+  }
+  
+  public Boolean _validateExpr(final Constant b, final boolean predicate) {
+    boolean _xifexpression = false;
+    if (predicate) {
+      _xifexpression = this.error("\"0\" and \"1\" not allowed in predicate, use \"default\" keyword instead");
+    }
+    return Boolean.valueOf(_xifexpression);
+  }
+  
+  public Boolean _validateExpr(final DefaultPredicate b, final boolean predicate) {
+    boolean _xifexpression = false;
+    if ((!predicate)) {
+      _xifexpression = this.error("keyword \"default\" not allowed in command expressions, use \"0\" or \"1\" instead");
+    }
+    return Boolean.valueOf(_xifexpression);
+  }
+  
   public Boolean validate(final FSMElement cl) {
     if (cl instanceof CommandList) {
       return _validate((CommandList)cl);
@@ -258,6 +347,25 @@ public class FSMValidation {
     } else {
       throw new IllegalArgumentException("Unhandled parameter types: " +
         Arrays.<Object>asList(cl).toString());
+    }
+  }
+  
+  public Boolean validateExpr(final BoolExpr b, final boolean predicate) {
+    if (b instanceof AndExpr) {
+      return _validateExpr((AndExpr)b, predicate);
+    } else if (b instanceof Constant) {
+      return _validateExpr((Constant)b, predicate);
+    } else if (b instanceof DefaultPredicate) {
+      return _validateExpr((DefaultPredicate)b, predicate);
+    } else if (b instanceof NotExpr) {
+      return _validateExpr((NotExpr)b, predicate);
+    } else if (b instanceof OrExpr) {
+      return _validateExpr((OrExpr)b, predicate);
+    } else if (b != null) {
+      return _validateExpr(b, predicate);
+    } else {
+      throw new IllegalArgumentException("Unhandled parameter types: " +
+        Arrays.<Object>asList(b, predicate).toString());
     }
   }
 }
