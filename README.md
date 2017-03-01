@@ -15,8 +15,8 @@ You can also compile it by yourself by cloning the repository on your local mach
 ant run
 ```
 This also creates locally a .jar file, which needs to be fixed due to some library issue. To do so you must run the following command in the project folder containing the jar file.
-
-```zip -d logisim-evolution.jar 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*SF'
+```
+zip -d logisim-evolution.jar 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*SF'
 ```
 
 This jar can be distributed and used on other machines.
