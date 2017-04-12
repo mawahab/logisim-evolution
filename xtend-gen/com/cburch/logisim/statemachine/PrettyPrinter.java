@@ -2,6 +2,7 @@ package com.cburch.logisim.statemachine;
 
 import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
+import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
@@ -12,6 +13,7 @@ import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OutputPort;
 import com.cburch.logisim.statemachine.fSMDSL.Port;
 import com.cburch.logisim.statemachine.fSMDSL.PortRef;
+import com.cburch.logisim.statemachine.fSMDSL.Range;
 import com.cburch.logisim.statemachine.fSMDSL.State;
 import com.cburch.logisim.statemachine.fSMDSL.Transition;
 import com.google.common.base.Objects;
@@ -131,6 +133,34 @@ public class PrettyPrinter {
     return _builder.toString();
   }
   
+  protected static String _pp(final CmpExpr b) {
+    String _switchResult = null;
+    String _op = b.getOp();
+    switch (_op) {
+      case "==":
+        EList<BoolExpr> _args = b.getArgs();
+        BoolExpr _get = _args.get(0);
+        Object _pp = PrettyPrinter.pp(_get);
+        String _plus = (_pp + "==");
+        EList<BoolExpr> _args_1 = b.getArgs();
+        BoolExpr _get_1 = _args_1.get(1);
+        Object _pp_1 = PrettyPrinter.pp(_get_1);
+        _switchResult = (_plus + _pp_1);
+        break;
+      case "!=":
+        EList<BoolExpr> _args_2 = b.getArgs();
+        BoolExpr _get_2 = _args_2.get(0);
+        Object _pp_2 = PrettyPrinter.pp(_get_2);
+        String _plus_1 = (_pp_2 + "!=");
+        EList<BoolExpr> _args_3 = b.getArgs();
+        BoolExpr _get_3 = _args_3.get(1);
+        Object _pp_3 = PrettyPrinter.pp(_get_3);
+        _switchResult = (_plus_1 + _pp_3);
+        break;
+    }
+    return _switchResult;
+  }
+  
   protected static String _pp(final NotExpr b) {
     EList<BoolExpr> _args = b.getArgs();
     BoolExpr _get = _args.get(0);
@@ -140,8 +170,26 @@ public class PrettyPrinter {
   }
   
   protected static String _pp(final PortRef b) {
-    Port _port = b.getPort();
-    return _port.getName();
+    String _xifexpression = null;
+    Range _range = b.getRange();
+    boolean _notEquals = (!Objects.equal(_range, null));
+    if (_notEquals) {
+      Port _port = b.getPort();
+      String _name = _port.getName();
+      String _plus = (_name + "[");
+      Range _range_1 = b.getRange();
+      int _lb = _range_1.getLb();
+      String _plus_1 = (_plus + Integer.valueOf(_lb));
+      String _plus_2 = (_plus_1 + ":");
+      Range _range_2 = b.getRange();
+      int _ub = _range_2.getUb();
+      String _plus_3 = (_plus_2 + Integer.valueOf(_ub));
+      _xifexpression = (_plus_3 + "]");
+    } else {
+      Port _port_1 = b.getPort();
+      _xifexpression = _port_1.getName();
+    }
+    return _xifexpression;
   }
   
   protected static String _pp(final DefaultPredicate b) {
@@ -155,6 +203,8 @@ public class PrettyPrinter {
   public static String pp(final EObject b) {
     if (b instanceof AndExpr) {
       return _pp((AndExpr)b);
+    } else if (b instanceof CmpExpr) {
+      return _pp((CmpExpr)b);
     } else if (b instanceof CommandList) {
       return _pp((CommandList)b);
     } else if (b instanceof Constant) {

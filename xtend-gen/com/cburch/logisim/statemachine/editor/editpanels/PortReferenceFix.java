@@ -2,7 +2,9 @@ package com.cburch.logisim.statemachine.editor.editpanels;
 
 import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
+import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
+import com.cburch.logisim.statemachine.fSMDSL.Constant;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
@@ -49,6 +51,10 @@ public class PortReferenceFix {
   }
   
   protected void _replaceRef(final BoolExpr b) {
+    throw new UnsupportedOperationException("NYI");
+  }
+  
+  protected void _replaceRef(final Constant b) {
   }
   
   protected void _replaceRef(final OrExpr b) {
@@ -60,6 +66,14 @@ public class PortReferenceFix {
   }
   
   protected void _replaceRef(final AndExpr b) {
+    EList<BoolExpr> _args = b.getArgs();
+    final Consumer<BoolExpr> _function = (BoolExpr a) -> {
+      this.replaceRef(a);
+    };
+    _args.forEach(_function);
+  }
+  
+  protected void _replaceRef(final CmpExpr b) {
     EList<BoolExpr> _args = b.getArgs();
     final Consumer<BoolExpr> _function = (BoolExpr a) -> {
       this.replaceRef(a);
@@ -90,6 +104,12 @@ public class PortReferenceFix {
   public void replaceRef(final EObject b) {
     if (b instanceof AndExpr) {
       _replaceRef((AndExpr)b);
+      return;
+    } else if (b instanceof CmpExpr) {
+      _replaceRef((CmpExpr)b);
+      return;
+    } else if (b instanceof Constant) {
+      _replaceRef((Constant)b);
       return;
     } else if (b instanceof NotExpr) {
       _replaceRef((NotExpr)b);

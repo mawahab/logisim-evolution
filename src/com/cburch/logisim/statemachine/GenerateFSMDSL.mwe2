@@ -6,7 +6,7 @@ import org.eclipse.xtext.ui.generator.*
 
 var grammarURI = "classpath:/com/cburch/logisim/statemachine/FSMDSL.xtext"
 var fileExtensions = "fsm"
-var projectName = "com.cburch.logisim.statemachine"
+var projectName = "logisim-evolution"
 var runtimeProject = "../${projectName}"
 var generateXtendStub = true
 var encoding = "UTF-8"

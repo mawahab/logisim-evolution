@@ -37,7 +37,7 @@ public class FSMCommandListEditPanel extends JPanel{
 			Optional<String> command = state.getCommands().stream().map(
 					(c)->
 					(c.getName().getName()+"="+PrettyPrinter.pp(c.getValue()))
-			).reduce((x,y)->(x+","+y));
+			).reduce((x,y)->(x+";"+y));
 			condField.setText(command.get());
 		}
 		
@@ -59,8 +59,9 @@ public class FSMCommandListEditPanel extends JPanel{
 					fixer.replaceRef(c);
 				}
 				return commands;
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, this, "Error : "+e.getMessage(),JOptionPane.ERROR_MESSAGE);
+				return null;
 			}
 		}
 		return list.getCommands();

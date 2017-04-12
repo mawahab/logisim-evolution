@@ -11,11 +11,13 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
+import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
 import com.cburch.logisim.statemachine.fSMDSL.InputPort;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
 import com.cburch.logisim.statemachine.fSMDSL.PortRef;
+import com.cburch.logisim.statemachine.fSMDSL.Range;
 import com.cburch.logisim.statemachine.fSMDSL.util.FSMDSLSwitch;
 
 import jdd.bdd.BDD;
@@ -30,7 +32,7 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 
 	private static final String ZERO = "\"0\"";
 	private static final String ONE = "\"1\"";
-	private static final boolean VERBOSE = false;
+	private static final boolean VERBOSE = true;
 	EList<InputPort> in;
 
 	private BDD bdd;
@@ -45,8 +47,9 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 	}
 
 	public BDDOptimizer(BoolExpr bexp) {
-
-		in = new CollectFlags().collect(bexp);
+		BoolExpr copy=EcoreUtil.copy(bexp);
+		copy = new RemoveCompare().replace(copy);
+		in = new CollectFlags().collect(copy);
 		int bddsize = in.size() * in.size();
 		bdd = new BDD(bddsize);
 		map = new BDDVariableMapping(bdd);
@@ -55,14 +58,13 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 			map.map(icp);
 		}
 
-		root = doSwitch(bexp);
+		root = doSwitch(copy);
 		debug("Root is " + root);
 	}
 
 	
 	public Integer caseAndExpr(AndExpr object) {
 		int varBDDAnd = 0;
-		;
 		boolean first = true;
 
 		for (BoolExpr bexp : object.getArgs()) {
@@ -96,16 +98,29 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 	}
 
 	
-	public Integer casePortRef(PortRef object) {
-		InputPort icp = (InputPort) object.getPort();
+	public Integer casePortRef(PortRef pref) {
+		InputPort icp = (InputPort) pref.getPort();
 		if (!in.contains(icp)) {
 			throw new RuntimeException("Inconsistency in "+ this.getClass().getSimpleName());
-		} else if (icp.getWidth()>1) {
-			throw new RuntimeException("No port width other than 1"+ this.getClass().getSimpleName());
 		} else {
-			int varProduct = map.getBDDVarFor(icp, 0);
-			map.map(object, varProduct);
-			return varProduct;
+			int width = icp.getWidth();
+			if (width>1) {
+				Range range = pref.getRange();
+				if(range!=null) {
+					int lb = range.getLb();
+					int ub = range.getUb();
+					if(lb==ub && lb<width) {
+						int varProduct = map.getBDDVarFor(icp, lb);
+						map.map(pref, varProduct);
+						return varProduct;
+					}
+				}
+				throw new RuntimeException("No port width other than 1"+ this.getClass().getSimpleName());
+			} else {
+				int varProduct = map.getBDDVarFor(icp, 0);
+				map.map(pref, varProduct);
+				return varProduct;
+			}
 		}
 	}
 
@@ -200,9 +215,9 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 			if (port.getWidth() == 1) {
 				t = pref(port);
 				nT = not(pref(port));
-//			} else if (port.getWidth() > 1) {
-//				t = pref(port, entry.getValue());
-//				nT = nT(port, entry.getValue());
+			} else if (port.getWidth() > 1) {
+				t = pref(port, entry.getValue(),  entry.getValue());
+				nT = not(pref(port, entry.getValue(),  entry.getValue()));
 			} else {
 				throw new RuntimeException("Illegal port width");
 			}

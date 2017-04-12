@@ -11,7 +11,7 @@ TOP:
 CommandStmt :
 	'[' in+=ShortInput (',' in+=ShortInput )*']'
 	'[' out+=ShortOutput (',' out+=ShortOutput )*']'
-	(commands+=Command) (',' commands+=Command)*
+	(commands+=Command) (commands+=Command)*
 ;
 
 
@@ -68,7 +68,11 @@ Command:
 	
 
 Ref returns BoolExpr:
-	{PortRef} port=[Port] ('[' ((ub=INT) ':')? lb=INT']')?	
+	{PortRef} port=[Port] (range=Range)?	
+;
+
+Range :
+	'[' ((ub=INT) ':')? lb=INT']'	
 ;
 
 Predicate returns BoolExpr : Default | Or ;
@@ -84,7 +88,7 @@ And returns BoolExpr:
 ;
 
 Cmp returns BoolExpr:
-	Primary (({AndExpr.args+=current}) (op=('=='|'/=')) args+=Primary)?
+	Primary (({CmpExpr.args+=current}) (op=('=='|'/=')) args+=Primary)?
 ;
 
 

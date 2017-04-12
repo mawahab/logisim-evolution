@@ -8,15 +8,12 @@ import com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage;
 
 import java.util.Collection;
 
-import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
-
-import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -30,7 +27,6 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * </p>
  * <ul>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.AndExprImpl#getArgs <em>Args</em>}</li>
- *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.AndExprImpl#getOp <em>Op</em>}</li>
  * </ul>
  *
  * @generated
@@ -46,26 +42,6 @@ public class AndExprImpl extends BoolExprImpl implements AndExpr
    * @ordered
    */
   protected EList<BoolExpr> args;
-
-  /**
-   * The default value of the '{@link #getOp() <em>Op</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getOp()
-   * @generated
-   * @ordered
-   */
-  protected static final String OP_EDEFAULT = null;
-
-  /**
-   * The cached value of the '{@link #getOp() <em>Op</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getOp()
-   * @generated
-   * @ordered
-   */
-  protected String op = OP_EDEFAULT;
 
   /**
    * <!-- begin-user-doc -->
@@ -107,29 +83,6 @@ public class AndExprImpl extends BoolExprImpl implements AndExpr
    * <!-- end-user-doc -->
    * @generated
    */
-  public String getOp()
-  {
-    return op;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setOp(String newOp)
-  {
-    String oldOp = op;
-    op = newOp;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, FSMDSLPackage.AND_EXPR__OP, oldOp, op));
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -153,8 +106,6 @@ public class AndExprImpl extends BoolExprImpl implements AndExpr
     {
       case FSMDSLPackage.AND_EXPR__ARGS:
         return getArgs();
-      case FSMDSLPackage.AND_EXPR__OP:
-        return getOp();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -174,9 +125,6 @@ public class AndExprImpl extends BoolExprImpl implements AndExpr
         getArgs().clear();
         getArgs().addAll((Collection<? extends BoolExpr>)newValue);
         return;
-      case FSMDSLPackage.AND_EXPR__OP:
-        setOp((String)newValue);
-        return;
     }
     super.eSet(featureID, newValue);
   }
@@ -194,9 +142,6 @@ public class AndExprImpl extends BoolExprImpl implements AndExpr
       case FSMDSLPackage.AND_EXPR__ARGS:
         getArgs().clear();
         return;
-      case FSMDSLPackage.AND_EXPR__OP:
-        setOp(OP_EDEFAULT);
-        return;
     }
     super.eUnset(featureID);
   }
@@ -213,27 +158,8 @@ public class AndExprImpl extends BoolExprImpl implements AndExpr
     {
       case FSMDSLPackage.AND_EXPR__ARGS:
         return args != null && !args.isEmpty();
-      case FSMDSLPackage.AND_EXPR__OP:
-        return OP_EDEFAULT == null ? op != null : !OP_EDEFAULT.equals(op);
     }
     return super.eIsSet(featureID);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public String toString()
-  {
-    if (eIsProxy()) return super.toString();
-
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (op: ");
-    result.append(op);
-    result.append(')');
-    return result.toString();
   }
 
 } //AndExprImpl

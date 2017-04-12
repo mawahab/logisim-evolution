@@ -11,6 +11,9 @@ import com.cburch.logisim.statemachine.fSMDSL.OutputPort
 import com.cburch.logisim.statemachine.fSMDSL.Port
 import com.cburch.logisim.statemachine.fSMDSL.FSM
 import com.cburch.logisim.statemachine.fSMDSL.Command
+import com.cburch.logisim.statemachine.fSMDSL.Transition
+import com.cburch.logisim.statemachine.fSMDSL.CmpExpr
+import com.cburch.logisim.statemachine.fSMDSL.Constant
 
 class PortReferenceFix {
 	
@@ -28,12 +31,21 @@ class PortReferenceFix {
 		replaceRef(c.value)
 	}
 
-	def dispatch void replaceRef(BoolExpr b) {}
+
+	def dispatch void replaceRef(BoolExpr b) {
+		throw new UnsupportedOperationException("NYI");
+	}
 	
+	def dispatch void replaceRef(Constant  b) {
+	
+	}
 	def  dispatch void replaceRef(OrExpr b) {
 		b.args.forEach[a|replaceRef(a)]
 	}
 	def  dispatch void replaceRef(AndExpr b) {
+		b.args.forEach[a|replaceRef(a)]
+	}
+	def  dispatch void replaceRef(CmpExpr b) {
 		b.args.forEach[a|replaceRef(a)]
 	}
 	def  dispatch void replaceRef(NotExpr b) {

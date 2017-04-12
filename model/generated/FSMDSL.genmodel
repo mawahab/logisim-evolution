@@ -59,10 +59,15 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FSMDSL.ecore#//Command/value"/>
     </genClasses>
     <genClasses ecoreClass="FSMDSL.ecore#//BoolExpr"/>
+    <genClasses ecoreClass="FSMDSL.ecore#//Range">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FSMDSL.ecore#//Range/ub"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FSMDSL.ecore#//Range/lb"/>
+    </genClasses>
     <genClasses ecoreClass="FSMDSL.ecore#//InputPort"/>
     <genClasses ecoreClass="FSMDSL.ecore#//OutputPort"/>
     <genClasses ecoreClass="FSMDSL.ecore#//PortRef">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference FSMDSL.ecore#//PortRef/port"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FSMDSL.ecore#//PortRef/range"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FSMDSL.ecore#//PortRef/ub"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FSMDSL.ecore#//PortRef/lb"/>
     </genClasses>
@@ -73,6 +78,10 @@
     <genClasses ecoreClass="FSMDSL.ecore#//AndExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FSMDSL.ecore#//AndExpr/args"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FSMDSL.ecore#//AndExpr/op"/>
+    </genClasses>
+    <genClasses ecoreClass="FSMDSL.ecore#//CmpExpr">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FSMDSL.ecore#//CmpExpr/args"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute FSMDSL.ecore#//CmpExpr/op"/>
     </genClasses>
     <genClasses ecoreClass="FSMDSL.ecore#//NotExpr">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference FSMDSL.ecore#//NotExpr/args"/>

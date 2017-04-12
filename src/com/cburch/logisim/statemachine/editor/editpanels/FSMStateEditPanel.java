@@ -74,7 +74,7 @@ public class FSMStateEditPanel extends JPanel{
 	public void configure() {
 		boolean error=true;
 		while(error) {
-			int dialog = JOptionPane.showConfirmDialog(null, this, "Please Enter X and Y Values",JOptionPane.OK_CANCEL_OPTION);
+			int dialog = JOptionPane.showConfirmDialog(null, this, "State configuration",JOptionPane.OK_CANCEL_OPTION);
 			error = checkInput(dialog);
 		}
 		state.setName(nameField.getText());

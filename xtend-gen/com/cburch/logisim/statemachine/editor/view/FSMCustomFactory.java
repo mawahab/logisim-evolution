@@ -14,6 +14,7 @@ import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OutputPort;
 import com.cburch.logisim.statemachine.fSMDSL.Port;
 import com.cburch.logisim.statemachine.fSMDSL.PortRef;
+import com.cburch.logisim.statemachine.fSMDSL.Range;
 import com.cburch.logisim.statemachine.fSMDSL.State;
 import com.cburch.logisim.statemachine.fSMDSL.Transition;
 import com.google.common.base.Objects;
@@ -40,9 +41,9 @@ public class FSMCustomFactory {
   
   public static int PORT_WIDTH = 20;
   
-  public static int FSMINFO_HEIGHT = 50;
+  public static int FSM_HEIGHT = 500;
   
-  public static int FSMINFO_WIDTH = 80;
+  public static int FSM_WIDTH = 500;
   
   public static int STATE_RADIUS = 30;
   
@@ -96,9 +97,9 @@ public class FSMCustomFactory {
       LayoutInfo _layout_1 = s.getLayout();
       _layout_1.setY(15);
       LayoutInfo _layout_2 = s.getLayout();
-      _layout_2.setWidth(FSMCustomFactory.FSMINFO_WIDTH);
+      _layout_2.setWidth(FSMCustomFactory.FSM_WIDTH);
       LayoutInfo _layout_3 = s.getLayout();
-      _layout_3.setHeight(FSMCustomFactory.FSMINFO_WIDTH);
+      _layout_3.setHeight(FSMCustomFactory.FSM_WIDTH);
       _xblockexpression = s;
     }
     return _xblockexpression;
@@ -189,6 +190,23 @@ public class FSMCustomFactory {
     {
       final FSMDSLFactory factory = FSMDSLFactory.eINSTANCE;
       final PortRef s = factory.createPortRef();
+      s.setPort(p);
+      _xblockexpression = s;
+    }
+    return _xblockexpression;
+  }
+  
+  public static PortRef pref(final Port p, final int lb, final int ub) {
+    PortRef _xblockexpression = null;
+    {
+      final FSMDSLFactory factory = FSMDSLFactory.eINSTANCE;
+      final PortRef s = factory.createPortRef();
+      Range _createRange = factory.createRange();
+      s.setRange(_createRange);
+      Range _range = s.getRange();
+      _range.setLb(lb);
+      Range _range_1 = s.getRange();
+      _range_1.setUb(ub);
       s.setPort(p);
       _xblockexpression = s;
     }

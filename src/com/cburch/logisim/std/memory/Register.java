@@ -52,6 +52,7 @@ import com.cburch.logisim.util.GraphicsUtil;
 import com.cburch.logisim.util.StringUtil;
 
 public class Register extends InstanceFactory {
+	
 	public static void DrawRegister(InstancePainter painter, int x, int y,
 			int nr_of_bits, boolean isLatch, boolean neg_active,
 			boolean has_we, String value) {

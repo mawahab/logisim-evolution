@@ -20,8 +20,8 @@ class FSMCustomFactory {
 	public static int PORT_HEIGHT= 30;
 	public static int PORT_WIDTH = 20;
 
-	public static int FSMINFO_HEIGHT= 50;
-	public static int FSMINFO_WIDTH = 80;
+	public static int FSM_HEIGHT= 500;
+	public static int FSM_WIDTH = 500;
 
 	public static int STATE_RADIUS = 30;
 
@@ -50,8 +50,8 @@ class FSMCustomFactory {
 		s.layout = factory.createLayoutInfo
 		s.layout.x=15
 		s.layout.y=15
-		s.layout.width=FSMINFO_WIDTH
-		s.layout.height=FSMINFO_WIDTH
+		s.layout.width=FSM_WIDTH
+		s.layout.height=FSM_WIDTH
 		s
 	}
 
@@ -112,6 +112,19 @@ class FSMCustomFactory {
 		s.port=p
 		s
 	}
+
+	def static pref(Port p, int lb, int ub) {
+		val factory = FSMDSLFactory.eINSTANCE
+		val s = factory.createPortRef;
+	
+		s.range= factory.createRange;
+		s.range.lb=lb
+		s.range.ub=ub
+		
+		s.port=p
+		s
+	}
+
 	def static negpref(Port p) {
 		not(pref(p))
 	}

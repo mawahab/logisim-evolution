@@ -33,7 +33,9 @@ package com.cburch.logisim.std.fsm;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -43,18 +45,20 @@ import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.cburch.logisim.proj.Project;
+import com.cburch.logisim.statemachine.editor.FSMEditorWindow;
 import com.cburch.logisim.statemachine.editor.view.FSMValidation;
 import com.cburch.logisim.util.FileUtil;
+import com.cburch.logisim.util.JFileChoosers;
 import com.cburch.logisim.util.JInputDialog;
 import com.cburch.logisim.util.LocaleListener;
 import com.cburch.logisim.util.LocaleManager;
 
 public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFSMEditor {
-
 
 	public FSMContent getContent() {
 		return content;
@@ -69,41 +73,60 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			Object source = event.getSource();
-			if (source == validate) {  
+			if (source == open) {
+
+				JFileChooser chooser = JFileChoosers.createAt(getDefaultImportFile(null));
+				chooser.setDialogTitle(Strings.get("openButton"));
+				int choice = chooser.showOpenDialog(FSMContentVisualEditor.this);
+				if (choice == JFileChooser.APPROVE_OPTION) {
+					File f = chooser.getSelectedFile();
+					try {
+						FSMFile.open(f, FSMContentVisualEditor.this);
+					} catch (IOException e) {
+						JOptionPane.showMessageDialog(FSMContentVisualEditor.this, e.getMessage(),
+								Strings.get("hexOpenErrorTitle"), JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+			if (source == save) {
+				JFileChooser chooser = JFileChoosers.createSelected(getDefaultExportFile(null));
+				chooser.setDialogTitle(Strings.get("saveButton"));
+				int choice = chooser.showSaveDialog(FSMContentVisualEditor.this);
+				if (choice == JFileChooser.APPROVE_OPTION) {
+					File f = chooser.getSelectedFile();
+					try {
+						FSMFile.save(f, FSMContentVisualEditor.this);
+					} catch (IOException e) {
+						JOptionPane.showMessageDialog(FSMContentVisualEditor.this, e.getMessage(),
+								Strings.get("hexSaveErrorTitle"), JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			}
+			if (source == validate) {
 				FSMValidation validator = new FSMValidation(content.getFsm());
 				validator.validate(content.getFsm());
 				int nbErrors = validator.getErrors().size();
 				int nbWarnings = validator.getWarnings().size();
-				if((nbErrors>0) || (nbWarnings>0)) {
-					
+				if ((nbErrors > 0) || (nbWarnings > 0)) {
+
 					StringBuffer message = new StringBuffer("Validation results :\n\n");
-					for(String err : validator.getErrors()) {
-						
-						message.append("Error :"+ err+"\n");
+					for (String err : validator.getErrors()) {
+
+						message.append("Error :" + err + "\n");
 					}
-					for(String err : validator.getWarnings()) {
-						message.append("Warning:"+ err+"\n");
+					for (String err : validator.getWarnings()) {
+						message.append("Warning:" + err + "\n");
 					}
-					
-					JOptionPane.showMessageDialog(FSMContentVisualEditor.this,
-							message.toString(),
-							Strings.get("fsmValidationWarning"),
-							JOptionPane.INFORMATION_MESSAGE);
+
+					JOptionPane.showMessageDialog(FSMContentVisualEditor.this, message.toString(),
+							Strings.get("fsmValidationWarning"), JOptionPane.INFORMATION_MESSAGE);
 				} else {
-					JOptionPane.showMessageDialog(FSMContentVisualEditor.this,
-							"No Errors/Warning detected",
-							Strings.get("fsmValidationWarning"),
-							JOptionPane.INFORMATION_MESSAGE);
+					JOptionPane.showMessageDialog(FSMContentVisualEditor.this, "No Errors/Warning detected",
+							Strings.get("fsmValidationWarning"), JOptionPane.INFORMATION_MESSAGE);
 				}
-				
+
 			}
-			if (source == switchView) {
-				JOptionPane.showMessageDialog(FSMContentVisualEditor.this,
-						"Switch to Text editor",
-						Strings.get("fsmSaveError"),
-						JOptionPane.INFORMATION_MESSAGE);
-			}
-			if (source == close) { 
+			if (source == close) {
 				dispose();
 			}
 		}
@@ -115,7 +138,6 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 			save.setText(Strings.get("saveButton"));
 			validate.setText(Strings.get("validateButton"));
 			close.setText(Strings.get("closeButton"));
-			switchView.setText(Strings.get("switchButton"));
 		}
 
 		@Override
@@ -131,32 +153,22 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 		@Override
 		public void contentSet(FSMContent source) {
 			validate.setEnabled(false);
-		}  
+		}
 
 	}
 
 	public static boolean confirmImport(Component parent) {
-		String[] options = { Strings.get("importOption"),
-				Strings.get("cancelOption") };
-		return JOptionPane.showOptionDialog(parent,
-				Strings.get("importMessage"), Strings.get("importTitle"), 0,
+		String[] options = { Strings.get("importOption"), Strings.get("cancelOption") };
+		return JOptionPane.showOptionDialog(parent, Strings.get("importMessage"), Strings.get("importTitle"), 0,
 				JOptionPane.QUESTION_MESSAGE, null, options, options[0]) == 0;
 	}
 
-
 	private static final long serialVersionUID = 1L;
-
 
 	private static final String EXPORT_DIR = null;
 
-
 	private final int APPLET_WIDTH = 800, APPLET_HEIGHT = 700;
 
-
-
-  
-
-	
 	private FrameListener frameListener = new FrameListener();
 	private ModelListener modelListener = new ModelListener();
 
@@ -167,9 +179,7 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 	private JButton open = new JButton();
 	private JButton save = new JButton();
 	private JButton validate = new JButton();
-	private JButton switchView = new JButton();
 	private JButton close = new JButton();
-
 
 	public FSMContentVisualEditor(Dialog parent, Project proj, FSMContent model) {
 		super(parent, Strings.get("hdlFrameTitle"), true);
@@ -181,37 +191,36 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 		configure(proj, model);
 	}
 
-
 	private void configure(Project proj, FSMContent model) {
 		this.project = proj;
 		this.content = model;
 		this.content.addFSMModelListener(modelListener);
 		this.addWindowListener(frameListener);
 
-		System.out.println(this.toString()+":"+getWidth()+"x"+getHeight());
-		JPanel buttonsPanel = new JPanel();
+		setSize(APPLET_WIDTH, APPLET_HEIGHT);
+		setMinimumSize(new Dimension(APPLET_WIDTH, APPLET_HEIGHT));
+		System.out.println(this.toString() + ":" + getWidth() + "x" + getHeight());
+		
+		Panel buttonsPanel = new Panel();
 		buttonsPanel.add(open);
 		buttonsPanel.add(save);
 		buttonsPanel.add(validate);
 		buttonsPanel.add(close);
-		buttonsPanel.add(switchView);
-		
+
 		open.addActionListener(frameListener);
 		save.addActionListener(frameListener);
 		close.addActionListener(frameListener);
 		validate.addActionListener(frameListener);
-		switchView.addActionListener(frameListener);
-		
-		editor = new FSMEditorWindow(model);		
-		
+
+		editor = new FSMEditorWindow(model);
+
 		add(buttonsPanel, BorderLayout.SOUTH);
 		add(editor, BorderLayout.CENTER);
 
 		LocaleManager.addLocaleListener(frameListener);
 		frameListener.localeChanged();
-		setSize(APPLET_WIDTH, APPLET_HEIGHT);	
 
-		pack(); 
+		pack();
 
 	}
 
@@ -225,13 +234,10 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 
 		File compFolder;
 		try {
-			compFolder = new File(FileUtil.correctPath(projectFile
-					.getParentFile().getCanonicalPath()) + EXPORT_DIR);
-			if (!compFolder.exists()
-					|| (compFolder.exists() && !compFolder.isDirectory()))
+			compFolder = new File(FileUtil.correctPath(projectFile.getParentFile().getCanonicalPath()) + EXPORT_DIR);
+			if (!compFolder.exists() || (compFolder.exists() && !compFolder.isDirectory()))
 				compFolder.mkdir();
-			return new File(FileUtil.correctPath(compFolder.getCanonicalPath())
-					+ content.getName() + ".fsm");
+			return new File(FileUtil.correctPath(compFolder.getCanonicalPath()) + content.getName() + ".fsm");
 		} catch (IOException ex) {
 			return defaultFile;
 		}
@@ -244,10 +250,8 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 
 		File compFolder;
 		try {
-			compFolder = new File(FileUtil.correctPath(projectFile
-					.getParentFile().getCanonicalPath()) + EXPORT_DIR);
-			if (!compFolder.exists()
-					|| (compFolder.exists() && !compFolder.isDirectory()))
+			compFolder = new File(FileUtil.correctPath(projectFile.getParentFile().getCanonicalPath()) + EXPORT_DIR);
+			if (!compFolder.exists() || (compFolder.exists() && !compFolder.isDirectory()))
 				compFolder.mkdir();
 			return new File(FileUtil.correctPath(compFolder.getCanonicalPath()));
 		} catch (IOException ex) {
@@ -263,9 +267,8 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 	@Override
 	public void setValue(Object value) {
 		content.updateContent(value.toString());
-		
-	}
 
+	}
 
 
 }

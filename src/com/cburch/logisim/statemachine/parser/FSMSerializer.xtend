@@ -27,6 +27,7 @@ import java.nio.charset.Charset
 import java.io.File
 import java.io.FileInputStream
 import java.io.OutputStream
+import javax.swing.JOptionPane
 
 /** 
  * GecosScilabFrontend is a sample module. When the script evaluator encounters
@@ -40,7 +41,9 @@ class FSMSerializer {
 			save(fsm,bos);
 			return new String(bos.toByteArray,Charset.defaultCharset())
 		} catch (Exception e) {
-			throw new RuntimeException("Could not serialize current Model to string");
+			JOptionPane.showConfirmDialog(null, null, e.message,JOptionPane.ERROR_MESSAGE);
+			throw new RuntimeException(e.message);
+				
 		}
 	}
 
@@ -49,7 +52,9 @@ class FSMSerializer {
 			val bos = new FileOutputStream(f);
 			save(fsm,bos);
 		} catch (Exception e) {
-			throw new RuntimeException("Could not serialize current Model to string");
+			e.printStackTrace
+			JOptionPane.showConfirmDialog(null, null, e.message,JOptionPane.ERROR_MESSAGE);
+			throw new RuntimeException("Could not serialize current Model to string :"+e.message);
 		}
 	}
 	def static void save(FSM fsm, OutputStream os) {
@@ -64,7 +69,9 @@ class FSMSerializer {
 			saveOptions.put(XtextResource.OPTION_FORMAT, Boolean.TRUE)
 			resource.save(os, saveOptions)
 		} catch (Exception e) {
-			throw new RuntimeException("Could not serialize current Model to string");
+			e.printStackTrace
+			JOptionPane.showConfirmDialog(null, null, e.message,JOptionPane.ERROR_MESSAGE);
+			throw new RuntimeException(e.message);
 		}
 	}
   
@@ -107,7 +114,7 @@ class FSMSerializer {
 		EcoreUtil.resolveAll(r)
 		for (org.eclipse.emf.ecore.resource.Resource.Diagnostic error : r.getErrors()) {
 			System.err.println(error)
-			throw new RuntimeException('''«error.getMessage()» «error.getLine()»''')
+			throw new IOException('''«error.getMessage()» «error.getLine()»''')
 		}
 		r.getParseResult().getRootNode()
 		var EObject root = r.getParseResult().getRootASTElement()

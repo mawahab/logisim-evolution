@@ -19,6 +19,7 @@ import javafx.animation.Transition
 import java.io.PrintStream
 import java.io.File
 import java.util.ArrayList
+import com.cburch.logisim.statemachine.fSMDSL.CmpExpr
 
 class FSMVHDLCodeGen{
 
@@ -109,6 +110,13 @@ class FSMVHDLCodeGen{
 	}
 	
 
+	def static dispatch genPred(CmpExpr b) {
+		switch(b.op) {
+			case "==" : {'''(«genPred(b.args.get(0))»==«genPred(b.args.get(1))»)'''}
+			case "!=" : {'''(«genPred(b.args.get(0))»/=«genPred(b.args.get(1))»)'''}
+			default : throw new UnsupportedOperationException("Not implemented")			
+		}
+	}
 	def static dispatch genPred(OrExpr b) {
 		'''(«FOR i:b.args SEPARATOR " or "»«genPred(i)»«ENDFOR»)'''.toString
 	}

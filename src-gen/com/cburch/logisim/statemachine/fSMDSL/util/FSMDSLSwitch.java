@@ -178,6 +178,13 @@ public class FSMDSLSwitch<T> extends Switch<T>
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
+      case FSMDSLPackage.RANGE:
+      {
+        Range range = (Range)theEObject;
+        T result = caseRange(range);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
       case FSMDSLPackage.INPUT_PORT:
       {
         InputPort inputPort = (InputPort)theEObject;
@@ -227,6 +234,14 @@ public class FSMDSLSwitch<T> extends Switch<T>
         AndExpr andExpr = (AndExpr)theEObject;
         T result = caseAndExpr(andExpr);
         if (result == null) result = caseBoolExpr(andExpr);
+        if (result == null) result = defaultCase(theEObject);
+        return result;
+      }
+      case FSMDSLPackage.CMP_EXPR:
+      {
+        CmpExpr cmpExpr = (CmpExpr)theEObject;
+        T result = caseCmpExpr(cmpExpr);
+        if (result == null) result = caseBoolExpr(cmpExpr);
         if (result == null) result = defaultCase(theEObject);
         return result;
       }
@@ -475,6 +490,22 @@ public class FSMDSLSwitch<T> extends Switch<T>
   }
 
   /**
+   * Returns the result of interpreting the object as an instance of '<em>Range</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Range</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseRange(Range object)
+  {
+    return null;
+  }
+
+  /**
    * Returns the result of interpreting the object as an instance of '<em>Input Port</em>'.
    * <!-- begin-user-doc -->
    * This implementation returns null;
@@ -566,6 +597,22 @@ public class FSMDSLSwitch<T> extends Switch<T>
    * @generated
    */
   public T caseAndExpr(AndExpr object)
+  {
+    return null;
+  }
+
+  /**
+   * Returns the result of interpreting the object as an instance of '<em>Cmp Expr</em>'.
+   * <!-- begin-user-doc -->
+   * This implementation returns null;
+   * returning a non-null result will terminate the switch.
+   * <!-- end-user-doc -->
+   * @param object the target of the switch.
+   * @return the result of interpreting the object as an instance of '<em>Cmp Expr</em>'.
+   * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+   * @generated
+   */
+  public T caseCmpExpr(CmpExpr object)
   {
     return null;
   }

@@ -17,6 +17,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import javax.swing.JOptionPane;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -49,7 +50,10 @@ public class FSMSerializer {
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
-        throw new RuntimeException("Could not serialize current Model to string");
+        String _message = e.getMessage();
+        JOptionPane.showConfirmDialog(null, null, _message, JOptionPane.ERROR_MESSAGE);
+        String _message_1 = e.getMessage();
+        throw new RuntimeException(_message_1);
       } else {
         throw Exceptions.sneakyThrow(_t);
       }
@@ -63,7 +67,12 @@ public class FSMSerializer {
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
-        throw new RuntimeException("Could not serialize current Model to string");
+        e.printStackTrace();
+        String _message = e.getMessage();
+        JOptionPane.showConfirmDialog(null, null, _message, JOptionPane.ERROR_MESSAGE);
+        String _message_1 = e.getMessage();
+        String _plus = ("Could not serialize current Model to string :" + _message_1);
+        throw new RuntimeException(_plus);
       } else {
         throw Exceptions.sneakyThrow(_t);
       }
@@ -87,7 +96,11 @@ public class FSMSerializer {
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
-        throw new RuntimeException("Could not serialize current Model to string");
+        e.printStackTrace();
+        String _message = e.getMessage();
+        JOptionPane.showConfirmDialog(null, null, _message, JOptionPane.ERROR_MESSAGE);
+        String _message_1 = e.getMessage();
+        throw new RuntimeException(_message_1);
       } else {
         throw Exceptions.sneakyThrow(_t);
       }
@@ -182,7 +195,7 @@ public class FSMSerializer {
         _builder.append(" ");
         int _line = error.getLine();
         _builder.append(_line, "");
-        throw new RuntimeException(_builder.toString());
+        throw new IOException(_builder.toString());
       }
     }
     IParseResult _parseResult = r.getParseResult();

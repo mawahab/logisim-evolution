@@ -5,8 +5,10 @@ package com.cburch.logisim.statemachine.fSMDSL.impl;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage;
 import com.cburch.logisim.statemachine.fSMDSL.Port;
 import com.cburch.logisim.statemachine.fSMDSL.PortRef;
+import com.cburch.logisim.statemachine.fSMDSL.Range;
 
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
@@ -22,8 +24,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * </p>
  * <ul>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.PortRefImpl#getPort <em>Port</em>}</li>
- *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.PortRefImpl#getUb <em>Ub</em>}</li>
- *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.PortRefImpl#getLb <em>Lb</em>}</li>
+ *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.PortRefImpl#getRange <em>Range</em>}</li>
  * </ul>
  *
  * @generated
@@ -41,44 +42,14 @@ public class PortRefImpl extends BoolExprImpl implements PortRef
   protected Port port;
 
   /**
-   * The default value of the '{@link #getUb() <em>Ub</em>}' attribute.
+   * The cached value of the '{@link #getRange() <em>Range</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getUb()
+   * @see #getRange()
    * @generated
    * @ordered
    */
-  protected static final int UB_EDEFAULT = 0;
-
-  /**
-   * The cached value of the '{@link #getUb() <em>Ub</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getUb()
-   * @generated
-   * @ordered
-   */
-  protected int ub = UB_EDEFAULT;
-
-  /**
-   * The default value of the '{@link #getLb() <em>Lb</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getLb()
-   * @generated
-   * @ordered
-   */
-  protected static final int LB_EDEFAULT = 0;
-
-  /**
-   * The cached value of the '{@link #getLb() <em>Lb</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getLb()
-   * @generated
-   * @ordered
-   */
-  protected int lb = LB_EDEFAULT;
+  protected Range range;
 
   /**
    * <!-- begin-user-doc -->
@@ -149,9 +120,9 @@ public class PortRefImpl extends BoolExprImpl implements PortRef
    * <!-- end-user-doc -->
    * @generated
    */
-  public int getUb()
+  public Range getRange()
   {
-    return ub;
+    return range;
   }
 
   /**
@@ -159,12 +130,16 @@ public class PortRefImpl extends BoolExprImpl implements PortRef
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setUb(int newUb)
+  public NotificationChain basicSetRange(Range newRange, NotificationChain msgs)
   {
-    int oldUb = ub;
-    ub = newUb;
+    Range oldRange = range;
+    range = newRange;
     if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, FSMDSLPackage.PORT_REF__UB, oldUb, ub));
+    {
+      ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, FSMDSLPackage.PORT_REF__RANGE, oldRange, newRange);
+      if (msgs == null) msgs = notification; else msgs.add(notification);
+    }
+    return msgs;
   }
 
   /**
@@ -172,9 +147,20 @@ public class PortRefImpl extends BoolExprImpl implements PortRef
    * <!-- end-user-doc -->
    * @generated
    */
-  public int getLb()
+  public void setRange(Range newRange)
   {
-    return lb;
+    if (newRange != range)
+    {
+      NotificationChain msgs = null;
+      if (range != null)
+        msgs = ((InternalEObject)range).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - FSMDSLPackage.PORT_REF__RANGE, null, msgs);
+      if (newRange != null)
+        msgs = ((InternalEObject)newRange).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - FSMDSLPackage.PORT_REF__RANGE, null, msgs);
+      msgs = basicSetRange(newRange, msgs);
+      if (msgs != null) msgs.dispatch();
+    }
+    else if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, FSMDSLPackage.PORT_REF__RANGE, newRange, newRange));
   }
 
   /**
@@ -182,12 +168,15 @@ public class PortRefImpl extends BoolExprImpl implements PortRef
    * <!-- end-user-doc -->
    * @generated
    */
-  public void setLb(int newLb)
+  @Override
+  public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
-    int oldLb = lb;
-    lb = newLb;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, FSMDSLPackage.PORT_REF__LB, oldLb, lb));
+    switch (featureID)
+    {
+      case FSMDSLPackage.PORT_REF__RANGE:
+        return basicSetRange(null, msgs);
+    }
+    return super.eInverseRemove(otherEnd, featureID, msgs);
   }
 
   /**
@@ -203,10 +192,8 @@ public class PortRefImpl extends BoolExprImpl implements PortRef
       case FSMDSLPackage.PORT_REF__PORT:
         if (resolve) return getPort();
         return basicGetPort();
-      case FSMDSLPackage.PORT_REF__UB:
-        return getUb();
-      case FSMDSLPackage.PORT_REF__LB:
-        return getLb();
+      case FSMDSLPackage.PORT_REF__RANGE:
+        return getRange();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -224,11 +211,8 @@ public class PortRefImpl extends BoolExprImpl implements PortRef
       case FSMDSLPackage.PORT_REF__PORT:
         setPort((Port)newValue);
         return;
-      case FSMDSLPackage.PORT_REF__UB:
-        setUb((Integer)newValue);
-        return;
-      case FSMDSLPackage.PORT_REF__LB:
-        setLb((Integer)newValue);
+      case FSMDSLPackage.PORT_REF__RANGE:
+        setRange((Range)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -247,11 +231,8 @@ public class PortRefImpl extends BoolExprImpl implements PortRef
       case FSMDSLPackage.PORT_REF__PORT:
         setPort((Port)null);
         return;
-      case FSMDSLPackage.PORT_REF__UB:
-        setUb(UB_EDEFAULT);
-        return;
-      case FSMDSLPackage.PORT_REF__LB:
-        setLb(LB_EDEFAULT);
+      case FSMDSLPackage.PORT_REF__RANGE:
+        setRange((Range)null);
         return;
     }
     super.eUnset(featureID);
@@ -269,31 +250,10 @@ public class PortRefImpl extends BoolExprImpl implements PortRef
     {
       case FSMDSLPackage.PORT_REF__PORT:
         return port != null;
-      case FSMDSLPackage.PORT_REF__UB:
-        return ub != UB_EDEFAULT;
-      case FSMDSLPackage.PORT_REF__LB:
-        return lb != LB_EDEFAULT;
+      case FSMDSLPackage.PORT_REF__RANGE:
+        return range != null;
     }
     return super.eIsSet(featureID);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  @Override
-  public String toString()
-  {
-    if (eIsProxy()) return super.toString();
-
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (ub: ");
-    result.append(ub);
-    result.append(", lb: ");
-    result.append(lb);
-    result.append(')');
-    return result.toString();
   }
 
 } //PortRefImpl

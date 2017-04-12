@@ -13,8 +13,7 @@ package com.cburch.logisim.statemachine.fSMDSL;
  * </p>
  * <ul>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.PortRef#getPort <em>Port</em>}</li>
- *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.PortRef#getUb <em>Ub</em>}</li>
- *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.PortRef#getLb <em>Lb</em>}</li>
+ *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.PortRef#getRange <em>Range</em>}</li>
  * </ul>
  *
  * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#getPortRef()
@@ -50,55 +49,29 @@ public interface PortRef extends BoolExpr
   void setPort(Port value);
 
   /**
-   * Returns the value of the '<em><b>Ub</b></em>' attribute.
+   * Returns the value of the '<em><b>Range</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <p>
-   * If the meaning of the '<em>Ub</em>' attribute isn't clear,
+   * If the meaning of the '<em>Range</em>' containment reference isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Ub</em>' attribute.
-   * @see #setUb(int)
-   * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#getPortRef_Ub()
-   * @model
+   * @return the value of the '<em>Range</em>' containment reference.
+   * @see #setRange(Range)
+   * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#getPortRef_Range()
+   * @model containment="true"
    * @generated
    */
-  int getUb();
+  Range getRange();
 
   /**
-   * Sets the value of the '{@link com.cburch.logisim.statemachine.fSMDSL.PortRef#getUb <em>Ub</em>}' attribute.
+   * Sets the value of the '{@link com.cburch.logisim.statemachine.fSMDSL.PortRef#getRange <em>Range</em>}' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Ub</em>' attribute.
-   * @see #getUb()
+   * @param value the new value of the '<em>Range</em>' containment reference.
+   * @see #getRange()
    * @generated
    */
-  void setUb(int value);
-
-  /**
-   * Returns the value of the '<em><b>Lb</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Lb</em>' attribute isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Lb</em>' attribute.
-   * @see #setLb(int)
-   * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#getPortRef_Lb()
-   * @model
-   * @generated
-   */
-  int getLb();
-
-  /**
-   * Sets the value of the '{@link com.cburch.logisim.statemachine.fSMDSL.PortRef#getLb <em>Lb</em>}' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Lb</em>' attribute.
-   * @see #getLb()
-   * @generated
-   */
-  void setLb(int value);
+  void setRange(Range value);
 
 } // PortRef

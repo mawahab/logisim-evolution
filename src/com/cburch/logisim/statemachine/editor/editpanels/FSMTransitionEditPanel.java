@@ -59,8 +59,9 @@ public class FSMTransitionEditPanel extends JPanel{
 					}
 				}
 				return predicate;
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, this, "Error : "+e.getMessage(),JOptionPane.ERROR_MESSAGE);
+				return null;
 			}
 		}
 		return t.getPredicate();

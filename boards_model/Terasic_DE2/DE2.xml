@@ -10,25 +10,44 @@
 
 <!--This section describes all Components present on the boards-->
 
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_N25" FPGAPinPullBehavior="Float" Height="25" LocationX="131" LocationY="354" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_N26" FPGAPinPullBehavior="Float" Height="25" LocationX="149" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_P25" FPGAPinPullBehavior="Float" Height="25" LocationX="167" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_P25" FPGAPinPullBehavior="Float" Height="25" LocationX="175" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_AE14" FPGAPinPullBehavior="Float" Height="25" LocationX="183" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_AF14" FPGAPinPullBehavior="Float" Height="25" LocationX="191" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_AD13" FPGAPinPullBehavior="Float" Height="25" LocationX="199" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_AC13" FPGAPinPullBehavior="Float" Height="25" LocationX="207" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_C13" FPGAPinPullBehavior="Float" Height="25" LocationX="215" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_B13" FPGAPinPullBehavior="Float" Height="25" LocationX="223" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_A13" FPGAPinPullBehavior="Float" Height="25" LocationX="231" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_N1" FPGAPinPullBehavior="Float" Height="25" LocationX="239" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_P1" FPGAPinPullBehavior="Float" Height="25" LocationX="247" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_P2" FPGAPinPullBehavior="Float" Height="25" LocationX="255" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_T7" FPGAPinPullBehavior="Float" Height="25" LocationX="263" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_U3" FPGAPinPullBehavior="Float" Height="25" LocationX="271" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_U4" FPGAPinPullBehavior="Float" Height="25" LocationX="279" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_V1" FPGAPinPullBehavior="Float" Height="25" LocationX="287" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_V2" FPGAPinPullBehavior="Float" Height="25" LocationX="295" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinPullBehavior="Float" 
+FPGAPinName="PIN_N25"  Height="25" LocationX="131" LocationY="354" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_N26" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="149" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_P25" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="167" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_P25" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="175" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_AE14" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="183" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_AF14" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="191" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_AD13" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="199" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_AC13" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="207" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_C13" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="215" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_B13" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="223" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_A13" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="231" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_N1" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="239" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_P1" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="247" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_P2" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="255" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_T7" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="263" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_U3" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="271" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_U4" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="279" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_V1" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="287" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="PIN_V2" 
+FPGAPinPullBehavior="Float" Height="25" LocationX="295" LocationY="355" Width="14"/>
 
 <SevenSegment ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" FPGAPin_0="PIN_AF10" FPGAPin_1="PIN_AB12" FPGAPin_2="PIN_AC12" FPGAPin_3="PIN_AD11" FPGAPin_4="PIN_AE11" FPGAPin_5="PIN_V14" FPGAPin_6="PIN_V13" Height="32" LocationX="132" LocationY="291" NrOfPins="8" Width="18"/>
 <SevenSegment ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" FPGAPin_0="PIN_AF10" FPGAPin_1="PIN_AB12" FPGAPin_2="PIN_AC12" FPGAPin_3="PIN_AD11" FPGAPin_4="PIN_AE11" FPGAPin_5="PIN_V14" FPGAPin_6="PIN_V13" Height="32" LocationX="152" LocationY="291" NrOfPins="8" Width="18"/>
@@ -40,65 +59,32 @@
 <SevenSegment ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" FPGAPin_0="PIN_R2"   FPGAPin_1="PIN_P4" FPGAPin_2="PIN_P3" FPGAPin_3="PIN_M2" FPGAPin_4="PIN_M3" FPGAPin_5="PIN_M5" FPGAPin_6="PIN_M4" Height="32" LocationX="302" LocationY="291" NrOfPins="8" Width="18"/>
 <SevenSegment ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" FPGAPin_0="PIN_L3"   FPGAPin_1="PIN_L2" FPGAPin_2="PIN_L9" FPGAPin_3="PIN_L6" FPGAPin_4="PIN_L7" FPGAPin_5="PIN_P9" FPGAPin_6="PIN_N9" Height="32" LocationX="332" LocationY="291" NrOfPins="8" Width="18"/>
 
-=CONCATENER("FPGAPin_0=";car(34); B99;car(34);" FPGAPin_1=";car(34);B100;car(34);" FPGAPin_2=";car(34); B101;car(34);" FPGAPin_3=";car(34); B102;car(34);" FPGAPin_4=";car(34); B103;car(34);" FPGAPin_5=";car(34); B104;car(34);" FPGAPin_6=";car(34); B105; car(34))
+<!-- LEDR0 -->
+<LED ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
+FPGAPinName="PIN_AE23" LocationX="331" LocationY="337" Height="11" Width="8"/>
+<!-- LEDR1 -->
+<LED ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
+FPGAPinName="PIN_AF23" LocationX="349" LocationY="337" Height="11" Width="8"/>
+<!-- LEDR2 -->
+<LED ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
+FPGAPinName="PIN_AB21" LocationX="367" LocationY="337" Height="11" Width="8"/>
+<!-- LEDR3 -->
+<LED ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
+FPGAPinName="PIN_AC22" LocationX="396" LocationY="337" Height="11" Width="8"/>
+<!-- LEDR4 -->
+<LED ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
+FPGAPinName="PIN_AD22" LocationX="414" LocationY="337" Height="11" Width="8"/>
+<!-- LEDR5 -->
+<LED ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
+FPGAPinName="PIN_AD23" LocationX="414" LocationY="337" Height="11" Width="8"/>
+<!-- LEDR6 -->
+<LED ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
+FPGAPinName="PIN_AD21" LocationX="414" LocationY="337" Height="11" Width="8"/>
+<!-- LEDR7 -->
+<LED ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
+FPGAPinName="PIN_AC21" LocationX="414" LocationY="337" Height="11" Width="8"/>
 
 
-=CONCATENER("FPGAPin_0=";char(34); B99;char(34);" FPGAPin_1=")
-
-<SevenSegment ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
-FPGAPin_0="AF10" FPGAPin_1="AB12" FPGAPin_2="AC12" FPGAPin_3="AD11" FPGAPin_4="V14" FPGAPin_5="V13" FPGAPin_6="V20" FPGAPin_7="V21" Height="32" LocationX="132" LocationY="291" NrOfPins="8" Width="18"/>
-<SevenSegment ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
-FPGAPin_0="AF10" FPGAPin_1="AB12" FPGAPin_2="AC12" FPGAPin_3="AD11" FPGAPin_4="V14" FPGAPin_5="V13" FPGAPin_6="V20" FPGAPin_7="V21" Height="32" LocationX="132" LocationY="291" NrOfPins="8" Width="18"/>
-<SevenSegment ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
-FPGAPin_0="AF10" FPGAPin_1="AB12" FPGAPin_2="AC12" FPGAPin_3="AD11" FPGAPin_4="V14" FPGAPin_5="V13" FPGAPin_6="V20" FPGAPin_7="V21" Height="32" LocationX="132" LocationY="291" NrOfPins="8" Width="18"/>
-<SevenSegment ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
-FPGAPin_0="AF10" FPGAPin_1="AB12" FPGAPin_2="AC12" FPGAPin_3="AD11" FPGAPin_4="V14" FPGAPin_5="V13" FPGAPin_6="V20" FPGAPin_7="V21" Height="32" LocationX="132" LocationY="291" NrOfPins="8" Width="18"/>
-<SevenSegment ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
-FPGAPin_0="AF10" FPGAPin_1="AB12" FPGAPin_2="AC12" FPGAPin_3="AD11" FPGAPin_4="V14" FPGAPin_5="V13" FPGAPin_6="V20" FPGAPin_7="V21" Height="32" LocationX="132" LocationY="291" NrOfPins="8" Width="18"/>
-<SevenSegment ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
-FPGAPin_0="AF10" FPGAPin_1="AB12" FPGAPin_2="AC12" FPGAPin_3="AD11" FPGAPin_4="V14" FPGAPin_5="V13" FPGAPin_6="V20" FPGAPin_7="V21" Height="32" LocationX="132" LocationY="291" NrOfPins="8" Width="18"/>
-<SevenSegment ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
-FPGAPin_0="AF10" FPGAPin_1="AB12" FPGAPin_2="AC12" FPGAPin_3="AD11" FPGAPin_4="V14" FPGAPin_5="V13" FPGAPin_6="V20" FPGAPin_7="V21" Height="32" LocationX="132" LocationY="291" NrOfPins="8" Width="18"/>
-
-<LED ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" FPGAPinName="PIN_AE23" Height="11" LocationX="137" LocationY="337" Width="7"/>
-
-FPGAPin_0="PIN_V20" FPGAPin_1="PIN_V21" FPGAPin_2="PIN_W21" FPGAPin_3="PIN_Y22" FPGAPin_4="PIN_AA24" FPGAPin_5="PIN_AA23" FPGAPin_6="PIN_AB24"
- 
-@HEX1[2]$
-@HEX1[3]$
-@HEX1[4]$
-@HEX1[5]$
-@HEX1[6]$
-FPGAPin_0="PIN_AB23" FPGAPin_1="PIN_V22" FPGAPin_2="PIN_AC25" FPGAPin_3="PIN_AC26" FPGAPin_4="PIN_AB26" FPGAPin_5="PIN_AB25" FPGAPin_6="PIN_Y24"
-@HEX2[1]$
-@HEX2[2]$
-@HEX2[3]$
-@HEX2[4]$
-@HEX2[5]$
-@HEX2[6]$
-FPGAPin_0="PIN_Y23" FPGAPin_1="PIN_AA25" FPGAPin_2="PIN_AA26" FPGAPin_3="PIN_Y26" FPGAPin_4="PIN_Y25" FPGAPin_5="PIN_U22" FPGAPin_6="PIN_W24"
-@HEX3[1]$
-@HEX3[2]$
-@HEX3[3]$
-@HEX3[4]$
-@HEX3[5]$
-@HEX3[6]$
-FPGAPin_0='PIN_U9' FPGAPin_1='PIN_U1 'FPGAPin_2='PIN_U2 'FPGAPin_3='PIN_T4 'FPGAPin_4='PIN_R7 'FPGAPin_5='PIN_R6 'FPGAPin_6='PIN_T3'
-@HEX4[1]$
-@HEX4[2]$
-@HEX4[3]$
-@HEX4[4]$
-@HEX4[5]$
-@HEX4[6]$
-FPGAPin_0="PIN_T2" FPGAPin_1="PIN_P6" FPGAPin_2="PIN_P7" FPGAPin_3="PIN_T9" FPGAPin_4="PIN_R5" FPGAPin_5="PIN_R4" FPGAPin_6="PIN_R3"
-@HEX5[1]$
-@HEX5[2]$
-@HEX5[3]$
-@HEX5[4]$
-@HEX5[5]$
-@HEX5[6]$
-FPGAPin_0="PIN_R2" FPGAPin_1="PIN_P4" FPGAPin_2="PIN_P3" FPGAPin_3="PIN_M2" FPGAPin_4="PIN_M3" FPGAPin_5="PIN_M5" FPGAPin_6="PIN_M4"
-@HEX6[1]$
 </IOComponents>
 <BoardPicture>
 <!--This section hold the board picture-->

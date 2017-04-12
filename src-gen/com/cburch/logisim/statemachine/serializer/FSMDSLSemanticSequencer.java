@@ -4,6 +4,7 @@
 package com.cburch.logisim.statemachine.serializer;
 
 import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
+import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.CommandStmt;
@@ -18,6 +19,7 @@ import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OutputPort;
 import com.cburch.logisim.statemachine.fSMDSL.PortRef;
 import com.cburch.logisim.statemachine.fSMDSL.PredicateStmt;
+import com.cburch.logisim.statemachine.fSMDSL.Range;
 import com.cburch.logisim.statemachine.fSMDSL.State;
 import com.cburch.logisim.statemachine.fSMDSL.Transition;
 import com.cburch.logisim.statemachine.services.FSMDSLGrammarAccess;
@@ -45,7 +47,10 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	public void createSequence(EObject context, EObject semanticObject) {
 		if(semanticObject.eClass().getEPackage() == FSMDSLPackage.eINSTANCE) switch(semanticObject.eClass().getClassifierID()) {
 			case FSMDSLPackage.AND_EXPR:
-				sequence_And_Cmp(context, (AndExpr) semanticObject); 
+				sequence_And(context, (AndExpr) semanticObject); 
+				return; 
+			case FSMDSLPackage.CMP_EXPR:
+				sequence_Cmp(context, (CmpExpr) semanticObject); 
 				return; 
 			case FSMDSLPackage.COMMAND:
 				sequence_Command(context, (Command) semanticObject); 
@@ -102,6 +107,9 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 			case FSMDSLPackage.PREDICATE_STMT:
 				sequence_PredicateStmt(context, (PredicateStmt) semanticObject); 
 				return; 
+			case FSMDSLPackage.RANGE:
+				sequence_Range(context, (Range) semanticObject); 
+				return; 
 			case FSMDSLPackage.STATE:
 				sequence_State(context, (State) semanticObject); 
 				return; 
@@ -114,9 +122,18 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Constraint:
-	 *     ((args+=And_AndExpr_1_0 args+=Cmp) | (args+=Cmp_AndExpr_1_0 (op='==' | op='/=') args+=Primary))
+	 *     (args+=And_AndExpr_1_0 args+=Cmp)
 	 */
-	protected void sequence_And_Cmp(EObject context, AndExpr semanticObject) {
+	protected void sequence_And(EObject context, AndExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (args+=Cmp_CmpExpr_1_0 (op='==' | op='/=') args+=Primary)
+	 */
+	protected void sequence_Cmp(EObject context, CmpExpr semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -262,7 +279,16 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Constraint:
-	 *     (port=[Port|ID] (ub=INT? lb=INT)?)
+	 *     (ub=INT? lb=INT)
+	 */
+	protected void sequence_Range(EObject context, Range semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (port=[Port|ID] range=Range?)
 	 */
 	protected void sequence_Ref(EObject context, PortRef semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);

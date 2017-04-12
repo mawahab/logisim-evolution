@@ -22,6 +22,8 @@ import com.cburch.logisim.statemachine.editor.view.*
 import com.cburch.logisim.statemachine.fSMDSL.LayoutInfo
 import com.cburch.logisim.statemachine.fSMDSL.CommandList
 import com.cburch.logisim.statemachine.editor.view.FSMZones.AreaType
+import org.eclipse.emf.ecore.util.EcoreUtil
+import com.cburch.logisim.statemachine.fSMDSL.OutputPort
 
 class FSMEditorController {
 	
@@ -36,10 +38,11 @@ class FSMEditorController {
 	
 	FSMElement currentSelection
 	
-	
 	Transition newTransition
 	
 	FSMPopupMenu popupMenu
+	
+	FSMElement clipboard
 
 	/** 
 	 * Constructor. Initialize the color to the default color and create the
@@ -60,10 +63,12 @@ class FSMEditorController {
 		return fsm.getStates().size()
 	}
 
+	def FSMElement getCurrentSelection() {
+		return currentSelection
+	}
+
 	def addNewState(int x, int y) {
 		var String code = Integer.toBinaryString(fsm.states.size);
-
-		
 		val nb0 = Math.max(0,fsm.width-code.length())
 		for(n:1..nb0) {
 			code="0"+code
@@ -84,6 +89,25 @@ class FSMEditorController {
 		fsm.in.add(ip)
 	}
 
+	def pasteInputPort(int x, int y) {
+		val ip = (currentSelection as InputPort)
+		fsm.in.add(currentSelection as InputPort);
+		ip.layout.x=x
+		ip.layout.y=y
+	}
+	def pasteOutputPort(int x, int y) {
+		val ip = (currentSelection as OutputPort)
+		fsm.in.add(currentSelection as OutputPort);
+		ip.layout.x=x
+		ip.layout.y=y
+	}
+	def pasteState(int x, int y) {
+		val ip = (currentSelection as State)
+		fsm.states.add(currentSelection as State);
+		ip.layout.x=x
+		ip.layout.y=y
+	} 
+	
 	def addNewInputPort(int x, int y) {
 		fsm.in.add(FSMCustomFactory.inport("I"+fsm.in.size,1,x,y))
 	}
@@ -96,7 +120,7 @@ class FSMEditorController {
 	 * @param g
 	 */
 	def void draw(Graphics2D g) {
-		drawing.drawElement(fsm,g)
+		drawing.drawElement(fsm,g,currentSelection)
 	}
 
 	/** 
@@ -123,6 +147,7 @@ class FSMEditorController {
 		Math.sqrt(dx*dx+dy*dy) 
 	}
 	
+
 	public def dispatch move(Point p, CommandList cl) {
 		val state = cl.eContainer as State
 		val layout = state.layout
@@ -158,6 +183,45 @@ class FSMEditorController {
 			view.repaint
 		}
 	}
+
+	def executeCopy(Point p, AreaType type) {
+	
+		switch(type) {
+			case AreaType.INPUT :{
+				clipboard=EcoreUtil.copy(currentSelection);
+			}
+			case AreaType.OUTPUT :{
+				clipboard=EcoreUtil.copy(currentSelection);
+			}
+			case AreaType.STATE:{
+				clipboard=EcoreUtil.copy(currentSelection);
+			}
+			default: {
+				return
+			}
+		}
+		view.repaint
+	
+	}  
+	def executePaste(Point p, AreaType type) {
+	
+		switch(type) {
+			case AreaType.INPUT :{
+				pasteInputPort(p.x,p.y)
+			}
+			case AreaType.OUTPUT :{
+				pasteOutputPort(p.x,p.y)
+			}
+			case AreaType.STATE:{
+				pasteState(p.x,p.y)
+			}
+			default: {
+				return
+			}
+		}
+		view.repaint
+	
+	}  
 	
 	def executeCreate(Point p, AreaType type) {
 		switch(type) {
@@ -189,30 +253,35 @@ class FSMEditorController {
 	}
 	
 	
-	def executeRightClick(Point p) {
-		val List<FSMElement> selection = zones.getActiveElement(p);
+	def executeRightClick(Point scaled, Point unscaled) {
+		val List<FSMElement> selection = zones.getActiveElement(scaled);
 		if (selection.size()>0) {  
 			currentSelection=selection.get(0)
-			popupMenu.showPopupMenu(p,zones.getAreaType(p,fsm))
-		} else {  
-			popupMenu.showPopupMenu(p,zones.getAreaType(p,fsm))
+			view.repaint
+			popupMenu.showPopupMenu(unscaled,zones.getAreaType(scaled,fsm))
+		} else { 
+			currentSelection=null; 
+			view.repaint
+			popupMenu.showPopupMenu(unscaled,zones.getAreaType(scaled,fsm))
 		}
+		
 	}
 	
 	def executePress(Point p) {
 		val List<FSMElement> selection = zones.getActiveElement(p);
+		currentSelection=null; 		
 		if (selection.size()>0) {
 			val first = selection.get(0)
 			currentSelection = first;
 		}
+		view.repaint
 	}
 	
 	def executeDragged(Point p) {
 		if(currentSelection!=null) {
 			move(p,currentSelection)
-			view.repaint
 		}
-		
+		view.repaint
 	}
 	def executeMove(Point p) {
 		if (newTransition != null) {
@@ -220,15 +289,17 @@ class FSMEditorController {
 			val layout = newTransition.getLayout();
 			layout.setX(p.x);
 			layout.setY(p.y);
-			view.repaint
 		}
+		view.repaint
 	}
 	
 	def executeLeftClick(Point p) {
 		val List<FSMElement> selection = zones.getActiveElement(p);
+		currentSelection=null; 	
 		if (selection.size()>0) {
 			val first = selection.get(0)
 			if(first instanceof State) {
+				currentSelection=first; 		
 				if(newTransition != null) {
 					val LayoutInfo layout = newTransition.getLayout();
 					val LayoutInfo srcLayout = newTransition.getSrc().getLayout();
@@ -243,16 +314,18 @@ class FSMEditorController {
 			} else if(newTransition!=null) {
 				deleteElement(newTransition);
 			}
-			view.repaint
 			newTransition=null;
 		}
+			view.repaint
 	}
+	
 	def executeRelease(Point p) {
 
-		currentSelection =null;
+		//currentSelection =null;
 		if(newTransition!=null) {
 			
 		}
+		view.repaint
 	}
 
 	
@@ -270,6 +343,8 @@ class FSMEditorController {
 	 */
 	def dispatch void deleteElement(FSMElement e) {
 		remover.remove(e)
+		view.repaint
+		
 	}
 
 	/** 

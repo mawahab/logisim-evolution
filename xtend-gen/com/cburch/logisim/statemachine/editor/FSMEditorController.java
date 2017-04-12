@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IntegerRange;
 
@@ -45,6 +46,8 @@ public class FSMEditorController {
   private Transition newTransition;
   
   private FSMPopupMenu popupMenu;
+  
+  private FSMElement clipboard;
   
   /**
    * Constructor. Initialize the color to the default color and create the
@@ -69,6 +72,10 @@ public class FSMEditorController {
   public int getNbState() {
     EList<State> _states = this.fsm.getStates();
     return _states.size();
+  }
+  
+  public FSMElement getCurrentSelection() {
+    return this.currentSelection;
   }
   
   public boolean addNewState(final int x, final int y) {
@@ -122,6 +129,36 @@ public class FSMEditorController {
     return _in.add(ip);
   }
   
+  public void pasteInputPort(final int x, final int y) {
+    final InputPort ip = ((InputPort) this.currentSelection);
+    EList<Port> _in = this.fsm.getIn();
+    _in.add(((InputPort) this.currentSelection));
+    LayoutInfo _layout = ip.getLayout();
+    _layout.setX(x);
+    LayoutInfo _layout_1 = ip.getLayout();
+    _layout_1.setY(y);
+  }
+  
+  public void pasteOutputPort(final int x, final int y) {
+    final OutputPort ip = ((OutputPort) this.currentSelection);
+    EList<Port> _in = this.fsm.getIn();
+    _in.add(((OutputPort) this.currentSelection));
+    LayoutInfo _layout = ip.getLayout();
+    _layout.setX(x);
+    LayoutInfo _layout_1 = ip.getLayout();
+    _layout_1.setY(y);
+  }
+  
+  public void pasteState(final int x, final int y) {
+    final State ip = ((State) this.currentSelection);
+    EList<State> _states = this.fsm.getStates();
+    _states.add(((State) this.currentSelection));
+    LayoutInfo _layout = ip.getLayout();
+    _layout.setX(x);
+    LayoutInfo _layout_1 = ip.getLayout();
+    _layout_1.setY(y);
+  }
+  
   public boolean addNewInputPort(final int x, final int y) {
     EList<Port> _in = this.fsm.getIn();
     EList<Port> _in_1 = this.fsm.getIn();
@@ -145,7 +182,7 @@ public class FSMEditorController {
    * @param g
    */
   public void draw(final Graphics2D g) {
-    this.drawing.drawElement(this.fsm, g);
+    this.drawing.drawElement(this.fsm, g, this.currentSelection);
   }
   
   /**
@@ -229,6 +266,51 @@ public class FSMEditorController {
     }
   }
   
+  public void executeCopy(final Point p, final FSMZones.AreaType type) {
+    if (type != null) {
+      switch (type) {
+        case INPUT:
+          FSMElement _copy = EcoreUtil.<FSMElement>copy(this.currentSelection);
+          this.clipboard = _copy;
+          break;
+        case OUTPUT:
+          FSMElement _copy_1 = EcoreUtil.<FSMElement>copy(this.currentSelection);
+          this.clipboard = _copy_1;
+          break;
+        case STATE:
+          FSMElement _copy_2 = EcoreUtil.<FSMElement>copy(this.currentSelection);
+          this.clipboard = _copy_2;
+          break;
+        default:
+          return;
+      }
+    } else {
+      return;
+    }
+    this.view.repaint();
+  }
+  
+  public void executePaste(final Point p, final FSMZones.AreaType type) {
+    if (type != null) {
+      switch (type) {
+        case INPUT:
+          this.pasteInputPort(p.x, p.y);
+          break;
+        case OUTPUT:
+          this.pasteOutputPort(p.x, p.y);
+          break;
+        case STATE:
+          this.pasteState(p.x, p.y);
+          break;
+        default:
+          return;
+      }
+    } else {
+      return;
+    }
+    this.view.repaint();
+  }
+  
   public void executeCreate(final Point p, final FSMZones.AreaType type) {
     if (type != null) {
       switch (type) {
@@ -262,47 +344,42 @@ public class FSMEditorController {
     this.executeEdit(p);
   }
   
-  public void executeRightClick(final Point p) {
-    final List<FSMElement> selection = this.zones.getActiveElement(p);
+  public void executeRightClick(final Point scaled, final Point unscaled) {
+    final List<FSMElement> selection = this.zones.getActiveElement(scaled);
     int _size = selection.size();
     boolean _greaterThan = (_size > 0);
     if (_greaterThan) {
       FSMElement _get = selection.get(0);
       this.currentSelection = _get;
-      FSMZones.AreaType _areaType = this.zones.getAreaType(p, this.fsm);
-      this.popupMenu.showPopupMenu(p, _areaType);
+      this.view.repaint();
+      FSMZones.AreaType _areaType = this.zones.getAreaType(scaled, this.fsm);
+      this.popupMenu.showPopupMenu(unscaled, _areaType);
     } else {
-      FSMZones.AreaType _areaType_1 = this.zones.getAreaType(p, this.fsm);
-      this.popupMenu.showPopupMenu(p, _areaType_1);
+      this.currentSelection = null;
+      this.view.repaint();
+      FSMZones.AreaType _areaType_1 = this.zones.getAreaType(scaled, this.fsm);
+      this.popupMenu.showPopupMenu(unscaled, _areaType_1);
     }
   }
   
-  public FSMElement executePress(final Point p) {
-    FSMElement _xblockexpression = null;
-    {
-      final List<FSMElement> selection = this.zones.getActiveElement(p);
-      FSMElement _xifexpression = null;
-      int _size = selection.size();
-      boolean _greaterThan = (_size > 0);
-      if (_greaterThan) {
-        FSMElement _xblockexpression_1 = null;
-        {
-          final FSMElement first = selection.get(0);
-          _xblockexpression_1 = this.currentSelection = first;
-        }
-        _xifexpression = _xblockexpression_1;
-      }
-      _xblockexpression = _xifexpression;
+  public void executePress(final Point p) {
+    final List<FSMElement> selection = this.zones.getActiveElement(p);
+    this.currentSelection = null;
+    int _size = selection.size();
+    boolean _greaterThan = (_size > 0);
+    if (_greaterThan) {
+      final FSMElement first = selection.get(0);
+      this.currentSelection = first;
     }
-    return _xblockexpression;
+    this.view.repaint();
   }
   
   public void executeDragged(final Point p) {
     boolean _notEquals = (!Objects.equal(this.currentSelection, null));
     if (_notEquals) {
       this.move(p, this.currentSelection);
-      this.view.repaint();
     }
+    this.view.repaint();
   }
   
   public void executeMove(final Point p) {
@@ -312,71 +389,56 @@ public class FSMEditorController {
       final LayoutInfo layout = this.newTransition.getLayout();
       layout.setX(p.x);
       layout.setY(p.y);
-      this.view.repaint();
     }
+    this.view.repaint();
   }
   
-  public Transition executeLeftClick(final Point p) {
-    Transition _xblockexpression = null;
-    {
-      final List<FSMElement> selection = this.zones.getActiveElement(p);
-      Transition _xifexpression = null;
-      int _size = selection.size();
-      boolean _greaterThan = (_size > 0);
-      if (_greaterThan) {
-        Transition _xblockexpression_1 = null;
-        {
-          final FSMElement first = selection.get(0);
-          if ((first instanceof State)) {
-            boolean _notEquals = (!Objects.equal(this.newTransition, null));
-            if (_notEquals) {
-              final LayoutInfo layout = this.newTransition.getLayout();
-              State _src = this.newTransition.getSrc();
-              final LayoutInfo srcLayout = _src.getLayout();
-              int _x = srcLayout.getX();
-              int _plus = (p.x + _x);
-              int _divide = (_plus / 2);
-              layout.setX(_divide);
-              int _y = srcLayout.getY();
-              int _plus_1 = (p.y + _y);
-              int _divide_1 = (_plus_1 / 2);
-              layout.setY(_divide_1);
-              State _src_1 = this.newTransition.getSrc();
-              boolean _notEquals_1 = (!Objects.equal(first, _src_1));
-              if (_notEquals_1) {
-                this.newTransition.setDst(((State)first));
-              } else {
-                this.deleteElement(this.newTransition);
-              }
-            }
+  public void executeLeftClick(final Point p) {
+    final List<FSMElement> selection = this.zones.getActiveElement(p);
+    this.currentSelection = null;
+    int _size = selection.size();
+    boolean _greaterThan = (_size > 0);
+    if (_greaterThan) {
+      final FSMElement first = selection.get(0);
+      if ((first instanceof State)) {
+        this.currentSelection = first;
+        boolean _notEquals = (!Objects.equal(this.newTransition, null));
+        if (_notEquals) {
+          final LayoutInfo layout = this.newTransition.getLayout();
+          State _src = this.newTransition.getSrc();
+          final LayoutInfo srcLayout = _src.getLayout();
+          int _x = srcLayout.getX();
+          int _plus = (p.x + _x);
+          int _divide = (_plus / 2);
+          layout.setX(_divide);
+          int _y = srcLayout.getY();
+          int _plus_1 = (p.y + _y);
+          int _divide_1 = (_plus_1 / 2);
+          layout.setY(_divide_1);
+          State _src_1 = this.newTransition.getSrc();
+          boolean _notEquals_1 = (!Objects.equal(first, _src_1));
+          if (_notEquals_1) {
+            this.newTransition.setDst(((State)first));
           } else {
-            boolean _notEquals_2 = (!Objects.equal(this.newTransition, null));
-            if (_notEquals_2) {
-              this.deleteElement(this.newTransition);
-            }
+            this.deleteElement(this.newTransition);
           }
-          this.view.repaint();
-          _xblockexpression_1 = this.newTransition = null;
         }
-        _xifexpression = _xblockexpression_1;
+      } else {
+        boolean _notEquals_2 = (!Objects.equal(this.newTransition, null));
+        if (_notEquals_2) {
+          this.deleteElement(this.newTransition);
+        }
       }
-      _xblockexpression = _xifexpression;
+      this.newTransition = null;
     }
-    return _xblockexpression;
+    this.view.repaint();
   }
   
-  public Object executeRelease(final Point p) {
-    Object _xblockexpression = null;
-    {
-      this.currentSelection = null;
-      Object _xifexpression = null;
-      boolean _notEquals = (!Objects.equal(this.newTransition, null));
-      if (_notEquals) {
-        _xifexpression = null;
-      }
-      _xblockexpression = _xifexpression;
+  public void executeRelease(final Point p) {
+    boolean _notEquals = (!Objects.equal(this.newTransition, null));
+    if (_notEquals) {
     }
-    return _xblockexpression;
+    this.view.repaint();
   }
   
   /**
@@ -392,6 +454,7 @@ public class FSMEditorController {
    */
   protected void _deleteElement(final FSMElement e) {
     this.remover.remove(e);
+    this.view.repaint();
   }
   
   /**

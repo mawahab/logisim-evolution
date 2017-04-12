@@ -149,6 +149,15 @@ public interface FSMDSLFactory extends EFactory
   BoolExpr createBoolExpr();
 
   /**
+   * Returns a new object of class '<em>Range</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Range</em>'.
+   * @generated
+   */
+  Range createRange();
+
+  /**
    * Returns a new object of class '<em>Input Port</em>'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -201,6 +210,15 @@ public interface FSMDSLFactory extends EFactory
    * @generated
    */
   AndExpr createAndExpr();
+
+  /**
+   * Returns a new object of class '<em>Cmp Expr</em>'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return a new object of class '<em>Cmp Expr</em>'.
+   * @generated
+   */
+  CmpExpr createCmpExpr();
 
   /**
    * Returns a new object of class '<em>Not Expr</em>'.

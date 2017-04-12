@@ -145,6 +145,11 @@ public class FSMDSLAdapterFactory extends AdapterFactoryImpl
         return createBoolExprAdapter();
       }
       @Override
+      public Adapter caseRange(Range object)
+      {
+        return createRangeAdapter();
+      }
+      @Override
       public Adapter caseInputPort(InputPort object)
       {
         return createInputPortAdapter();
@@ -173,6 +178,11 @@ public class FSMDSLAdapterFactory extends AdapterFactoryImpl
       public Adapter caseAndExpr(AndExpr object)
       {
         return createAndExprAdapter();
+      }
+      @Override
+      public Adapter caseCmpExpr(CmpExpr object)
+      {
+        return createCmpExprAdapter();
       }
       @Override
       public Adapter caseNotExpr(NotExpr object)
@@ -417,6 +427,21 @@ public class FSMDSLAdapterFactory extends AdapterFactoryImpl
   }
 
   /**
+   * Creates a new adapter for an object of class '{@link com.cburch.logisim.statemachine.fSMDSL.Range <em>Range</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.cburch.logisim.statemachine.fSMDSL.Range
+   * @generated
+   */
+  public Adapter createRangeAdapter()
+  {
+    return null;
+  }
+
+  /**
    * Creates a new adapter for an object of class '{@link com.cburch.logisim.statemachine.fSMDSL.InputPort <em>Input Port</em>}'.
    * <!-- begin-user-doc -->
    * This default implementation returns null so that we can easily ignore cases;
@@ -502,6 +527,21 @@ public class FSMDSLAdapterFactory extends AdapterFactoryImpl
    * @generated
    */
   public Adapter createAndExprAdapter()
+  {
+    return null;
+  }
+
+  /**
+   * Creates a new adapter for an object of class '{@link com.cburch.logisim.statemachine.fSMDSL.CmpExpr <em>Cmp Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * This default implementation returns null so that we can easily ignore cases;
+   * it's useful to ignore a case when inheritance will catch all the cases anyway.
+   * <!-- end-user-doc -->
+   * @return the new adapter.
+   * @see com.cburch.logisim.statemachine.fSMDSL.CmpExpr
+   * @generated
+   */
+  public Adapter createCmpExprAdapter()
   {
     return null;
   }

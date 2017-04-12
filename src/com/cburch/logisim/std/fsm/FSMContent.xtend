@@ -129,9 +129,10 @@ class FSMContent implements Cloneable {
 	}
 
 	static final String TEMPLATE = 
-	'''fsm example @[50,50,30,30] {
+	'''fsm example @[50,50,800,500] {
 		in A[1]@[50,100];
-		out X[1]@[50,140];
+		in B[3]@[50,120];
+		out X[1]@[500,140];
 		codeWidth=2 ;
 		reset=S0 ;
 	

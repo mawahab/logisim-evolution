@@ -35,17 +35,31 @@ class PrettyPrinter {
 		'''(«FOR i:b.args SEPARATOR "+"»«pp(i)»«ENDFOR»)'''.toString
 	}
 	def static dispatch pp(AndExpr b) {
-//		if(b.args.size<=1) {
-//			throw new RuntimeException("Error in "+b)
-//		}
+
 		'''(«FOR i:b.args SEPARATOR "."»«pp(i)»«ENDFOR»)'''.toString
 	}
+
+	def static dispatch pp(CmpExpr b) {
+		switch(b.op) {
+			case "==" : {
+				pp(b.args.get(0))+"=="+pp(b.args.get(1)) 
+			}
+			case "!=" : {
+				pp(b.args.get(0))+"!="+pp(b.args.get(1)) 
+			}
+		}
+	}
+
 	def static dispatch pp(NotExpr b) {
 		"(/"+pp(b.args.get(0))+")";
 		
 	}
 	def static dispatch pp(PortRef b) {
-		b.port.name
+		if(b.range!=null) {
+			b.port.name + "["+b.range.lb+":"+b.range.ub+"]"
+		} else {
+			b.port.name
+		}
 	}
 	def static dispatch pp(DefaultPredicate b) {
 		"default"

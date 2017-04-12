@@ -69,6 +69,7 @@ public class FSMDSLSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) port=[Port|ID]
 	 *     (rule start) (ambiguity) value=BIN
 	 *     (rule start) (ambiguity) {AndExpr.args+=}
+	 *     (rule start) (ambiguity) {CmpExpr.args+=}
 	 *     (rule start) (ambiguity) {OrExpr.args+=}
 	 */
 	protected void emit_Primary_LeftParenthesisKeyword_0_0_a(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
@@ -81,6 +82,7 @@ public class FSMDSLSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *
 	 * This ambiguous syntax occurs at:
 	 *     (rule start) (ambiguity) {AndExpr.args+=}
+	 *     (rule start) (ambiguity) {CmpExpr.args+=}
 	 *     (rule start) (ambiguity) {OrExpr.args+=}
 	 */
 	protected void emit_Primary_LeftParenthesisKeyword_0_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {

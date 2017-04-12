@@ -149,13 +149,16 @@ public class FSMContent implements Cloneable {
   private final static String TEMPLATE = new Function0<String>() {
     public String apply() {
       StringConcatenation _builder = new StringConcatenation();
-      _builder.append("fsm example @[50,50,30,30] {");
+      _builder.append("fsm example @[50,50,800,500] {");
       _builder.newLine();
       _builder.append("\t\t");
       _builder.append("in A[1]@[50,100];");
       _builder.newLine();
       _builder.append("\t\t");
-      _builder.append("out X[1]@[50,140];");
+      _builder.append("in B[3]@[50,120];");
+      _builder.newLine();
+      _builder.append("\t\t");
+      _builder.append("out X[1]@[500,140];");
       _builder.newLine();
       _builder.append("\t\t");
       _builder.append("codeWidth=2 ;");

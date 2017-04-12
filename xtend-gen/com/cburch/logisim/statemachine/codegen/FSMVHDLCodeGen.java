@@ -2,6 +2,7 @@ package com.cburch.logisim.statemachine.codegen;
 
 import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
+import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
@@ -277,7 +278,7 @@ public class FSMVHDLCodeGen {
         _builder.append("\t\t\t\t");
         _builder.append("if ");
         BoolExpr _predicate = t.getPredicate();
-        String _genPred = FSMVHDLCodeGen.genPred(_predicate);
+        CharSequence _genPred = FSMVHDLCodeGen.genPred(_predicate);
         _builder.append(_genPred, "\t\t\t\t");
         _builder.append(" then");
         _builder.newLineIfNotEmpty();
@@ -328,7 +329,47 @@ public class FSMVHDLCodeGen {
     return _builder;
   }
   
-  protected static String _genPred(final OrExpr b) {
+  protected static CharSequence _genPred(final CmpExpr b) {
+    CharSequence _switchResult = null;
+    String _op = b.getOp();
+    switch (_op) {
+      case "==":
+        StringConcatenation _builder = new StringConcatenation();
+        _builder.append("(");
+        EList<BoolExpr> _args = b.getArgs();
+        BoolExpr _get = _args.get(0);
+        Object _genPred = FSMVHDLCodeGen.genPred(_get);
+        _builder.append(_genPred, "");
+        _builder.append("==");
+        EList<BoolExpr> _args_1 = b.getArgs();
+        BoolExpr _get_1 = _args_1.get(1);
+        Object _genPred_1 = FSMVHDLCodeGen.genPred(_get_1);
+        _builder.append(_genPred_1, "");
+        _builder.append(")");
+        _switchResult = _builder;
+        break;
+      case "!=":
+        StringConcatenation _builder_1 = new StringConcatenation();
+        _builder_1.append("(");
+        EList<BoolExpr> _args_2 = b.getArgs();
+        BoolExpr _get_2 = _args_2.get(0);
+        Object _genPred_2 = FSMVHDLCodeGen.genPred(_get_2);
+        _builder_1.append(_genPred_2, "");
+        _builder_1.append("/=");
+        EList<BoolExpr> _args_3 = b.getArgs();
+        BoolExpr _get_3 = _args_3.get(1);
+        Object _genPred_3 = FSMVHDLCodeGen.genPred(_get_3);
+        _builder_1.append(_genPred_3, "");
+        _builder_1.append(")");
+        _switchResult = _builder_1;
+        break;
+      default:
+        throw new UnsupportedOperationException("Not implemented");
+    }
+    return _switchResult;
+  }
+  
+  protected static CharSequence _genPred(final OrExpr b) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("(");
     {
@@ -348,7 +389,7 @@ public class FSMVHDLCodeGen {
     return _builder.toString();
   }
   
-  protected static String _genPred(final AndExpr b) {
+  protected static CharSequence _genPred(final AndExpr b) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("(");
     {
@@ -368,7 +409,7 @@ public class FSMVHDLCodeGen {
     return _builder.toString();
   }
   
-  protected static String _genPred(final NotExpr b) {
+  protected static CharSequence _genPred(final NotExpr b) {
     EList<BoolExpr> _args = b.getArgs();
     BoolExpr _get = _args.get(0);
     Object _genPred = FSMVHDLCodeGen.genPred(_get);
@@ -376,12 +417,12 @@ public class FSMVHDLCodeGen {
     return (_plus + ")");
   }
   
-  protected static String _genPred(final PortRef b) {
+  protected static CharSequence _genPred(final PortRef b) {
     Port _port = b.getPort();
     return _port.getName();
   }
   
-  protected static String _genPred(final Constant b) {
+  protected static CharSequence _genPred(final Constant b) {
     return b.getValue();
   }
   
@@ -409,7 +450,7 @@ public class FSMVHDLCodeGen {
     String _name_1 = _name.getName();
     String _plus = (_name_1 + "<=");
     BoolExpr _value = c.getValue();
-    String _genPred = FSMVHDLCodeGen.genPred(_value);
+    CharSequence _genPred = FSMVHDLCodeGen.genPred(_value);
     String _plus_1 = (_plus + _genPred);
     return (_plus_1 + ";");
   }
@@ -422,9 +463,11 @@ public class FSMVHDLCodeGen {
     return _generate(e);
   }
   
-  public static String genPred(final BoolExpr b) {
+  public static CharSequence genPred(final BoolExpr b) {
     if (b instanceof AndExpr) {
       return _genPred((AndExpr)b);
+    } else if (b instanceof CmpExpr) {
+      return _genPred((CmpExpr)b);
     } else if (b instanceof Constant) {
       return _genPred((Constant)b);
     } else if (b instanceof NotExpr) {

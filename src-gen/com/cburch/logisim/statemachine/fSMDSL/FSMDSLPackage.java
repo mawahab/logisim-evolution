@@ -620,6 +620,43 @@ public interface FSMDSLPackage extends EPackage
   int BOOL_EXPR_FEATURE_COUNT = 0;
 
   /**
+   * The meta object id for the '{@link com.cburch.logisim.statemachine.fSMDSL.impl.RangeImpl <em>Range</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.cburch.logisim.statemachine.fSMDSL.impl.RangeImpl
+   * @see com.cburch.logisim.statemachine.fSMDSL.impl.FSMDSLPackageImpl#getRange()
+   * @generated
+   */
+  int RANGE = 14;
+
+  /**
+   * The feature id for the '<em><b>Ub</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RANGE__UB = 0;
+
+  /**
+   * The feature id for the '<em><b>Lb</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RANGE__LB = 1;
+
+  /**
+   * The number of structural features of the '<em>Range</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int RANGE_FEATURE_COUNT = 2;
+
+  /**
    * The meta object id for the '{@link com.cburch.logisim.statemachine.fSMDSL.impl.InputPortImpl <em>Input Port</em>}' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -627,7 +664,7 @@ public interface FSMDSLPackage extends EPackage
    * @see com.cburch.logisim.statemachine.fSMDSL.impl.FSMDSLPackageImpl#getInputPort()
    * @generated
    */
-  int INPUT_PORT = 14;
+  int INPUT_PORT = 15;
 
   /**
    * The feature id for the '<em><b>Layout</b></em>' containment reference.
@@ -673,7 +710,7 @@ public interface FSMDSLPackage extends EPackage
    * @see com.cburch.logisim.statemachine.fSMDSL.impl.FSMDSLPackageImpl#getOutputPort()
    * @generated
    */
-  int OUTPUT_PORT = 15;
+  int OUTPUT_PORT = 16;
 
   /**
    * The feature id for the '<em><b>Layout</b></em>' containment reference.
@@ -719,7 +756,7 @@ public interface FSMDSLPackage extends EPackage
    * @see com.cburch.logisim.statemachine.fSMDSL.impl.FSMDSLPackageImpl#getPortRef()
    * @generated
    */
-  int PORT_REF = 16;
+  int PORT_REF = 17;
 
   /**
    * The feature id for the '<em><b>Port</b></em>' reference.
@@ -731,22 +768,13 @@ public interface FSMDSLPackage extends EPackage
   int PORT_REF__PORT = BOOL_EXPR_FEATURE_COUNT + 0;
 
   /**
-   * The feature id for the '<em><b>Ub</b></em>' attribute.
+   * The feature id for the '<em><b>Range</b></em>' containment reference.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int PORT_REF__UB = BOOL_EXPR_FEATURE_COUNT + 1;
-
-  /**
-   * The feature id for the '<em><b>Lb</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int PORT_REF__LB = BOOL_EXPR_FEATURE_COUNT + 2;
+  int PORT_REF__RANGE = BOOL_EXPR_FEATURE_COUNT + 1;
 
   /**
    * The number of structural features of the '<em>Port Ref</em>' class.
@@ -755,7 +783,7 @@ public interface FSMDSLPackage extends EPackage
    * @generated
    * @ordered
    */
-  int PORT_REF_FEATURE_COUNT = BOOL_EXPR_FEATURE_COUNT + 3;
+  int PORT_REF_FEATURE_COUNT = BOOL_EXPR_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link com.cburch.logisim.statemachine.fSMDSL.impl.DefaultPredicateImpl <em>Default Predicate</em>}' class.
@@ -765,7 +793,7 @@ public interface FSMDSLPackage extends EPackage
    * @see com.cburch.logisim.statemachine.fSMDSL.impl.FSMDSLPackageImpl#getDefaultPredicate()
    * @generated
    */
-  int DEFAULT_PREDICATE = 17;
+  int DEFAULT_PREDICATE = 18;
 
   /**
    * The number of structural features of the '<em>Default Predicate</em>' class.
@@ -784,7 +812,7 @@ public interface FSMDSLPackage extends EPackage
    * @see com.cburch.logisim.statemachine.fSMDSL.impl.FSMDSLPackageImpl#getOrExpr()
    * @generated
    */
-  int OR_EXPR = 18;
+  int OR_EXPR = 19;
 
   /**
    * The feature id for the '<em><b>Args</b></em>' containment reference list.
@@ -812,7 +840,7 @@ public interface FSMDSLPackage extends EPackage
    * @see com.cburch.logisim.statemachine.fSMDSL.impl.FSMDSLPackageImpl#getAndExpr()
    * @generated
    */
-  int AND_EXPR = 19;
+  int AND_EXPR = 20;
 
   /**
    * The feature id for the '<em><b>Args</b></em>' containment reference list.
@@ -824,22 +852,50 @@ public interface FSMDSLPackage extends EPackage
   int AND_EXPR__ARGS = BOOL_EXPR_FEATURE_COUNT + 0;
 
   /**
-   * The feature id for the '<em><b>Op</b></em>' attribute.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   * @ordered
-   */
-  int AND_EXPR__OP = BOOL_EXPR_FEATURE_COUNT + 1;
-
-  /**
    * The number of structural features of the '<em>And Expr</em>' class.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
    * @ordered
    */
-  int AND_EXPR_FEATURE_COUNT = BOOL_EXPR_FEATURE_COUNT + 2;
+  int AND_EXPR_FEATURE_COUNT = BOOL_EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The meta object id for the '{@link com.cburch.logisim.statemachine.fSMDSL.impl.CmpExprImpl <em>Cmp Expr</em>}' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see com.cburch.logisim.statemachine.fSMDSL.impl.CmpExprImpl
+   * @see com.cburch.logisim.statemachine.fSMDSL.impl.FSMDSLPackageImpl#getCmpExpr()
+   * @generated
+   */
+  int CMP_EXPR = 21;
+
+  /**
+   * The feature id for the '<em><b>Args</b></em>' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CMP_EXPR__ARGS = BOOL_EXPR_FEATURE_COUNT + 0;
+
+  /**
+   * The feature id for the '<em><b>Op</b></em>' attribute.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CMP_EXPR__OP = BOOL_EXPR_FEATURE_COUNT + 1;
+
+  /**
+   * The number of structural features of the '<em>Cmp Expr</em>' class.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   * @ordered
+   */
+  int CMP_EXPR_FEATURE_COUNT = BOOL_EXPR_FEATURE_COUNT + 2;
 
   /**
    * The meta object id for the '{@link com.cburch.logisim.statemachine.fSMDSL.impl.NotExprImpl <em>Not Expr</em>}' class.
@@ -849,7 +905,7 @@ public interface FSMDSLPackage extends EPackage
    * @see com.cburch.logisim.statemachine.fSMDSL.impl.FSMDSLPackageImpl#getNotExpr()
    * @generated
    */
-  int NOT_EXPR = 20;
+  int NOT_EXPR = 22;
 
   /**
    * The feature id for the '<em><b>Args</b></em>' containment reference list.
@@ -877,7 +933,7 @@ public interface FSMDSLPackage extends EPackage
    * @see com.cburch.logisim.statemachine.fSMDSL.impl.FSMDSLPackageImpl#getConstant()
    * @generated
    */
-  int CONSTANT = 21;
+  int CONSTANT = 23;
 
   /**
    * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1347,6 +1403,38 @@ public interface FSMDSLPackage extends EPackage
   EClass getBoolExpr();
 
   /**
+   * Returns the meta object for class '{@link com.cburch.logisim.statemachine.fSMDSL.Range <em>Range</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Range</em>'.
+   * @see com.cburch.logisim.statemachine.fSMDSL.Range
+   * @generated
+   */
+  EClass getRange();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.cburch.logisim.statemachine.fSMDSL.Range#getUb <em>Ub</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Ub</em>'.
+   * @see com.cburch.logisim.statemachine.fSMDSL.Range#getUb()
+   * @see #getRange()
+   * @generated
+   */
+  EAttribute getRange_Ub();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.cburch.logisim.statemachine.fSMDSL.Range#getLb <em>Lb</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the attribute '<em>Lb</em>'.
+   * @see com.cburch.logisim.statemachine.fSMDSL.Range#getLb()
+   * @see #getRange()
+   * @generated
+   */
+  EAttribute getRange_Lb();
+
+  /**
    * Returns the meta object for class '{@link com.cburch.logisim.statemachine.fSMDSL.InputPort <em>Input Port</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -1388,26 +1476,15 @@ public interface FSMDSLPackage extends EPackage
   EReference getPortRef_Port();
 
   /**
-   * Returns the meta object for the attribute '{@link com.cburch.logisim.statemachine.fSMDSL.PortRef#getUb <em>Ub</em>}'.
+   * Returns the meta object for the containment reference '{@link com.cburch.logisim.statemachine.fSMDSL.PortRef#getRange <em>Range</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Ub</em>'.
-   * @see com.cburch.logisim.statemachine.fSMDSL.PortRef#getUb()
+   * @return the meta object for the containment reference '<em>Range</em>'.
+   * @see com.cburch.logisim.statemachine.fSMDSL.PortRef#getRange()
    * @see #getPortRef()
    * @generated
    */
-  EAttribute getPortRef_Ub();
-
-  /**
-   * Returns the meta object for the attribute '{@link com.cburch.logisim.statemachine.fSMDSL.PortRef#getLb <em>Lb</em>}'.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @return the meta object for the attribute '<em>Lb</em>'.
-   * @see com.cburch.logisim.statemachine.fSMDSL.PortRef#getLb()
-   * @see #getPortRef()
-   * @generated
-   */
-  EAttribute getPortRef_Lb();
+  EReference getPortRef_Range();
 
   /**
    * Returns the meta object for class '{@link com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate <em>Default Predicate</em>}'.
@@ -1462,15 +1539,36 @@ public interface FSMDSLPackage extends EPackage
   EReference getAndExpr_Args();
 
   /**
-   * Returns the meta object for the attribute '{@link com.cburch.logisim.statemachine.fSMDSL.AndExpr#getOp <em>Op</em>}'.
+   * Returns the meta object for class '{@link com.cburch.logisim.statemachine.fSMDSL.CmpExpr <em>Cmp Expr</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for class '<em>Cmp Expr</em>'.
+   * @see com.cburch.logisim.statemachine.fSMDSL.CmpExpr
+   * @generated
+   */
+  EClass getCmpExpr();
+
+  /**
+   * Returns the meta object for the containment reference list '{@link com.cburch.logisim.statemachine.fSMDSL.CmpExpr#getArgs <em>Args</em>}'.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @return the meta object for the containment reference list '<em>Args</em>'.
+   * @see com.cburch.logisim.statemachine.fSMDSL.CmpExpr#getArgs()
+   * @see #getCmpExpr()
+   * @generated
+   */
+  EReference getCmpExpr_Args();
+
+  /**
+   * Returns the meta object for the attribute '{@link com.cburch.logisim.statemachine.fSMDSL.CmpExpr#getOp <em>Op</em>}'.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @return the meta object for the attribute '<em>Op</em>'.
-   * @see com.cburch.logisim.statemachine.fSMDSL.AndExpr#getOp()
-   * @see #getAndExpr()
+   * @see com.cburch.logisim.statemachine.fSMDSL.CmpExpr#getOp()
+   * @see #getCmpExpr()
    * @generated
    */
-  EAttribute getAndExpr_Op();
+  EAttribute getCmpExpr_Op();
 
   /**
    * Returns the meta object for class '{@link com.cburch.logisim.statemachine.fSMDSL.NotExpr <em>Not Expr</em>}'.
@@ -1902,6 +2000,32 @@ public interface FSMDSLPackage extends EPackage
     EClass BOOL_EXPR = eINSTANCE.getBoolExpr();
 
     /**
+     * The meta object literal for the '{@link com.cburch.logisim.statemachine.fSMDSL.impl.RangeImpl <em>Range</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.cburch.logisim.statemachine.fSMDSL.impl.RangeImpl
+     * @see com.cburch.logisim.statemachine.fSMDSL.impl.FSMDSLPackageImpl#getRange()
+     * @generated
+     */
+    EClass RANGE = eINSTANCE.getRange();
+
+    /**
+     * The meta object literal for the '<em><b>Ub</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute RANGE__UB = eINSTANCE.getRange_Ub();
+
+    /**
+     * The meta object literal for the '<em><b>Lb</b></em>' attribute feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EAttribute RANGE__LB = eINSTANCE.getRange_Lb();
+
+    /**
      * The meta object literal for the '{@link com.cburch.logisim.statemachine.fSMDSL.impl.InputPortImpl <em>Input Port</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1940,20 +2064,12 @@ public interface FSMDSLPackage extends EPackage
     EReference PORT_REF__PORT = eINSTANCE.getPortRef_Port();
 
     /**
-     * The meta object literal for the '<em><b>Ub</b></em>' attribute feature.
+     * The meta object literal for the '<em><b>Range</b></em>' containment reference feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute PORT_REF__UB = eINSTANCE.getPortRef_Ub();
-
-    /**
-     * The meta object literal for the '<em><b>Lb</b></em>' attribute feature.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    EAttribute PORT_REF__LB = eINSTANCE.getPortRef_Lb();
+    EReference PORT_REF__RANGE = eINSTANCE.getPortRef_Range();
 
     /**
      * The meta object literal for the '{@link com.cburch.logisim.statemachine.fSMDSL.impl.DefaultPredicateImpl <em>Default Predicate</em>}' class.
@@ -2002,12 +2118,30 @@ public interface FSMDSLPackage extends EPackage
     EReference AND_EXPR__ARGS = eINSTANCE.getAndExpr_Args();
 
     /**
+     * The meta object literal for the '{@link com.cburch.logisim.statemachine.fSMDSL.impl.CmpExprImpl <em>Cmp Expr</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see com.cburch.logisim.statemachine.fSMDSL.impl.CmpExprImpl
+     * @see com.cburch.logisim.statemachine.fSMDSL.impl.FSMDSLPackageImpl#getCmpExpr()
+     * @generated
+     */
+    EClass CMP_EXPR = eINSTANCE.getCmpExpr();
+
+    /**
+     * The meta object literal for the '<em><b>Args</b></em>' containment reference list feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    EReference CMP_EXPR__ARGS = eINSTANCE.getCmpExpr_Args();
+
+    /**
      * The meta object literal for the '<em><b>Op</b></em>' attribute feature.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    EAttribute AND_EXPR__OP = eINSTANCE.getAndExpr_Op();
+    EAttribute CMP_EXPR__OP = eINSTANCE.getCmpExpr_Op();
 
     /**
      * The meta object literal for the '{@link com.cburch.logisim.statemachine.fSMDSL.impl.NotExprImpl <em>Not Expr</em>}' class.

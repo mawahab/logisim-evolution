@@ -1,6 +1,7 @@
 package com.cburch.logisim.statemachine.editor.view;
 
 import com.cburch.logisim.statemachine.editor.FSMEditorController;
+import com.cburch.logisim.statemachine.editor.view.FSMDrawing;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.FSMElement;
@@ -171,37 +172,73 @@ public class FSMZones {
   }
   
   public static boolean inRectangle(final int x, final int y, final LayoutInfo l) {
-    boolean _and = false;
-    boolean _and_1 = false;
-    boolean _and_2 = false;
-    int _x = l.getX();
-    boolean _greaterEqualsThan = (x >= _x);
-    if (!_greaterEqualsThan) {
-      _and_2 = false;
+    int _height = l.getHeight();
+    boolean _greaterThan = (_height > 0);
+    if (_greaterThan) {
+      boolean _and = false;
+      boolean _and_1 = false;
+      boolean _and_2 = false;
+      int _x = l.getX();
+      boolean _greaterEqualsThan = (x >= _x);
+      if (!_greaterEqualsThan) {
+        _and_2 = false;
+      } else {
+        int _x_1 = l.getX();
+        int _width = l.getWidth();
+        int _plus = (_x_1 + _width);
+        boolean _lessEqualsThan = (x <= _plus);
+        _and_2 = _lessEqualsThan;
+      }
+      if (!_and_2) {
+        _and_1 = false;
+      } else {
+        int _y = l.getY();
+        boolean _greaterEqualsThan_1 = (y >= _y);
+        _and_1 = _greaterEqualsThan_1;
+      }
+      if (!_and_1) {
+        _and = false;
+      } else {
+        int _y_1 = l.getY();
+        int _height_1 = l.getHeight();
+        int _plus_1 = (_y_1 + _height_1);
+        boolean _lessEqualsThan_1 = (y <= _plus_1);
+        _and = _lessEqualsThan_1;
+      }
+      return _and;
     } else {
-      int _x_1 = l.getX();
-      int _width = l.getWidth();
-      int _plus = (_x_1 + _width);
-      boolean _lessEqualsThan = (x <= _plus);
-      _and_2 = _lessEqualsThan;
+      boolean _and_3 = false;
+      boolean _and_4 = false;
+      boolean _and_5 = false;
+      int _x_2 = l.getX();
+      boolean _greaterEqualsThan_2 = (x >= _x_2);
+      if (!_greaterEqualsThan_2) {
+        _and_5 = false;
+      } else {
+        int _x_3 = l.getX();
+        int _width_1 = l.getWidth();
+        int _plus_2 = (_x_3 + _width_1);
+        boolean _lessEqualsThan_2 = (x <= _plus_2);
+        _and_5 = _lessEqualsThan_2;
+      }
+      if (!_and_5) {
+        _and_4 = false;
+      } else {
+        int _y_2 = l.getY();
+        int _height_2 = l.getHeight();
+        int _plus_3 = (_y_2 + _height_2);
+        boolean _greaterEqualsThan_3 = (y >= _plus_3);
+        _and_4 = _greaterEqualsThan_3;
+      }
+      if (!_and_4) {
+        _and_3 = false;
+      } else {
+        int _y_3 = l.getY();
+        boolean _lessEqualsThan_3 = (y <= _y_3);
+        _and_3 = _lessEqualsThan_3;
+      }
+      return _and_3;
     }
-    if (!_and_2) {
-      _and_1 = false;
-    } else {
-      int _y = l.getY();
-      boolean _greaterEqualsThan_1 = (y >= _y);
-      _and_1 = _greaterEqualsThan_1;
-    }
-    if (!_and_1) {
-      _and = false;
-    } else {
-      int _y_1 = l.getY();
-      int _height = l.getHeight();
-      int _plus_1 = (_y_1 + _height);
-      boolean _lessEqualsThan_1 = (y <= _plus_1);
-      _and = _lessEqualsThan_1;
-    }
-    return _and;
   }
   
   protected boolean _isWithinElement(final Point p, final CommandList e) {
@@ -209,12 +246,10 @@ public class FSMZones {
     {
       final LayoutInfo l = e.getLayout();
       int _x = l.getX();
-      String _plus = ((((("(" + Integer.valueOf(p.x)) + ",") + Integer.valueOf(p.y)) + ") within CommandList[") + Integer.valueOf(_x));
+      String _plus = ((((("check if (" + Integer.valueOf(p.x)) + ",") + Integer.valueOf(p.y)) + ") within CommandList[") + Integer.valueOf(_x));
       String _plus_1 = (_plus + ",");
       int _y = l.getY();
-      int _height = l.getHeight();
-      int _minus = (_y - _height);
-      String _plus_2 = (_plus_1 + Integer.valueOf(_minus));
+      String _plus_2 = (_plus_1 + Integer.valueOf(_y));
       String _plus_3 = (_plus_2 + ",");
       int _x_1 = l.getX();
       int _width = l.getWidth();
@@ -222,14 +257,18 @@ public class FSMZones {
       String _plus_5 = (_plus_3 + Integer.valueOf(_plus_4));
       String _plus_6 = (_plus_5 + ",");
       int _y_1 = l.getY();
-      String _plus_7 = (_plus_6 + Integer.valueOf(_y_1));
-      String _plus_8 = (_plus_7 + "]");
-      InputOutput.<String>println(_plus_8);
+      int _height = l.getHeight();
+      int _plus_7 = (_y_1 + _height);
+      String _plus_8 = (_plus_6 + Integer.valueOf(_plus_7));
+      String _plus_9 = (_plus_8 + "]");
+      InputOutput.<String>println(_plus_9);
       LayoutInfo _layout = e.getLayout();
-      int _height_1 = _layout.getHeight();
-      int _plus_9 = (p.y + _height_1);
-      LayoutInfo _layout_1 = e.getLayout();
-      _xblockexpression = FSMZones.inRectangle(p.x, _plus_9, _layout_1);
+      boolean _inRectangle = FSMZones.inRectangle(p.x, p.y, _layout);
+      if (_inRectangle) {
+        InputOutput.<String>println("\tYES !");
+        return true;
+      }
+      _xblockexpression = false;
     }
     return _xblockexpression;
   }
@@ -239,64 +278,124 @@ public class FSMZones {
     {
       final LayoutInfo l = e.getLayout();
       int _x = l.getX();
-      String _plus = ((((("(" + Integer.valueOf(p.x)) + ",") + Integer.valueOf(p.y)) + ") within CommandList[") + Integer.valueOf(_x));
+      String _plus = ((((("check if (" + Integer.valueOf(p.x)) + ",") + Integer.valueOf(p.y)) + ") within FSM [") + Integer.valueOf(_x));
       String _plus_1 = (_plus + ",");
       int _y = l.getY();
-      int _height = l.getHeight();
-      int _minus = (_y - _height);
-      String _plus_2 = (_plus_1 + Integer.valueOf(_minus));
-      String _plus_3 = (_plus_2 + ",");
+      int _plus_2 = (_y + FSMDrawing.FSM_TITLE_HEIGHT);
+      String _plus_3 = (_plus_1 + Integer.valueOf(_plus_2));
+      String _plus_4 = (_plus_3 + ",");
       int _x_1 = l.getX();
       int _width = l.getWidth();
-      int _plus_4 = (_x_1 + _width);
-      String _plus_5 = (_plus_3 + Integer.valueOf(_plus_4));
-      String _plus_6 = (_plus_5 + ",");
+      int _plus_5 = (_x_1 + _width);
+      String _plus_6 = (_plus_4 + Integer.valueOf(_plus_5));
+      String _plus_7 = (_plus_6 + ",");
       int _y_1 = l.getY();
-      String _plus_7 = (_plus_6 + Integer.valueOf(_y_1));
-      String _plus_8 = (_plus_7 + "]");
-      InputOutput.<String>println(_plus_8);
-      LayoutInfo _layout = e.getLayout();
-      _xblockexpression = FSMZones.inRectangle(p.x, p.y, _layout);
+      int _plus_8 = (_y_1 + FSMDrawing.FSM_TITLE_HEIGHT);
+      String _plus_9 = (_plus_7 + Integer.valueOf(_plus_8));
+      String _plus_10 = (_plus_9 + "]");
+      InputOutput.<String>println(_plus_10);
+      boolean _and = false;
+      int _x_2 = l.getX();
+      boolean _greaterThan = (p.x > _x_2);
+      if (!_greaterThan) {
+        _and = false;
+      } else {
+        int _x_3 = l.getX();
+        int _width_1 = l.getWidth();
+        int _plus_11 = (_x_3 + _width_1);
+        boolean _lessThan = (p.x < _plus_11);
+        _and = _lessThan;
+      }
+      if (_and) {
+        boolean _and_1 = false;
+        int _y_2 = l.getY();
+        boolean _greaterThan_1 = (p.y > _y_2);
+        if (!_greaterThan_1) {
+          _and_1 = false;
+        } else {
+          int _y_3 = l.getY();
+          int _plus_12 = (_y_3 + FSMDrawing.FSM_TITLE_HEIGHT);
+          boolean _lessThan_1 = (p.y < _plus_12);
+          _and_1 = _lessThan_1;
+        }
+        if (_and_1) {
+          InputOutput.<String>println("\tYES !");
+          return true;
+        }
+      }
+      _xblockexpression = false;
     }
     return _xblockexpression;
   }
   
   protected boolean _isWithinElement(final Point p, final State e) {
-    final LayoutInfo l = e.getLayout();
-    final int radius = l.getWidth();
-    int _x = l.getX();
-    int _plus = (_x + radius);
-    final int dx = (p.x - _plus);
-    int _y = l.getY();
-    int _plus_1 = (_y + radius);
-    final int dy = (p.y - _plus_1);
-    final double distance = Math.sqrt(((dx * dx) + (dy * dy)));
-    int _x_1 = l.getX();
-    int _plus_2 = (_x_1 + radius);
-    String _plus_3 = ((((((("(" + Integer.valueOf(p.x)) + ",") + Integer.valueOf(p.y)) + ") distant from ") + Double.valueOf(distance)) + " to circle[") + Integer.valueOf(_plus_2));
-    String _plus_4 = (_plus_3 + ",");
-    int _y_1 = l.getY();
-    int _plus_5 = (_y_1 + radius);
-    String _plus_6 = (_plus_4 + Integer.valueOf(_plus_5));
-    String _plus_7 = (_plus_6 + ",");
-    String _plus_8 = (_plus_7 + Integer.valueOf(radius));
-    String _plus_9 = (_plus_8 + "]");
-    InputOutput.<String>println(_plus_9);
-    return (distance < radius);
+    boolean _xblockexpression = false;
+    {
+      final LayoutInfo l = e.getLayout();
+      final int radius = l.getWidth();
+      int _x = l.getX();
+      int _plus = (_x + radius);
+      final int dx = (p.x - _plus);
+      int _y = l.getY();
+      int _plus_1 = (_y + radius);
+      final int dy = (p.y - _plus_1);
+      final double distance = Math.sqrt(((dx * dx) + (dy * dy)));
+      int _x_1 = l.getX();
+      int _plus_2 = (_x_1 + radius);
+      String _plus_3 = ((((("check if (" + Integer.valueOf(p.x)) + ",") + Integer.valueOf(p.y)) + ") within circle[") + Integer.valueOf(_plus_2));
+      String _plus_4 = (_plus_3 + ",");
+      int _y_1 = l.getY();
+      int _plus_5 = (_y_1 + radius);
+      String _plus_6 = (_plus_4 + Integer.valueOf(_plus_5));
+      String _plus_7 = (_plus_6 + ",");
+      String _plus_8 = (_plus_7 + Integer.valueOf(radius));
+      String _plus_9 = (_plus_8 + "] -> distance = ");
+      String _plus_10 = (_plus_9 + Double.valueOf(distance));
+      String _plus_11 = (_plus_10 + "  ");
+      InputOutput.<String>println(_plus_11);
+      if ((distance < radius)) {
+        InputOutput.<String>println("\tYES !");
+        return true;
+      }
+      _xblockexpression = false;
+    }
+    return _xblockexpression;
   }
   
   protected boolean _isWithinElement(final Point p, final Transition e) {
-    boolean _and = false;
-    LayoutInfo _layout = e.getLayout();
-    boolean _inRectangle = FSMZones.inRectangle(p.x, p.y, _layout);
-    if (!_inRectangle) {
-      _and = false;
-    } else {
-      State _dst = e.getDst();
-      boolean _notEquals = (!Objects.equal(_dst, null));
-      _and = _notEquals;
+    boolean _xblockexpression = false;
+    {
+      final LayoutInfo l = e.getLayout();
+      int _x = l.getX();
+      String _plus = ((((("check if (" + Integer.valueOf(p.x)) + ",") + Integer.valueOf(p.y)) + ") within Transition[") + Integer.valueOf(_x));
+      String _plus_1 = (_plus + ",");
+      int _y = l.getY();
+      String _plus_2 = (_plus_1 + Integer.valueOf(_y));
+      String _plus_3 = (_plus_2 + ",");
+      int _width = l.getWidth();
+      String _plus_4 = (_plus_3 + Integer.valueOf(_width));
+      String _plus_5 = (_plus_4 + ",");
+      int _height = l.getHeight();
+      String _plus_6 = (_plus_5 + Integer.valueOf(_height));
+      String _plus_7 = (_plus_6 + ",]   ");
+      InputOutput.<String>println(_plus_7);
+      boolean _and = false;
+      LayoutInfo _layout = e.getLayout();
+      boolean _inRectangle = FSMZones.inRectangle(p.x, p.y, _layout);
+      if (!_inRectangle) {
+        _and = false;
+      } else {
+        State _dst = e.getDst();
+        boolean _notEquals = (!Objects.equal(_dst, null));
+        _and = _notEquals;
+      }
+      if (_and) {
+        InputOutput.<String>println("\tYES !");
+        return true;
+      }
+      _xblockexpression = false;
     }
-    return _and;
+    return _xblockexpression;
   }
   
   protected boolean _isWithinElement(final Point p, final InputPort e) {
@@ -321,7 +420,12 @@ public class FSMZones {
       String _plus_9 = (_plus_8 + "]");
       InputOutput.<String>println(_plus_9);
       LayoutInfo _layout = e.getLayout();
-      _xblockexpression = FSMZones.inRectangle(p.x, p.y, _layout);
+      boolean _inRectangle = FSMZones.inRectangle(p.x, p.y, _layout);
+      if (_inRectangle) {
+        InputOutput.<String>println("\tYES !");
+        return true;
+      }
+      _xblockexpression = false;
     }
     return _xblockexpression;
   }
@@ -348,7 +452,12 @@ public class FSMZones {
       String _plus_9 = (_plus_8 + "]");
       InputOutput.<String>println(_plus_9);
       LayoutInfo _layout = e.getLayout();
-      _xblockexpression = FSMZones.inRectangle(p.x, p.y, _layout);
+      boolean _inRectangle = FSMZones.inRectangle(p.x, p.y, _layout);
+      if (_inRectangle) {
+        InputOutput.<String>println("\tYES !");
+        return true;
+      }
+      _xblockexpression = false;
     }
     return _xblockexpression;
   }

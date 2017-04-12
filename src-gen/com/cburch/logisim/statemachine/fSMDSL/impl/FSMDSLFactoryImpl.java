@@ -78,12 +78,14 @@ public class FSMDSLFactoryImpl extends EFactoryImpl implements FSMDSLFactory
       case FSMDSLPackage.TRANSITION: return createTransition();
       case FSMDSLPackage.COMMAND: return createCommand();
       case FSMDSLPackage.BOOL_EXPR: return createBoolExpr();
+      case FSMDSLPackage.RANGE: return createRange();
       case FSMDSLPackage.INPUT_PORT: return createInputPort();
       case FSMDSLPackage.OUTPUT_PORT: return createOutputPort();
       case FSMDSLPackage.PORT_REF: return createPortRef();
       case FSMDSLPackage.DEFAULT_PREDICATE: return createDefaultPredicate();
       case FSMDSLPackage.OR_EXPR: return createOrExpr();
       case FSMDSLPackage.AND_EXPR: return createAndExpr();
+      case FSMDSLPackage.CMP_EXPR: return createCmpExpr();
       case FSMDSLPackage.NOT_EXPR: return createNotExpr();
       case FSMDSLPackage.CONSTANT: return createConstant();
       default:
@@ -250,6 +252,17 @@ public class FSMDSLFactoryImpl extends EFactoryImpl implements FSMDSLFactory
    * <!-- end-user-doc -->
    * @generated
    */
+  public Range createRange()
+  {
+    RangeImpl range = new RangeImpl();
+    return range;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public InputPort createInputPort()
   {
     InputPortImpl inputPort = new InputPortImpl();
@@ -309,6 +322,17 @@ public class FSMDSLFactoryImpl extends EFactoryImpl implements FSMDSLFactory
   {
     AndExprImpl andExpr = new AndExprImpl();
     return andExpr;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public CmpExpr createCmpExpr()
+  {
+    CmpExprImpl cmpExpr = new CmpExprImpl();
+    return cmpExpr;
   }
 
   /**

@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import javax.swing.*;
 
+import com.cburch.logisim.statemachine.editor.view.FSMCustomFactory;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 
 
@@ -14,6 +15,8 @@ public class FSMEditPanel extends JPanel{
 	JTextField codeField ;
 	JCheckBox  initialFSM ;
 	FSM fsm;
+	private JTextField widthField;
+	private JTextField heightField;
 	
 	public FSMEditPanel(FSM fsm) {
 		super();
@@ -21,13 +24,20 @@ public class FSMEditPanel extends JPanel{
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		nameField = new JTextField(10);
 		codeField = new JTextField(10);
+		widthField = new JTextField(10);
+		heightField = new JTextField(10);
 		nameField.setText(fsm.getName());
 		codeField.setText(""+fsm.getWidth());
-
+		widthField.setText(""+fsm.getLayout().getWidth());
+		heightField.setText(""+fsm.getLayout().getHeight());
 		add(new JLabel("Name"));
 		add(nameField);
 		add(new JLabel("Code width "));
 		add(codeField);
+		add(new JLabel("Diagram width "));
+		add(widthField);
+		add(new JLabel("Diagram height "));
+		add(heightField);
 
 		codeField.addActionListener
 		(	
@@ -39,34 +49,25 @@ public class FSMEditPanel extends JPanel{
 
 	}
 	
-	private boolean checkInput(int result) {
-		if (result == JOptionPane.OK_OPTION) {
-			String txt = codeField.getText();
-			char first = txt.charAt(0);
-			char last = txt.charAt(txt.length()-1);
-			if(first=='"'&& last=='"') {
-				txt=txt.substring(1, txt.length()-2);
-				for (char c : txt.toCharArray()) {
-					if (c != '0' && c != '1') {
-						JOptionPane.showMessageDialog(null, "Error: Please enter a binary code (instead of "+txt+")", "Error Message",
-								JOptionPane.ERROR_MESSAGE);
-						return true;
-						
-					}
-				}
-			}  else {
-				JOptionPane.showMessageDialog(null, "Error: Please enter a binary code (instead of "+txt+")", "Error Message",
-						JOptionPane.ERROR_MESSAGE);
-			}
-		}
-		return false;
-	}
+
 	public void configure() {
-		boolean error=true;
-		int dialog = JOptionPane.showConfirmDialog(null, this, "Please Enter X and Y Values",JOptionPane.OK_CANCEL_OPTION);
-		int parseInt = Integer.parseInt(codeField.getText());
-		fsm.setName(nameField.getText());
-		fsm.setWidth(parseInt);
+		boolean error = true;
+
+		while(error) {
+			try {
+				int dialog = JOptionPane.showConfirmDialog(null, this, "State configuration",JOptionPane.OK_CANCEL_OPTION);
+				int parseInt = Integer.parseInt(codeField.getText());
+				fsm.setName(nameField.getText());
+				fsm.setWidth(parseInt);
+				parseInt = Integer.parseInt(widthField.getText());
+				fsm.getLayout().setWidth(Math.max(FSMCustomFactory.FSM_WIDTH, parseInt));
+				parseInt = Integer.parseInt(heightField.getText());
+				fsm.getLayout().setHeight(Math.max(FSMCustomFactory.FSM_HEIGHT, parseInt));
+				error=false;
+			} catch (NumberFormatException e) {
+				error=true;
+			}
+		}		
 	}
 
 

@@ -4,6 +4,7 @@ package com.cburch.logisim.statemachine.fSMDSL.impl;
 
 import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
+import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.CommandStmt;
@@ -20,6 +21,7 @@ import com.cburch.logisim.statemachine.fSMDSL.OutputPort;
 import com.cburch.logisim.statemachine.fSMDSL.Port;
 import com.cburch.logisim.statemachine.fSMDSL.PortRef;
 import com.cburch.logisim.statemachine.fSMDSL.PredicateStmt;
+import com.cburch.logisim.statemachine.fSMDSL.Range;
 import com.cburch.logisim.statemachine.fSMDSL.ShortInput;
 import com.cburch.logisim.statemachine.fSMDSL.ShortOutput;
 import com.cburch.logisim.statemachine.fSMDSL.State;
@@ -143,6 +145,13 @@ public class FSMDSLPackageImpl extends EPackageImpl implements FSMDSLPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  private EClass rangeEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   private EClass inputPortEClass = null;
 
   /**
@@ -179,6 +188,13 @@ public class FSMDSLPackageImpl extends EPackageImpl implements FSMDSLPackage
    * @generated
    */
   private EClass andExprEClass = null;
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  private EClass cmpExprEClass = null;
 
   /**
    * <!-- begin-user-doc -->
@@ -682,6 +698,36 @@ public class FSMDSLPackageImpl extends EPackageImpl implements FSMDSLPackage
    * <!-- end-user-doc -->
    * @generated
    */
+  public EClass getRange()
+  {
+    return rangeEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getRange_Ub()
+  {
+    return (EAttribute)rangeEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getRange_Lb()
+  {
+    return (EAttribute)rangeEClass.getEStructuralFeatures().get(1);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EClass getInputPort()
   {
     return inputPortEClass;
@@ -722,19 +768,9 @@ public class FSMDSLPackageImpl extends EPackageImpl implements FSMDSLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getPortRef_Ub()
+  public EReference getPortRef_Range()
   {
-    return (EAttribute)portRefEClass.getEStructuralFeatures().get(1);
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public EAttribute getPortRef_Lb()
-  {
-    return (EAttribute)portRefEClass.getEStructuralFeatures().get(2);
+    return (EReference)portRefEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -792,9 +828,29 @@ public class FSMDSLPackageImpl extends EPackageImpl implements FSMDSLPackage
    * <!-- end-user-doc -->
    * @generated
    */
-  public EAttribute getAndExpr_Op()
+  public EClass getCmpExpr()
   {
-    return (EAttribute)andExprEClass.getEStructuralFeatures().get(1);
+    return cmpExprEClass;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EReference getCmpExpr_Args()
+  {
+    return (EReference)cmpExprEClass.getEStructuralFeatures().get(0);
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EAttribute getCmpExpr_Op()
+  {
+    return (EAttribute)cmpExprEClass.getEStructuralFeatures().get(1);
   }
 
   /**
@@ -923,14 +979,17 @@ public class FSMDSLPackageImpl extends EPackageImpl implements FSMDSLPackage
 
     boolExprEClass = createEClass(BOOL_EXPR);
 
+    rangeEClass = createEClass(RANGE);
+    createEAttribute(rangeEClass, RANGE__UB);
+    createEAttribute(rangeEClass, RANGE__LB);
+
     inputPortEClass = createEClass(INPUT_PORT);
 
     outputPortEClass = createEClass(OUTPUT_PORT);
 
     portRefEClass = createEClass(PORT_REF);
     createEReference(portRefEClass, PORT_REF__PORT);
-    createEAttribute(portRefEClass, PORT_REF__UB);
-    createEAttribute(portRefEClass, PORT_REF__LB);
+    createEReference(portRefEClass, PORT_REF__RANGE);
 
     defaultPredicateEClass = createEClass(DEFAULT_PREDICATE);
 
@@ -939,7 +998,10 @@ public class FSMDSLPackageImpl extends EPackageImpl implements FSMDSLPackage
 
     andExprEClass = createEClass(AND_EXPR);
     createEReference(andExprEClass, AND_EXPR__ARGS);
-    createEAttribute(andExprEClass, AND_EXPR__OP);
+
+    cmpExprEClass = createEClass(CMP_EXPR);
+    createEReference(cmpExprEClass, CMP_EXPR__ARGS);
+    createEAttribute(cmpExprEClass, CMP_EXPR__OP);
 
     notExprEClass = createEClass(NOT_EXPR);
     createEReference(notExprEClass, NOT_EXPR__ARGS);
@@ -993,6 +1055,7 @@ public class FSMDSLPackageImpl extends EPackageImpl implements FSMDSLPackage
     defaultPredicateEClass.getESuperTypes().add(this.getBoolExpr());
     orExprEClass.getESuperTypes().add(this.getBoolExpr());
     andExprEClass.getESuperTypes().add(this.getBoolExpr());
+    cmpExprEClass.getESuperTypes().add(this.getBoolExpr());
     notExprEClass.getESuperTypes().add(this.getBoolExpr());
     constantEClass.getESuperTypes().add(this.getBoolExpr());
 
@@ -1053,14 +1116,17 @@ public class FSMDSLPackageImpl extends EPackageImpl implements FSMDSLPackage
 
     initEClass(boolExprEClass, BoolExpr.class, "BoolExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+    initEClass(rangeEClass, Range.class, "Range", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEAttribute(getRange_Ub(), ecorePackage.getEInt(), "ub", null, 0, 1, Range.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getRange_Lb(), ecorePackage.getEInt(), "lb", null, 0, 1, Range.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
     initEClass(inputPortEClass, InputPort.class, "InputPort", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(outputPortEClass, OutputPort.class, "OutputPort", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
     initEClass(portRefEClass, PortRef.class, "PortRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getPortRef_Port(), this.getPort(), null, "port", null, 0, 1, PortRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getPortRef_Ub(), ecorePackage.getEInt(), "ub", null, 0, 1, PortRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getPortRef_Lb(), ecorePackage.getEInt(), "lb", null, 0, 1, PortRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEReference(getPortRef_Range(), this.getRange(), null, "range", null, 0, 1, PortRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(defaultPredicateEClass, DefaultPredicate.class, "DefaultPredicate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
@@ -1069,7 +1135,10 @@ public class FSMDSLPackageImpl extends EPackageImpl implements FSMDSLPackage
 
     initEClass(andExprEClass, AndExpr.class, "AndExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getAndExpr_Args(), this.getBoolExpr(), null, "args", null, 0, -1, AndExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getAndExpr_Op(), ecorePackage.getEString(), "op", null, 0, 1, AndExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+    initEClass(cmpExprEClass, CmpExpr.class, "CmpExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+    initEReference(getCmpExpr_Args(), this.getBoolExpr(), null, "args", null, 0, -1, CmpExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+    initEAttribute(getCmpExpr_Op(), ecorePackage.getEString(), "op", null, 0, 1, CmpExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
     initEClass(notExprEClass, NotExpr.class, "NotExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
     initEReference(getNotExpr_Args(), this.getBoolExpr(), null, "args", null, 0, -1, NotExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
