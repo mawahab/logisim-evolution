@@ -15,6 +15,7 @@ import java.awt.BasicStroke
 import com.cburch.logisim.statemachine.fSMDSL.LayoutInfo
 import com.cburch.logisim.statemachine.fSMDSL.State
 import com.cburch.logisim.statemachine.fSMDSL.FSMElement
+import java.util.List
 
 class FSMDrawing {
 
@@ -48,7 +49,7 @@ class FSMDrawing {
 		e.layout
 	}
 
-	def dispatch drawElement(FSMElement e, Graphics2D page, FSMElement selection) {
+	def dispatch drawElement(FSMElement e, Graphics2D page, List<FSMElement> selection) {
 		
 	}
 
@@ -70,7 +71,7 @@ class FSMDrawing {
 		height
 	}
 
-	def dispatch drawElement(CommandList e, Graphics2D g, FSMElement selection) {
+	def dispatch drawElement(CommandList e, Graphics2D g, List<FSMElement> selection) {
 		highlightSelection(e,g,selection)
 		checkLayout(e);
 		var l = e.layout
@@ -95,7 +96,7 @@ class FSMDrawing {
 
 	}
 
-	def dispatch drawElement(FSM e, Graphics2D g, FSMElement selection) {
+	def dispatch drawElement(FSM e, Graphics2D g, List<FSMElement> selection) {
 				highlightSelection(e,g,selection)
 		val l = e.layout
 		if(l.x==0) l.x=FSM_BORDER_X
@@ -117,7 +118,7 @@ class FSMDrawing {
 		for(s:e.states) drawElement(s.commandList,g, selection);
 
 	}
-	def dispatch drawElement(State e, Graphics2D g, FSMElement selection) {
+	def dispatch drawElement(State e, Graphics2D g, List<FSMElement> selection) {
 		highlightSelection(e, g, selection)
 		val l = e.layout
 		if (l.width==0) {
@@ -145,8 +146,8 @@ class FSMDrawing {
 
 	}
 	
-	def highlightSelection(FSMElement e, Graphics2D g, FSMElement selection) {
-		if(selection==e) {
+	def highlightSelection(FSMElement e, Graphics2D g, List<FSMElement> selection) {
+		if(selection.contains(e)) {
 			g.setStroke(new BasicStroke(3));
 		} else {
 			g.setStroke(new BasicStroke(1));
@@ -176,7 +177,7 @@ class FSMDrawing {
 		p
 	}
 
-	def dispatch drawElement(Transition e, Graphics2D g, FSMElement selection) {
+	def dispatch drawElement(Transition e, Graphics2D g, List<FSMElement> selection) {
 				highlightSelection(e,g,selection)
 		
 		val src = e.eContainer as State;
@@ -224,7 +225,7 @@ class FSMDrawing {
 		}
 	}
 
-	def dispatch drawElement(InputPort e, Graphics2D page, FSMElement selection) {
+	def dispatch drawElement(InputPort e, Graphics2D page, List<FSMElement> selection) {
 		highlightSelection(e,page,selection)
 		drawPort(e, page, true);
 	}
@@ -252,7 +253,7 @@ class FSMDrawing {
 		}
 	}
 
-	def dispatch drawElement(OutputPort e, Graphics2D page, FSMElement selection) {
+	def dispatch drawElement(OutputPort e, Graphics2D page, List<FSMElement> selection) {
 		highlightSelection(e,page,selection)
 		showZone(e.layout,page)
 		drawPort(e, page, false);

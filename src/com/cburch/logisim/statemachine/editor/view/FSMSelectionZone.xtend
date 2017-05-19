@@ -1,24 +1,20 @@
 package com.cburch.logisim.statemachine.editor.view
 
-import com.cburch.logisim.statemachine.PrettyPrinter
+
 import com.cburch.logisim.statemachine.fSMDSL.*
-import java.awt.Color
-import java.awt.Graphics2D
 import java.awt.Point
-import java.awt.RenderingHints
-import java.awt.geom.RoundRectangle2D
-import org.eclipse.emf.ecore.EObject
+
 import java.util.List
 import com.cburch.logisim.statemachine.editor.FSMEditorController
 import java.util.ArrayList
 
-class FSMZones {
+class FSMSelectionZone {
 
-	FSMEditorController ctrl
+	FSM fsm = null;
 	
-	new(FSMEditorController ctrl) {
-		this.ctrl=ctrl
-	}
+	new(FSM model) {
+		 fsm = model;
+	}  
 	
 	def getSelectedElement(Point p,FSMElement e) {
 		if (isWithinElement(p,e)) {
@@ -59,15 +55,54 @@ class FSMZones {
 	
 	def void detectElement(Point p, FSMElement o, List<FSMElement> l) {
 		val isWithinElement = isWithinElement(p, o)
+		if (isWithinElement && o !== null && l !== null && l.size()==0) {
+			l.add(o)
+		}
+
+	}
+	def void detectElement(Zone z, FSMElement o, List<FSMElement> l) {
+		val isWithinElement = isWithinZone(z, o)
 		if (isWithinElement && o !== null && l !== null) {
 			l.add(o)
 		}
 
 	}
 
-	def List<FSMElement> getActiveElement(Point p) {
+	def List<FSMElement> getElementsInZone(Zone z) {
 		var List<FSMElement> candidates = new ArrayList<FSMElement>()
-		val fsm = ctrl.getFSM();
+		
+		
+		detectElement(z, fsm, candidates)
+		for (Port ip : fsm.getIn()) {
+			detectElement(z, ip, candidates)
+		}
+		for (Port op : fsm.getOut()) {
+			detectElement(z, op, candidates)
+		}
+		for (State s : fsm.getStates()) {
+			detectElement(z, s, candidates)
+			detectElement(z, s.getCommandList(), candidates)
+			for (Transition t : s.getTransition()) {
+				detectElement(z, t, candidates)
+			}
+
+		}
+		println(candidates)
+		return candidates			
+	}
+	
+	def setSelectionZone(Zone z) {
+		
+	}
+	
+	
+	def List<FSMElement> getSelectedElementsAt(Point p) {
+	
+	}
+		
+	def List<FSMElement> getSelectedElements(Point p) {
+		var List<FSMElement> candidates = new ArrayList<FSMElement>()
+		
 		detectElement(p, fsm, candidates)
 		for (Port ip : fsm.getIn()) {
 			detectElement(p, ip, candidates)
@@ -83,13 +118,13 @@ class FSMZones {
 			}
 
 		}
-		var int nbmatch = candidates.size()
+		
 		println(candidates)
 		return candidates	
 	}
 	
-	def public AreaType getAreaType(Point p, FSM fsm) {
-		val List<FSMElement> selection = getActiveElement(p);
+	def public AreaType getAreaType(Point p) {
+		val List<FSMElement> selection = getSelectedElements(p);
 		if (selection.size()>0) {
 			val first = selection.get(0)
 			if(first instanceof State) {
@@ -111,6 +146,12 @@ class FSMZones {
 	}
 
 	def dispatch boolean isWithinElement(Point p,FSMElement e) {
+		val l= e.layout	
+		println("check if ("+p.x+','+p.y+") within "+e.class+" ["+(l.x)+","+(l.y)+","+(l.x+l.width)+","+(l.y+l.height)+"]")
+		if (inRectangle(p.x,p.y,e.layout)) {
+			println("\tYES !")
+			return true
+		}
 		false
 	}
 
@@ -192,4 +233,30 @@ class FSMZones {
 		}
 		false
 	}
+	
+	
+	/////////////////////////////////
+	
+	
+	def dispatch isWithinZone(Zone p,FSMElement e) {
+	 	p.contains(new Zone(e.layout)) 
+	}
+	
+	def dispatch isWithinZone(Zone p,FSM e) {
+	 	val l = e.layout
+	 	p.contains(new Zone(l.x,l.y,l.x+l.width,l.y+FSMDrawing.FSM_TITLE_HEIGHT)) 
+	}
+
+	def dispatch isWithinZone(Zone p,State e) {
+		val l = e.layout
+	 	p.contains(new Zone(l.x,l.y,l.x+2*l.width,l.y+2*l.width)) 
+	}
+	
+	def dispatch isWithinZone(Zone p,Transition e) {
+		p.contains(new Zone(e.layout))  && e.dst!=null
+	}
+
+	
+	
+	
 }

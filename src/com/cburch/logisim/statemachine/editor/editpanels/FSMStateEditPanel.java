@@ -46,10 +46,10 @@ public class FSMStateEditPanel extends JPanel{
 	}
 	
 	private boolean checkInput(int result) {
+		FSM fsm = (FSM)(state.eContainer());
 		if (result == JOptionPane.OK_OPTION) {
 			String txt = codeField.getText();
 			if(initialState.isSelected()) {
-				FSM fsm = (FSM)(state.eContainer());
 				fsm.setStart(state);
 			}
 			char first = txt.charAt(0);
@@ -63,6 +63,10 @@ public class FSMStateEditPanel extends JPanel{
 						return true;
 						
 					}
+				}
+				if (txt.length()!=fsm.getWidth()) {
+					JOptionPane.showMessageDialog(null, "Error: Please enter a "+fsm.getWidth()+" bit code ", "Error Message",
+							JOptionPane.ERROR_MESSAGE);
 				}
 			}  else {
 				JOptionPane.showMessageDialog(null, "Error: Please enter a binary code (instead of "+txt+")", "Error Message",

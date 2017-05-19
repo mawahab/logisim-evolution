@@ -27,7 +27,7 @@ class RemoveCompare {
 	def dispatch replace(CmpExpr  e) {
 		val list = EcoreUtil.getAllContents(e,false).filter(typeof(CmpExpr)).toList
 		for (n:list) {
-			println("")
+			println("Replace ")
 			EcoreUtil.replace(n,slice(n))
 		}
 		slice(e)

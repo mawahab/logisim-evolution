@@ -20,6 +20,9 @@ import java.io.PrintStream
 import java.io.File
 import java.util.ArrayList
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr
+import java.io.FileNotFoundException
+import com.cburch.logisim.statemachine.fSMDSL.InputPort
+import com.cburch.logisim.statemachine.fSMDSL.OutputPort
 
 class FSMVHDLCodeGen{
 
@@ -32,7 +35,7 @@ class FSMVHDLCodeGen{
 	new() {
 	}
 
-	def export(FSM fsm, File f) {
+	def export(FSM fsm, File f) throws FileNotFoundException{
 		val ps  = new PrintStream(f);
 		ps.append(generate(fsm));
 		ps.close
@@ -51,17 +54,21 @@ class FSMVHDLCodeGen{
 			clr : in std_logic;
 			en  : in std_logic;
 			«FOR i:ios SEPARATOR ";"»
+				«genPort(i)»
 			«ENDFOR»
 		);
 		end entity;
 		
 		architecture RTL of «e.name» is
-			type state_type is («e.states.map[s|'_'+s.name].reduce[s1,s2|s1+','+s2]»);  
+			type state_type is («e.states.map[s|"S_"+s.name].reduce[s1,s2|s1+','+s2]»);  
 			signal symCS : state_type ;  
 			signal CS : std_logic_vector(«e.width-1» downto 0) ;  
 			
+			constant ONE : std_logic:='1';
+			constant ZERO : std_logic:='0';
+
 			«FOR s:e.states»
-			constant «s.name» is std_logic_vector(«e.width-1» downto 0):=«s.code»;
+			constant «s.name» : std_logic_vector(«e.width-1» downto 0):=«s.code»;
 			«ENDFOR»
 			
 		begin
@@ -69,7 +76,7 @@ class FSMVHDLCodeGen{
 			begin
 				if clr='1' then
 					CS <= «e.start.name»;
-					symCS <= _«e.start.name»;
+					symCS <= S_«e.start.name»;
 				elsif rising_edge(clk) then
 					case (CS) is
 						«FOR s:e.states»«genTransition(s)»«ENDFOR» 
@@ -80,6 +87,7 @@ class FSMVHDLCodeGen{
 			
 			OUTPUT : process(CS,«FOR i:e.in SEPARATOR ","»«i.name»«ENDFOR»)
 			begin
+				«FOR o:e.out»«genDefaultValue(o)»«ENDFOR» 
 				case (CS) is
 					«FOR s:e.states»«genCommand(s)»«ENDFOR» 
 					when others => null;
@@ -90,21 +98,47 @@ class FSMVHDLCodeGen{
 		'''
 	}
 	
+	def genDefaultValue(Port port) {
+		val value= if(port.width==1) {
+			"'0'"
+		} else {
+			'''"«Integer.toBinaryString((1<<port.width)-1)» "'''
+		}
+		'''«port.name» <= «value»;'''
+	}
+	
+	def dispatch genPort(Port port) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	def dispatch genPort(InputPort port) {
+		if(port.width >1)
+		'''«port.name» : in std_logic_vector(«port.width-1» downto 0)'''
+		else
+		'''«port.name» : in std_logic'''
+		
+	}
+	def dispatch genPort(OutputPort port) {
+		if(port.width >1)
+		'''«port.name» : out std_logic_vector(«port.width-1» downto 0)'''
+		else
+		'''«port.name» : out std_logic'''
+	}
+	
 	def getDefault(State s) {
 		s.transition.findFirst[p|(p.predicate instanceof DefaultPredicate)]
 	}
 	def genTransition(State state) {
 		'''when «state.name» =>
 				«FOR t:state.transition.filter[t|!(t.predicate instanceof DefaultPredicate)]»
-				if «genPred(t.predicate)» then
+				if «genPred(t.predicate)»='1'  then
 					CS <= «t.dst.name»;
-					symCS <= _«t.dst.name»;
+					symCS <= S_«t.dst.name»;
 				end if;
 				«ENDFOR»
 				«IF getDefault(state)!=null»
 				-- default transition
-				CS <= «getDefault(state).dst»;
-				symCS <= _«getDefault(state).dst»;
+				CS <= «getDefault(state).dst.name»;
+				symCS <= S_«getDefault(state).dst.name»;
 				«ENDIF»
 		'''
 	}
@@ -131,17 +165,38 @@ class FSMVHDLCodeGen{
 		b.port.name
 	}
 	def static dispatch genPred(Constant b) {
-		b.value
+		if(b.value.length>3) 
+			b.value
+		else {
+			switch(b.value) {
+				case "\"0\"" : return "ZERO"
+ 
+				case "\"1\"" : return "ONE"
+				 
+				default :{
+					throw new UnsupportedOperationException("Invalivd one-bit value "+b.value);					
+				}
+			}
+		}
+		
+			b.value.replace('"','\'') 
 	}
 
 
 	def genCommand(State s) {
-		'''
-		when «s.name» => 
-		«FOR c:s.commandList.commands»
-			«genCommand(c)»
-		«ENDFOR»
-		'''
+		
+		if (s.commandList.commands.size==0) {
+			'''
+			when «s.name» => null;
+			'''
+		} else {
+			'''
+			when «s.name» => 
+			«FOR c:s.commandList.commands»
+				«genCommand(c)»
+			«ENDFOR»
+			'''
+		}
 	}
 	
 	def genCommand(Command c) {

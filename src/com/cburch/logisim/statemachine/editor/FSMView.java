@@ -22,7 +22,11 @@ import java.util.List;
 
 import javax.swing.JPanel;
 
+import com.cburch.logisim.statemachine.editor.view.FSMSelectionZone;
+import com.cburch.logisim.statemachine.editor.view.Zone;
+import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.FSMElement;
+import com.cburch.logisim.statemachine.fSMDSL.LayoutInfo;
 import com.cburch.logisim.std.fsm.IFSMEditor;
 
 // CanvasPanel is the class upon which we actually draw. It listens
@@ -36,17 +40,22 @@ public class FSMView extends JPanel implements MouseListener, MouseMotionListene
 	private static final long serialVersionUID = 0;
 
 	private FSMEditorController controller; // the drawing: shapes in order
-	private Point currentPos = new Point(0, 0);
 	private final IFSMEditor editor;
 	private double scale=1.0;
 
 	private Point unscaledPos;
+	private Point scaledPos = new Point(0, 0);
+
+	private FSMSelectionZone zones;
+	private FSMPopupMenu popupMenu;
+	
 
 	// Constructor just needs to set up the CanvasPanel as a listener.
 	public FSMView(IFSMEditor parent) {
 		super();
 		editor = parent;
-		controller = new FSMEditorController(this, editor.getContent().getFsm()); // make
+		FSM fsm = editor.getContent().getFsm();
+		controller = new FSMEditorController(this, fsm); // make
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		setPreferredSize(new Dimension(1000,1000));
@@ -60,23 +69,26 @@ public class FSMView extends JPanel implements MouseListener, MouseMotionListene
                 repaint();
             }
         });
-
+        this.popupMenu = new FSMPopupMenu(this);
+        zones = new FSMSelectionZone(fsm);
 		setBackground(Color.white);
 	}
 
 	public void paint(Graphics page) {
+		
+		LayoutInfo l = getController().getFSM().getLayout();
+		setPreferredSize(new Dimension(Math.max(500, l.getWidth()), Math.max(500, l.getHeight())));
+		
 		super.paint(page); // execute the paint method of JPanel
-		int w = (int) getWidth();
-		int h = (int) getHeight();
+				
 		Graphics2D g = (Graphics2D) page;
 		g.scale(scale, scale);
 		getController().draw((Graphics2D) page); // draw all of the shapes
-		//showMouseCursor(page, g);
 	}
 
 	private void showMouseCursor(Graphics page, Graphics2D g) {
-		int x = (int)(currentPos.x);
-		int y = (int)(currentPos.y);
+		int x = (int)(scaledPos.x);
+		int y = (int)(scaledPos.y);
 		String label = "["+x+","+y+"]";
 		int sw= page.getFontMetrics().stringWidth(label);
 		g.setColor(Color.blue);
@@ -85,10 +97,20 @@ public class FSMView extends JPanel implements MouseListener, MouseMotionListene
 		g.setColor(Color.black);
 	}
 
+	public void showContextMenu() {
+		popupMenu.showPopupMenu(unscaledPos,zones.getAreaType(scaledPos));
+	}
+
+	public List<FSMElement> getElementsAt() {
+		return zones.getSelectedElements(scaledPos);
+	}
 	
+	public List<FSMElement> getElementsWithin(Zone z) {
+		return zones.getElementsInZone(z);
+	}
 
 	private void updatePosition(MouseEvent e) {
-		currentPos = new Point((int)(e.getX()/scale), (int)(e.getY()/scale));
+		scaledPos = new Point((int)(e.getX()/scale), (int)(e.getY()/scale));
 		unscaledPos = new Point(e.getX(),e.getY());
 	}
 
@@ -100,59 +122,49 @@ public class FSMView extends JPanel implements MouseListener, MouseMotionListene
 		FSMEditorController ctrl = this.getController();
 		if (e.getButton() == MouseEvent.BUTTON1) {
 			if (e.getClickCount() == 2) {
-				ctrl.executeDoubleClick(currentPos);
+				ctrl.executeDoubleClick(scaledPos);
 			} else {
-				ctrl.executeLeftClick(currentPos);
+				ctrl.executeLeftClick(scaledPos);
 			}
-		} else {
-			// FIXME : hack to "unscale" position to properly show context menu
-			ctrl.executeRightClick(currentPos, unscaledPos);
+		} else {  
+			ctrl.executeRightClick();
 		}
-
 	}
 
 	public void mousePressed(MouseEvent event) {
 		updatePosition(event);
-		getController().executePress(currentPos);
+		getController().executePress(scaledPos);
 		repaint();
-
 	}
 
 	public void mouseDragged(MouseEvent event) {
 		updatePosition(event);
-		getController().executeDragged(currentPos);
+		getController().executeDragged(scaledPos);
 		repaint();
-
 	}
 
-	// We don't care about the other mouse events.
 	public void mouseReleased(MouseEvent event) {
 		updatePosition(event);
+		getController().executeRelease(scaledPos);
 		repaint();
 	}
 
-	public void mouseEntered(MouseEvent event) {
-	}
+	public void mouseEntered(MouseEvent event) {}
 
-	public void mouseExited(MouseEvent event) {
-	}
+	public void mouseExited(MouseEvent event) {}
 
 	public void mouseMoved(MouseEvent event) {
 		updatePosition(event);
-		getController().executeMove(currentPos);
+		getController().executeMove(scaledPos);
 	}
 
 	public FSMEditorController getController() {
 		return controller;
 	}
 
-	public void getAreaType(Point p) {
-
-	}
-
 	public void setScale(double d) {
 		scale=d;
-		
 	}
+
 
 }

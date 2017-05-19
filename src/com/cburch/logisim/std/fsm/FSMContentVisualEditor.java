@@ -41,6 +41,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.swing.JButton;
@@ -50,6 +51,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.cburch.logisim.proj.Project;
+import com.cburch.logisim.statemachine.codegen.FSMVHDLCodeGen;
 import com.cburch.logisim.statemachine.editor.FSMEditorWindow;
 import com.cburch.logisim.statemachine.editor.view.FSMValidation;
 import com.cburch.logisim.util.FileUtil;
@@ -129,6 +131,21 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 			if (source == close) {
 				dispose();
 			}
+			if (source == gen) {
+				JFileChooser chooser = JFileChoosers.createSelected( new File(content.getName() + ".vhd"));
+				chooser.setDialogTitle("Export VHDL");
+				int choice = chooser.showSaveDialog(FSMContentVisualEditor.this);
+				if (choice == JFileChooser.APPROVE_OPTION) {
+					File f = chooser.getSelectedFile();
+					try {
+						new FSMVHDLCodeGen().export(getContent().getFsm(), f);
+					} catch (Exception e) {
+						JOptionPane.showMessageDialog(FSMContentVisualEditor.this, e.getMessage(),
+								"Error while saving file", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				dispose();
+			}
 		}
 
 		@Override
@@ -136,6 +153,7 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 			setTitle(Strings.get("fsmFrameTitle"));
 			open.setText(Strings.get("openButton"));
 			save.setText(Strings.get("saveButton"));
+			gen.setText("Export VHDL");
 			validate.setText(Strings.get("validateButton"));
 			close.setText(Strings.get("closeButton"));
 		}
@@ -178,6 +196,7 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 
 	private JButton open = new JButton();
 	private JButton save = new JButton();
+	private JButton gen = new JButton();
 	private JButton validate = new JButton();
 	private JButton close = new JButton();
 
@@ -204,13 +223,16 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 		Panel buttonsPanel = new Panel();
 		buttonsPanel.add(open);
 		buttonsPanel.add(save);
+		buttonsPanel.add(gen);
 		buttonsPanel.add(validate);
 		buttonsPanel.add(close);
 
 		open.addActionListener(frameListener);
 		save.addActionListener(frameListener);
+		gen.addActionListener(frameListener);
 		close.addActionListener(frameListener);
 		validate.addActionListener(frameListener);
+		
 
 		editor = new FSMEditorWindow(model);
 
