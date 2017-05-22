@@ -2,17 +2,14 @@ package com.cburch.logisim.statemachine.editor;
 
 import com.cburch.logisim.statemachine.editor.FSMEditorController;
 import com.cburch.logisim.statemachine.editor.FSMView;
-import com.cburch.logisim.statemachine.editor.view.FSMZones;
+import com.cburch.logisim.statemachine.editor.view.FSMSelectionZone;
 import com.cburch.logisim.statemachine.fSMDSL.FSMElement;
-import com.cburch.logisim.statemachine.fSMDSL.InputPort;
-import com.cburch.logisim.statemachine.fSMDSL.OutputPort;
-import com.cburch.logisim.statemachine.fSMDSL.State;
-import com.google.common.base.Objects;
 import java.awt.MenuItem;
 import java.awt.Point;
 import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 @SuppressWarnings("all")
 public class FSMPopupMenu extends PopupMenu implements ActionListener {
@@ -28,7 +25,7 @@ public class FSMPopupMenu extends PopupMenu implements ActionListener {
   
   private MenuItem deleteMenuItem;
   
-  private FSMZones.AreaType type = FSMZones.AreaType.NONE;
+  private FSMSelectionZone.AreaType type = FSMSelectionZone.AreaType.NONE;
   
   private Point currentPos;
   
@@ -53,13 +50,13 @@ public class FSMPopupMenu extends PopupMenu implements ActionListener {
         boolean _equals_2 = _actionCommand_2.equals("Copy");
         if (_equals_2) {
           FSMEditorController _controller_2 = this.view.getController();
-          _controller_2.executeCopy(this.currentPos, this.type);
+          _controller_2.executeCopy(this.currentPos);
         } else {
           String _actionCommand_3 = e.getActionCommand();
           boolean _equals_3 = _actionCommand_3.equals("Paste");
           if (_equals_3) {
             FSMEditorController _controller_3 = this.view.getController();
-            _controller_3.executePaste(this.currentPos, this.type);
+            _controller_3.executePaste(this.currentPos);
           } else {
             String _actionCommand_4 = e.getActionCommand();
             boolean _equals_4 = _actionCommand_4.equals("Delete");
@@ -93,6 +90,7 @@ public class FSMPopupMenu extends PopupMenu implements ActionListener {
     this.deleteMenuItem = _menuItem_4;
     this.deleteMenuItem.setActionCommand("Delete");
     this.editMenuItem.addActionListener(this);
+    this.pasteMenuItem.addActionListener(this);
     this.createMenuItem.addActionListener(this);
     this.deleteMenuItem.addActionListener(this);
     this.copyMenuItem.addActionListener(this);
@@ -111,29 +109,27 @@ public class FSMPopupMenu extends PopupMenu implements ActionListener {
     this.createMenuItem.setEnabled(enable);
   }
   
-  public void showPopupMenu(final Point p, final FSMZones.AreaType type) {
+  public void showPopupMenu(final Point p, final FSMSelectionZone.AreaType type) {
     this.currentPos = p;
     this.type = type;
-    FSMEditorController _controller = this.view.getController();
-    final FSMElement selection = _controller.getCurrentSelection();
     this.setEnabled(true);
-    this.pasteMenuItem.setEnabled(false);
+    FSMEditorController _controller = this.view.getController();
+    List<FSMElement> _clipboard = _controller.getClipboard();
+    int _size = _clipboard.size();
+    boolean _greaterThan = (_size > 0);
+    if (_greaterThan) {
+      this.pasteMenuItem.setEnabled(true);
+      FSMEditorController _controller_1 = this.view.getController();
+      List<FSMElement> _clipboard_1 = _controller_1.getClipboard();
+      int _size_1 = _clipboard_1.size();
+      String _plus = ("Paste " + Integer.valueOf(_size_1));
+      this.pasteMenuItem.setLabel(_plus);
+    }
     if (type != null) {
       switch (type) {
         case INPUT:
           this.copyMenuItem.setEnabled(true);
           this.copyMenuItem.setLabel("Copy");
-          boolean _and = false;
-          boolean _notEquals = (!Objects.equal(selection, null));
-          if (!_notEquals) {
-            _and = false;
-          } else {
-            _and = (selection instanceof InputPort);
-          }
-          if (_and) {
-            this.pasteMenuItem.setEnabled(true);
-            this.pasteMenuItem.setLabel("Paste");
-          }
           this.createMenuItem.setEnabled(true);
           this.copyMenuItem.setEnabled(true);
           this.copyMenuItem.setLabel("Duplicate");
@@ -142,17 +138,6 @@ public class FSMPopupMenu extends PopupMenu implements ActionListener {
         case STATE:
           this.copyMenuItem.setEnabled(true);
           this.copyMenuItem.setLabel("Copy");
-          boolean _and_1 = false;
-          boolean _notEquals_1 = (!Objects.equal(selection, null));
-          if (!_notEquals_1) {
-            _and_1 = false;
-          } else {
-            _and_1 = (selection instanceof State);
-          }
-          if (_and_1) {
-            this.pasteMenuItem.setEnabled(true);
-            this.pasteMenuItem.setLabel("Paste");
-          }
           this.createMenuItem.setEnabled(true);
           this.createMenuItem.setLabel("Add new state");
           break;
@@ -166,17 +151,6 @@ public class FSMPopupMenu extends PopupMenu implements ActionListener {
         case OUTPUT:
           this.copyMenuItem.setEnabled(true);
           this.copyMenuItem.setLabel("Duplicate");
-          boolean _and_2 = false;
-          boolean _notEquals_2 = (!Objects.equal(selection, null));
-          if (!_notEquals_2) {
-            _and_2 = false;
-          } else {
-            _and_2 = (selection instanceof OutputPort);
-          }
-          if (_and_2) {
-            this.pasteMenuItem.setEnabled(true);
-            this.pasteMenuItem.setLabel("Paste");
-          }
           this.createMenuItem.setEnabled(true);
           this.createMenuItem.setLabel("Add new output");
           break;

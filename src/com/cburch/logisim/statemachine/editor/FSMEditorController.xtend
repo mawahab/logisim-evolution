@@ -99,7 +99,11 @@ class FSMEditorController {
 		for (s:fsm.states) map.put(s.code,s)
 		val ub = ((1<<fsm.width)-1);
 		for(n:0..ub) {
-			val code = '"' + Integer.toBinaryString(n)+'"'
+			var code = Integer.toBinaryString(n);
+			while (code.length() < fsm.width) {    //pad with 16 0's
+        		code = "0" + code;
+  			}
+			code = '"' + code+'"'
 			if (!map.containsKey(code)) {
 				return code
 			}

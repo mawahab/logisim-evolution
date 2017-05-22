@@ -60,6 +60,8 @@ public interface Caret {
 
 	public void mouseDragged(MouseEvent e);
 
+	public void mouseMoved(MouseEvent e);
+
 	// events to handle
 	public void mousePressed(MouseEvent e);
 

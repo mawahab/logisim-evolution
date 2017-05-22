@@ -165,6 +165,13 @@ class InstancePokerAdapter extends AbstractCaret implements Pokable {
 	}
 
 	@Override
+	public void mouseMoved(MouseEvent e) {
+		if (poker != null) {
+			poker.mouseMoved(state, e);
+			checkCurrent();
+		}
+	}
+	@Override
 	public void mousePressed(MouseEvent e) {
 		if (poker != null) {
 			poker.mousePressed(state, e);

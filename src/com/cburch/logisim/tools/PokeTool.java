@@ -200,6 +200,13 @@ public class PokeTool extends Tool {
 			canvas.getProject().repaintCanvas();
 		}
 	}
+	@Override
+	public void mouseMoved(Canvas canvas, Graphics g, MouseEvent e) {
+		if (pokeCaret != null) {
+			pokeCaret.mouseMoved(e);
+			canvas.getProject().repaintCanvas();
+		}
+	}
 
 	@Override
 	public void mousePressed(Canvas canvas, Graphics g, MouseEvent e) {

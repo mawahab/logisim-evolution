@@ -67,7 +67,8 @@ public class FPGAIOInformationContainer {
 
 	public static enum IOComponentTypes {
 
-		LED, Button, Pin, SevenSegment, DIPSwitch, RGBLED, PortIO, LocalBus, Bus, Unknown;
+		LED, Button, Pin, SevenSegment, DIPSwitch, KeyPad, RGBLED, PortIO, LocalBus, Bus, Unknown;
+		
 		public static IOComponentTypes getEnumFromString(String str) {
 			for (IOComponentTypes elem : KnownComponentSet) {
 				if (elem.name().equalsIgnoreCase(str)) {

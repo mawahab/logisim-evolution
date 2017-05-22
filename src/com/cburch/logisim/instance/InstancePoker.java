@@ -56,6 +56,9 @@ public abstract class InstancePoker {
 	public void mouseDragged(InstanceState state, MouseEvent e) {
 	}
 
+	public void mouseMoved(InstanceState state, MouseEvent e) {
+	}
+
 	public void mousePressed(InstanceState state, MouseEvent e) {
 	}
 

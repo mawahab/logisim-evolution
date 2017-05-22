@@ -264,6 +264,10 @@ class TextFieldCaret implements Caret, TextFieldListener {
 	public void mouseDragged(MouseEvent e) {
 		// TODO: enhance label editing
 	}
+	
+	public void mouseMoved(MouseEvent e) {
+		// TODO: enhance label editing
+	}
 
 	public void mousePressed(MouseEvent e) {
 		// TODO: enhance label editing

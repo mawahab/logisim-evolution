@@ -24,6 +24,7 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.geom.QuadCurve2D;
 import java.util.Arrays;
+import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend2.lib.StringConcatenation;
@@ -73,7 +74,7 @@ public class FSMDrawing {
     return _xblockexpression;
   }
   
-  protected Object _drawElement(final FSMElement e, final Graphics2D page, final FSMElement selection) {
+  protected Object _drawElement(final FSMElement e, final Graphics2D page, final List<FSMElement> selection) {
     return null;
   }
   
@@ -105,7 +106,7 @@ public class FSMDrawing {
     return _xblockexpression;
   }
   
-  protected Object _drawElement(final CommandList e, final Graphics2D g, final FSMElement selection) {
+  protected Object _drawElement(final CommandList e, final Graphics2D g, final List<FSMElement> selection) {
     this.highlightSelection(e, g, selection);
     this.checkLayout(e);
     LayoutInfo l = e.getLayout();
@@ -156,7 +157,7 @@ public class FSMDrawing {
     return null;
   }
   
-  protected Object _drawElement(final FSM e, final Graphics2D g, final FSMElement selection) {
+  protected Object _drawElement(final FSM e, final Graphics2D g, final List<FSMElement> selection) {
     this.highlightSelection(e, g, selection);
     final LayoutInfo l = e.getLayout();
     int _x = l.getX();
@@ -237,7 +238,7 @@ public class FSMDrawing {
     return null;
   }
   
-  protected Object _drawElement(final State e, final Graphics2D g, final FSMElement selection) {
+  protected Object _drawElement(final State e, final Graphics2D g, final List<FSMElement> selection) {
     this.highlightSelection(e, g, selection);
     final LayoutInfo l = e.getLayout();
     int _width = l.getWidth();
@@ -304,9 +305,9 @@ public class FSMDrawing {
     return null;
   }
   
-  public void highlightSelection(final FSMElement e, final Graphics2D g, final FSMElement selection) {
-    boolean _equals = Objects.equal(selection, e);
-    if (_equals) {
+  public void highlightSelection(final FSMElement e, final Graphics2D g, final List<FSMElement> selection) {
+    boolean _contains = selection.contains(e);
+    if (_contains) {
       BasicStroke _basicStroke = new BasicStroke(3);
       g.setStroke(_basicStroke);
     } else {
@@ -350,7 +351,7 @@ public class FSMDrawing {
     return _xblockexpression;
   }
   
-  protected Object _drawElement(final Transition e, final Graphics2D g, final FSMElement selection) {
+  protected Object _drawElement(final Transition e, final Graphics2D g, final List<FSMElement> selection) {
     this.highlightSelection(e, g, selection);
     EObject _eContainer = e.eContainer();
     final State src = ((State) _eContainer);
@@ -470,7 +471,7 @@ public class FSMDrawing {
     }
   }
   
-  protected Object _drawElement(final InputPort e, final Graphics2D page, final FSMElement selection) {
+  protected Object _drawElement(final InputPort e, final Graphics2D page, final List<FSMElement> selection) {
     this.highlightSelection(e, page, selection);
     this.drawPort(e, page, true);
     return null;
@@ -556,7 +557,7 @@ public class FSMDrawing {
     }
   }
   
-  protected Object _drawElement(final OutputPort e, final Graphics2D page, final FSMElement selection) {
+  protected Object _drawElement(final OutputPort e, final Graphics2D page, final List<FSMElement> selection) {
     this.highlightSelection(e, page, selection);
     LayoutInfo _layout = e.getLayout();
     this.showZone(_layout, page);
@@ -564,7 +565,7 @@ public class FSMDrawing {
     return null;
   }
   
-  public Object drawElement(final FSMElement e, final Graphics2D page, final FSMElement selection) {
+  public Object drawElement(final FSMElement e, final Graphics2D page, final List<FSMElement> selection) {
     if (e instanceof InputPort) {
       return _drawElement((InputPort)e, page, selection);
     } else if (e instanceof OutputPort) {

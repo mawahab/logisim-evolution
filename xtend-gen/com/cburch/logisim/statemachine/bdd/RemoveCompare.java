@@ -59,7 +59,7 @@ public class RemoveCompare {
       final List<CmpExpr> list = IteratorExtensions.<CmpExpr>toList(_filter);
       for (final CmpExpr n : list) {
         {
-          InputOutput.<String>println("");
+          InputOutput.<String>println("Replace ");
           BoolExpr _slice = this.slice(n);
           EcoreUtil.replace(n, _slice);
         }

@@ -8,6 +8,7 @@ import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
 import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
+import com.cburch.logisim.statemachine.fSMDSL.InputPort;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OutputPort;
@@ -17,13 +18,13 @@ import com.cburch.logisim.statemachine.fSMDSL.State;
 import com.cburch.logisim.statemachine.fSMDSL.Transition;
 import com.google.common.base.Objects;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.Functions.Function2;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
@@ -39,15 +40,11 @@ public class FSMVHDLCodeGen {
   public FSMVHDLCodeGen() {
   }
   
-  public void export(final FSM fsm, final File f) {
-    try {
-      final PrintStream ps = new PrintStream(f);
-      CharSequence _generate = this.generate(fsm);
-      ps.append(_generate);
-      ps.close();
-    } catch (Throwable _e) {
-      throw Exceptions.sneakyThrow(_e);
-    }
+  public void export(final FSM fsm, final File f) throws FileNotFoundException {
+    final PrintStream ps = new PrintStream(f);
+    CharSequence _generate = this.generate(fsm);
+    ps.append(_generate);
+    ps.close();
   }
   
   protected CharSequence _generate(final FSM e) {
@@ -86,6 +83,10 @@ public class FSMVHDLCodeGen {
           } else {
             _builder.appendImmediate(";", "\t");
           }
+          _builder.append("\t");
+          CharSequence _genPort = this.genPort(i);
+          _builder.append(_genPort, "\t");
+          _builder.newLineIfNotEmpty();
         }
       }
       _builder.append(");");
@@ -103,7 +104,7 @@ public class FSMVHDLCodeGen {
       EList<State> _states = e.getStates();
       final Function1<State, String> _function = (State s) -> {
         String _name_2 = s.getName();
-        return ("_" + _name_2);
+        return ("S_" + _name_2);
       };
       List<String> _map = ListExtensions.<State, String>map(_states, _function);
       final Function2<String, String, String> _function_1 = (String s1, String s2) -> {
@@ -125,6 +126,13 @@ public class FSMVHDLCodeGen {
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
       _builder.newLine();
+      _builder.append("\t");
+      _builder.append("constant ONE : std_logic:=\'1\';");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("constant ZERO : std_logic:=\'0\';");
+      _builder.newLine();
+      _builder.newLine();
       {
         EList<State> _states_1 = e.getStates();
         for(final State s : _states_1) {
@@ -132,7 +140,7 @@ public class FSMVHDLCodeGen {
           _builder.append("constant ");
           String _name_2 = s.getName();
           _builder.append(_name_2, "\t");
-          _builder.append(" is std_logic_vector(");
+          _builder.append(" : std_logic_vector(");
           int _width_1 = e.getWidth();
           int _minus_1 = (_width_1 - 1);
           _builder.append(_minus_1, "\t");
@@ -164,7 +172,7 @@ public class FSMVHDLCodeGen {
       _builder.append(";");
       _builder.newLineIfNotEmpty();
       _builder.append("\t\t\t");
-      _builder.append("symCS <= _");
+      _builder.append("symCS <= S_");
       State _start_1 = e.getStart();
       String _name_4 = _start_1.getName();
       _builder.append(_name_4, "\t\t\t");
@@ -221,6 +229,16 @@ public class FSMVHDLCodeGen {
       _builder.append("begin");
       _builder.newLine();
       _builder.append("\t\t");
+      {
+        EList<Port> _out_1 = e.getOut();
+        for(final Port o : _out_1) {
+          CharSequence _genDefaultValue = this.genDefaultValue(o);
+          _builder.append(_genDefaultValue, "\t\t");
+        }
+      }
+      _builder.append(" ");
+      _builder.newLineIfNotEmpty();
+      _builder.append("\t\t");
       _builder.append("case (CS) is");
       _builder.newLine();
       _builder.append("\t\t\t");
@@ -249,6 +267,89 @@ public class FSMVHDLCodeGen {
       _xblockexpression = _builder;
     }
     return _xblockexpression;
+  }
+  
+  public CharSequence genDefaultValue(final Port port) {
+    CharSequence _xblockexpression = null;
+    {
+      String _xifexpression = null;
+      int _width = port.getWidth();
+      boolean _equals = (_width == 1);
+      if (_equals) {
+        _xifexpression = "\'0\'";
+      } else {
+        StringConcatenation _builder = new StringConcatenation();
+        _builder.append("\"");
+        int _width_1 = port.getWidth();
+        int _doubleLessThan = (1 << _width_1);
+        int _minus = (_doubleLessThan - 1);
+        String _binaryString = Integer.toBinaryString(_minus);
+        _builder.append(_binaryString, "");
+        _builder.append(" \"");
+        _xifexpression = _builder.toString();
+      }
+      final String value = _xifexpression;
+      StringConcatenation _builder_1 = new StringConcatenation();
+      String _name = port.getName();
+      _builder_1.append(_name, "");
+      _builder_1.append(" <= ");
+      _builder_1.append(value, "");
+      _builder_1.append(";");
+      _xblockexpression = _builder_1;
+    }
+    return _xblockexpression;
+  }
+  
+  protected CharSequence _genPort(final Port port) {
+    throw new UnsupportedOperationException("TODO: auto-generated method stub");
+  }
+  
+  protected CharSequence _genPort(final InputPort port) {
+    CharSequence _xifexpression = null;
+    int _width = port.getWidth();
+    boolean _greaterThan = (_width > 1);
+    if (_greaterThan) {
+      StringConcatenation _builder = new StringConcatenation();
+      String _name = port.getName();
+      _builder.append(_name, "");
+      _builder.append(" : in std_logic_vector(");
+      int _width_1 = port.getWidth();
+      int _minus = (_width_1 - 1);
+      _builder.append(_minus, "");
+      _builder.append(" downto 0)");
+      _xifexpression = _builder;
+    } else {
+      StringConcatenation _builder_1 = new StringConcatenation();
+      String _name_1 = port.getName();
+      _builder_1.append(_name_1, "");
+      _builder_1.append(" : in std_logic");
+      _xifexpression = _builder_1;
+    }
+    return _xifexpression;
+  }
+  
+  protected CharSequence _genPort(final OutputPort port) {
+    CharSequence _xifexpression = null;
+    int _width = port.getWidth();
+    boolean _greaterThan = (_width > 1);
+    if (_greaterThan) {
+      StringConcatenation _builder = new StringConcatenation();
+      String _name = port.getName();
+      _builder.append(_name, "");
+      _builder.append(" : out std_logic_vector(");
+      int _width_1 = port.getWidth();
+      int _minus = (_width_1 - 1);
+      _builder.append(_minus, "");
+      _builder.append(" downto 0)");
+      _xifexpression = _builder;
+    } else {
+      StringConcatenation _builder_1 = new StringConcatenation();
+      String _name_1 = port.getName();
+      _builder_1.append(_name_1, "");
+      _builder_1.append(" : out std_logic");
+      _xifexpression = _builder_1;
+    }
+    return _xifexpression;
   }
   
   public Transition getDefault(final State s) {
@@ -280,7 +381,7 @@ public class FSMVHDLCodeGen {
         BoolExpr _predicate = t.getPredicate();
         CharSequence _genPred = FSMVHDLCodeGen.genPred(_predicate);
         _builder.append(_genPred, "\t\t\t\t");
-        _builder.append(" then");
+        _builder.append("=\'1\'  then");
         _builder.newLineIfNotEmpty();
         _builder.append("\t\t\t\t");
         _builder.append("\t");
@@ -292,7 +393,7 @@ public class FSMVHDLCodeGen {
         _builder.newLineIfNotEmpty();
         _builder.append("\t\t\t\t");
         _builder.append("\t");
-        _builder.append("symCS <= _");
+        _builder.append("symCS <= S_");
         State _dst_1 = t.getDst();
         String _name_2 = _dst_1.getName();
         _builder.append(_name_2, "\t\t\t\t\t");
@@ -314,14 +415,16 @@ public class FSMVHDLCodeGen {
         _builder.append("CS <= ");
         Transition _default_1 = this.getDefault(state);
         State _dst_2 = _default_1.getDst();
-        _builder.append(_dst_2, "\t\t\t\t");
+        String _name_3 = _dst_2.getName();
+        _builder.append(_name_3, "\t\t\t\t");
         _builder.append(";");
         _builder.newLineIfNotEmpty();
         _builder.append("\t\t\t\t");
-        _builder.append("symCS <= _");
+        _builder.append("symCS <= S_");
         Transition _default_2 = this.getDefault(state);
         State _dst_3 = _default_2.getDst();
-        _builder.append(_dst_3, "\t\t\t\t");
+        String _name_4 = _dst_3.getName();
+        _builder.append(_name_4, "\t\t\t\t");
         _builder.append(";");
         _builder.newLineIfNotEmpty();
       }
@@ -423,26 +526,65 @@ public class FSMVHDLCodeGen {
   }
   
   protected static CharSequence _genPred(final Constant b) {
-    return b.getValue();
+    String _xblockexpression = null;
+    {
+      String _value = b.getValue();
+      int _length = _value.length();
+      boolean _greaterThan = (_length > 3);
+      if (_greaterThan) {
+        b.getValue();
+      } else {
+        String _value_1 = b.getValue();
+        switch (_value_1) {
+          case "\"0\"":
+            return "ZERO";
+          case "\"1\"":
+            return "ONE";
+          default:
+            String _value_2 = b.getValue();
+            String _plus = ("Invalivd one-bit value " + _value_2);
+            throw new UnsupportedOperationException(_plus);
+        }
+      }
+      String _value_2 = b.getValue();
+      _xblockexpression = _value_2.replace("\"", "\'");
+    }
+    return _xblockexpression;
   }
   
   public CharSequence genCommand(final State s) {
-    StringConcatenation _builder = new StringConcatenation();
-    _builder.append("when ");
-    String _name = s.getName();
-    _builder.append(_name, "");
-    _builder.append(" => ");
-    _builder.newLineIfNotEmpty();
-    {
-      CommandList _commandList = s.getCommandList();
-      EList<Command> _commands = _commandList.getCommands();
-      for(final Command c : _commands) {
-        String _genCommand = this.genCommand(c);
-        _builder.append(_genCommand, "");
-        _builder.newLineIfNotEmpty();
+    CharSequence _xifexpression = null;
+    CommandList _commandList = s.getCommandList();
+    EList<Command> _commands = _commandList.getCommands();
+    int _size = _commands.size();
+    boolean _equals = (_size == 0);
+    if (_equals) {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("when ");
+      String _name = s.getName();
+      _builder.append(_name, "");
+      _builder.append(" => null;");
+      _builder.newLineIfNotEmpty();
+      _xifexpression = _builder;
+    } else {
+      StringConcatenation _builder_1 = new StringConcatenation();
+      _builder_1.append("when ");
+      String _name_1 = s.getName();
+      _builder_1.append(_name_1, "");
+      _builder_1.append(" => ");
+      _builder_1.newLineIfNotEmpty();
+      {
+        CommandList _commandList_1 = s.getCommandList();
+        EList<Command> _commands_1 = _commandList_1.getCommands();
+        for(final Command c : _commands_1) {
+          String _genCommand = this.genCommand(c);
+          _builder_1.append(_genCommand, "");
+          _builder_1.newLineIfNotEmpty();
+        }
       }
+      _xifexpression = _builder_1;
     }
-    return _builder;
+    return _xifexpression;
   }
   
   public String genCommand(final Command c) {
@@ -461,6 +603,19 @@ public class FSMVHDLCodeGen {
   
   public CharSequence generate(final FSM e) {
     return _generate(e);
+  }
+  
+  public CharSequence genPort(final Port port) {
+    if (port instanceof InputPort) {
+      return _genPort((InputPort)port);
+    } else if (port instanceof OutputPort) {
+      return _genPort((OutputPort)port);
+    } else if (port != null) {
+      return _genPort(port);
+    } else {
+      throw new IllegalArgumentException("Unhandled parameter types: " +
+        Arrays.<Object>asList(port).toString());
+    }
   }
   
   public static CharSequence genPred(final BoolExpr b) {
