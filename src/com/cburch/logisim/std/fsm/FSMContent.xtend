@@ -129,32 +129,20 @@ class FSMContent implements Cloneable {
 	}
 
 	static final String TEMPLATE = 
-	'''fsm example @[50,50,800,500] {
-		in A[1]@[50,100];
-		in B[3]@[50,120];
-		out X[1]@[500,140];
-		codeWidth=2 ;
-		reset=S0 ;
-	
-		state S0="01" @[300,200] {
-			code = "01";
-			commands @[340,180,50,20]{
-				X="0";
-			}  
-			transitions {
-				goto S1 when A @[400,150,40,30];
-			}
-		}
-		state S1="10" @[500,200] {
-			code = "10";
-			commands @[540,180,40,30]{
-				X=A ;
-			}
-			transitions {
-				goto S0 when "1" @[400,250,40,30];
-			}
-		}
-	}
+	'''fsm example @[ 50 , 50 , 800 , 500 ] { in A [ 3 ] @[ 50 , 100 , 44 , 15 ] ; out
+X [ 4 ] @[ 807 , 140 , 43 , 15 ] ; codeWidth = 2 ; reset = S0 ; state S0 = "01"
+@[ 297 , 181 , 30 , 30 ] { commands @[ 246 , 173 , 50 , 40 ] { X = "0001" ; }
+transitions { S0 -> S1 when default @[ 432 , 151 , 50 , 21 ] ; S0 -> S3 when A
+== "000" @[ 346 , 269 , 68 , 21 ] ; } } state S1 = "10" @[ 470 , 186 , 30 , 30
+] { commands @[ 522 , 190 , 40 , 40 ] { X = "0010" ; } transitions { S1 -> S2
+when default @[ 533 , 276 , 50 , 21 ] ; S1 -> S0 when A == "000" @[ 399 , 230 ,
+68 , 21 ] ; } } state S2 = "00" @[ 471 , 339 , 30 , 30 ] { commands @[ 524 ,
+353 , 60 , 40 ] { X = { "00" , A [ 1 ] , "1" } ; } transitions { S2 -> S3 when
+default @[ 392 , 398 , 50 , 21 ] ; S2 -> S1 when A [ 2 : 1 ] == "11" @[ 557 ,
+250 , 90 , 21 ] ; } } state S3 = "11" @[ 287 , 325 , 30 , 30 ] { commands @[
+244 , 341 , 60 , 40 ] { X = "1000" ; } transitions { S3 -> S0 when default @[
+248 , 278 , 50 , 21 ] ; S3 -> S2 when A == "000" @[ 388 , 313 , 68 , 21 ] ; } }
+}
 	''';
 	static final package int CLK = 0
 	static final package int CLR = 1
@@ -200,6 +188,10 @@ class FSMContent implements Cloneable {
 		return concat(ctrl, concat(inputs, outputs))
 	}
 
+	def Port[] getAllInPorts() {
+		return concat(ctrl, inputs)
+	}
+
 	def int getPortsNumber() {
 		if(inputs === null || outputs === null) return 0
 		return ctrl.length + inputs.length + outputs.length
@@ -215,42 +207,22 @@ class FSMContent implements Cloneable {
 			ctrl = newArrayOfSize(3)
 			inputs = newArrayOfSize(inputsDesc.size())
 			outputs = newArrayOfSize(outputsDesc.size())
-			{
-				val _wrVal_ctrl = ctrl
-				val _wrIndx_ctrl = CLK
-				_wrVal_ctrl.set(_wrIndx_ctrl, new Port(0, FSMEntity::HEIGHT, Port::INPUT, 1))
-			}
-			{
-				val _wrVal_ctrl = ctrl
-				val _wrIndx_ctrl = CLR
-				_wrVal_ctrl.set(_wrIndx_ctrl, new Port(0, FSMEntity::HEIGHT + FSMEntity::PORT_GAP, Port::INPUT, 1))
-			}
-			{
-				val _wrVal_ctrl = ctrl
-				val _wrIndx_ctrl = EN
-				_wrVal_ctrl.set(_wrIndx_ctrl, new Port(0, FSMEntity::HEIGHT + 2 * FSMEntity::PORT_GAP, Port::INPUT, 1))
-			}
-			{
-				val _rdIndx_ctrl = CLK
-				ctrl.get(_rdIndx_ctrl)
-			}.setToolTip(Strings::getter("registerClkTip"))
-			{
-				val _rdIndx_ctrl = CLR
-				ctrl.get(_rdIndx_ctrl)
-			}.setToolTip(Strings::getter("registerClrTip"))
-			{
-				val _rdIndx_ctrl = EN
-				ctrl.get(_rdIndx_ctrl)
-			}.setToolTip(Strings::getter("registerEnableTip"))
+
+			ctrl.set(CLK, new Port(0, FSMEntity::HEIGHT, Port::INPUT, 1))
+			ctrl.set(CLR, new Port(0, FSMEntity::HEIGHT + FSMEntity::PORT_GAP, Port::INPUT, 1))
+			ctrl.set(EN, new Port(0, FSMEntity::HEIGHT + 2 * FSMEntity::PORT_GAP, Port::INPUT, 1))
+		
+			ctrl.get(CLK).setToolTip(Strings::getter("registerClkTip"))
+			ctrl.get(CLR).setToolTip(Strings::getter("registerClrTip"))
+			ctrl.get(EN).setToolTip(Strings::getter("registerEnableTip"))
+			
 			for (var int i = 0; i < inputsDesc.size(); i++) {
 				var InputPort desc = inputsDesc.get(i)
-				{
-					val _wrVal_inputs = inputs
-					val _wrIndx_inputs = i
-					_wrVal_inputs.set(_wrIndx_inputs,
+				
+					inputs.set(i,
 						new Port(0, ((i + ctrl.length) * FSMEntity::PORT_GAP) + FSMEntity::HEIGHT, Port::INPUT,
 							desc.getWidth()))
-				}
+				
 				{
 					val _rdIndx_inputs = i
 					inputs.get(_rdIndx_inputs)

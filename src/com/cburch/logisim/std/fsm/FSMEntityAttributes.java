@@ -123,12 +123,12 @@ public class FSMEntityAttributes extends AbstractAttributeSet {
 		}
 		if (attr == StdAttr.LABEL && value instanceof String) {
 			String newLabel = (String) value;
-			if (label.equals(newLabel)) {
+			if (!label.equals(newLabel)) {
 				fireAttributeValueChanged(attr, (V) newLabel,(V)label);
 				fireAttributeValueChanged(attr, value, (V) newLabel);
 				label = newLabel;
 			}
-				return;
+			return;
 		}
 		if (attr == StdAttr.LABEL_FONT && value instanceof Font) {
 			Font newFont = (Font) value;

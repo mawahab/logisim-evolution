@@ -62,29 +62,51 @@ public class KeyPad extends InstanceFactory {
 		public void mousePressed(InstanceState state, MouseEvent e) {
 			State val = (State) state.getData();
 			Location loc = state.getInstance().getLocation();
-			int cx = e.getX() - loc.getX() - 5;
-			int i = cx / 10;
-			val.ToggleBit(i);
+			Bounds bds = state.getInstance().getBounds();
+			int x0 = bds.getX() ;
+			int y0 = bds.getY() ;
+			int locX = e.getX()-BORDER-x0;
+			int locY = e.getY()-BORDER-y0;
+			
+			int j = locY/ KEY_HEIGHT;
+			int i = locX/ KEY_WIDTH;
+			
+			if (val.isActive(i,j)) {
+				val.deActivate(i, j);
+			} else {
+				val.activate(i, j);
+			}
+			
 			state.getInstance().fireInvalidated();
 		}
 	}
 
 	private static class State implements InstanceData, Cloneable {
 
-		private int Value;
-		private int size;
+		private boolean matrix[][];
+		private int col=-1;
 
-		public State(int value, int size) {
-			Value = value;
-			this.size = size;
+		public State() {
+			matrix = new boolean[4][4];
+			for (int i = 0; i < 4; i++) {
+				for (int j = 0; j < 4; j++) {
+					matrix[i][j]=false;
+				}
+			}
 		}
 
-		public boolean BitSet(int bitindex) {
-			if (bitindex >= size) {
-				return false;
-			}
-			int mask = 1 << bitindex;
-			return (Value & mask) != 0;
+
+		public boolean isActive(int i, int j) {
+			return matrix[i][j];
+		}
+
+
+		public void activate(int i, int j) {
+			matrix[i][j]=true;
+		}
+
+		public void deActivate(int i, int j) {
+			matrix[i][j]=false;
 		}
 
 		@Override
@@ -96,13 +118,6 @@ public class KeyPad extends InstanceFactory {
 			}
 		}
 
-		public void ToggleBit(int bitindex) {
-			if ((bitindex < 0) || (bitindex >= size)) {
-				return;
-			}
-			int mask = 1 << bitindex;
-			Value ^= mask;
-		}
 	}
 
 	public static final ArrayList<String> GetLabels(int size) {
@@ -113,8 +128,9 @@ public class KeyPad extends InstanceFactory {
 		return LabelNames;
 	}
 
-	private static final int KEY_WIDTH = 32;
-	private static final int KEY_HEIGHT= 32;
+	private static final int KEY_WIDTH = 30;
+	private static final int KEY_HEIGHT= 30;
+	private static final int BORDER = 20;
 
 	
 	public static final int MAX_SWITCH = 32;
@@ -192,10 +208,10 @@ public class KeyPad extends InstanceFactory {
 		Port[] ps = new Port[8];
 		for (int i = 0; i < 8; i++) {
 			if(i<4) {
-				ps[i] = new Port((i + 1) * KEY_WIDTH/2, 0, Port.INPUT, 1);
+				ps[i] = new Port((i+1 ) * KEY_WIDTH, 0, Port.INPUT, 1);
 							
 			} else {
-				ps[i] = new Port((i -4 + 1) * KEY_WIDTH/2, KEY_HEIGHT*4, Port.OUTPUT, 1);
+				ps[i] = new Port((i-4 +1 ) * KEY_WIDTH, KEY_HEIGHT*4+2*BORDER, Port.OUTPUT, 1);
 			}
 		}
 		instance.setPorts(ps);
@@ -235,22 +251,40 @@ public class KeyPad extends InstanceFactory {
 	public void paintInstance(InstancePainter painter) {
 		// FIXME : Render a Keypad object
 		State state = (State) painter.getData();
-		if (state == null || state.size != painter.getAttributeValue(ATTR_SIZE)) {
-			int val = (state == null) ? 0 : state.Value;
-			state = new State(val, painter.getAttributeValue(ATTR_SIZE));
+		if (state == null ) {
+			state = new State();
 			painter.setData(state);
 		}
 		Bounds bds = painter.getBounds().expand(-1);
 
 		Graphics g = painter.getGraphics();
+		GraphicsUtil.switchToWidth(g, 2);
+
+		g.drawRect(bds.getX(), bds.getY(), 2*BORDER+ KEY_WIDTH*4, 2*BORDER+KEY_HEIGHT*4);
 		GraphicsUtil.switchToWidth(g, 1);
 		
 		for (int i=0;i<4; i++) {
+			g.drawString("C"+i,bds.getX()+KEY_WIDTH/2+i*KEY_WIDTH, bds.getY()+4);
+		}
+		for (int i=0;i<4; i++) {
+			g.drawString("L"+i,bds.getX()+KEY_WIDTH/2+i*KEY_WIDTH, bds.getY()+KEY_HEIGHT*4+2*BORDER-5);
+		}
+		
+		//g.drawString(magrux, bds.getX(), bds.getY());
+		for (int i=0;i<4; i++) {
 			for (int j=0;j<4; j++) {
-				int locX = bds.getX()+i*KEY_WIDTH;
-				int locY = bds.getY()+j*KEY_HEIGHT;
-				g.drawRect(locX, locY, KEY_WIDTH-4, KEY_HEIGHT-4);
-				g.drawString(Integer.toHexString(4*i+j), locX, locY+KEY_HEIGHT/2);
+				int locX = bds.getX()+i*KEY_WIDTH+BORDER;
+				int locY = bds.getY()+j*KEY_HEIGHT+BORDER;
+				if (state.isActive(i, j)) {
+					g.setColor(Color.darkGray);
+					g.fillRect(locX, locY, KEY_WIDTH-4, KEY_HEIGHT-4);
+					g.setColor(Color.WHITE);
+					g.drawString(Integer.toHexString(4*i+j).toUpperCase(), locX, locY+KEY_HEIGHT/2);
+					g.setColor(Color.BLACK);
+				} else {
+					g.drawRect(locX, locY, KEY_WIDTH-4, KEY_HEIGHT-4);
+					g.drawString(Integer.toHexString(4*i+j), locX, locY+KEY_HEIGHT/2);
+				}
 			}
 		}
 //		GraphicsUtil.switchToWidth(g, 2);
@@ -284,14 +318,24 @@ public class KeyPad extends InstanceFactory {
 	@Override
 	public void propagate(InstanceState state) {
 		State pins = (State) state.getData();
-		if (pins == null || pins.size != state.getAttributeValue(ATTR_SIZE)) {
-			int val = (pins == null) ? 0 : pins.Value;
-			pins = new State(val, state.getAttributeValue(ATTR_SIZE));
+		// FIXME
+		if (pins == null) {
+			pins = new State();
 			state.setData(pins);
 		}
-		for (int i = 0; i < pins.size; i++) {
-			Value pinstate = (pins.BitSet(i)) ? Value.TRUE : Value.FALSE;
-			state.setPort(i, pinstate, 1);
+		
+		int command =0;
+		
+		for (int i = 0; i < 4; i++) {
+			if (state.getPortValue(3-i) == Value.TRUE) {
+				command = command | 0x1;
+			}
+			command = command << 1;
+		}
+				
+		for (int i = 0; i < 4; i++) {
+			Value pinstate = (pins.isActive(i, command)) ? Value.TRUE : Value.FALSE;
+			state.setPort(i+4, pinstate, 1);
 		}
 	}
 

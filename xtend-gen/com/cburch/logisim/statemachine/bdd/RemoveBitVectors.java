@@ -1,8 +1,11 @@
 package com.cburch.logisim.statemachine.bdd;
 
+import com.cburch.logisim.statemachine.PrettyPrinter;
+import com.cburch.logisim.statemachine.bdd.BitWidthAnalyzer;
 import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
+import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLFactory;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
@@ -29,13 +32,18 @@ import org.eclipse.xtext.xbase.lib.IteratorExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 
 @SuppressWarnings("all")
-public class RemoveCompare {
-  public RemoveCompare() {
+public class RemoveBitVectors {
+  private final static boolean VERBOSE = true;
+  
+  private BitWidthAnalyzer analyzer = new BitWidthAnalyzer();
+  
+  public RemoveBitVectors() {
   }
   
   protected BoolExpr _replace(final BoolExpr e) {
     BoolExpr _xblockexpression = null;
     {
+      InputOutput.<String>print((("replace " + e) + " by "));
       TreeIterator<Object> _allContents = EcoreUtil.<Object>getAllContents(e, false);
       Iterator<CmpExpr> _filter = Iterators.<CmpExpr>filter(_allContents, CmpExpr.class);
       final List<CmpExpr> list = IteratorExtensions.<CmpExpr>toList(_filter);
@@ -46,6 +54,9 @@ public class RemoveCompare {
           EcoreUtil.replace(n, _slice);
         }
       }
+      String _pp = PrettyPrinter.pp(e);
+      String _plus = (" " + _pp);
+      InputOutput.<String>println(_plus);
       _xblockexpression = e;
     }
     return _xblockexpression;
@@ -54,6 +65,10 @@ public class RemoveCompare {
   protected BoolExpr _replace(final CmpExpr e) {
     BoolExpr _xblockexpression = null;
     {
+      String _pp = PrettyPrinter.pp(e);
+      String _plus = ("replace " + _pp);
+      String _plus_1 = (_plus + " by ");
+      InputOutput.<String>print(_plus_1);
       TreeIterator<Object> _allContents = EcoreUtil.<Object>getAllContents(e, false);
       Iterator<CmpExpr> _filter = Iterators.<CmpExpr>filter(_allContents, CmpExpr.class);
       final List<CmpExpr> list = IteratorExtensions.<CmpExpr>toList(_filter);
@@ -64,7 +79,11 @@ public class RemoveCompare {
           EcoreUtil.replace(n, _slice);
         }
       }
-      _xblockexpression = this.slice(e);
+      final BoolExpr res = this.slice(e);
+      String _pp_1 = PrettyPrinter.pp(res);
+      String _plus_2 = (" " + _pp_1);
+      InputOutput.<String>println(_plus_2);
+      _xblockexpression = res;
     }
     return _xblockexpression;
   }
@@ -189,6 +208,22 @@ public class RemoveCompare {
       _xblockexpression = and;
     }
     return _xblockexpression;
+  }
+  
+  protected BoolExpr _slice(final ConcatExpr e, final int offset) {
+    this.analyzer.computeBitwidth(e);
+    int current = offset;
+    EList<BoolExpr> _args = e.getArgs();
+    for (final BoolExpr arg : _args) {
+      {
+        final Integer width = this.analyzer.getBitwidth(arg);
+        if ((current < (width).intValue())) {
+          return this.slice(arg, offset);
+        }
+        current = (current - (width).intValue());
+      }
+    }
+    throw new IndexOutOfBoundsException(((("Offset " + Integer.valueOf(offset)) + " is out of bound w.r.t to expression ") + e));
   }
   
   protected BoolExpr _slice(final OrExpr e, final int offset) {
@@ -316,6 +351,8 @@ public class RemoveCompare {
   public BoolExpr slice(final BoolExpr e, final int offset) {
     if (e instanceof AndExpr) {
       return _slice((AndExpr)e, offset);
+    } else if (e instanceof ConcatExpr) {
+      return _slice((ConcatExpr)e, offset);
     } else if (e instanceof Constant) {
       return _slice((Constant)e, offset);
     } else if (e instanceof NotExpr) {

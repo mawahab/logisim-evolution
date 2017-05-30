@@ -884,14 +884,16 @@ public class FSMDSLGrammarAccess extends AbstractGrammarElementFinder {
 		private final RuleCall cNameOutputPortIDTerminalRuleCall_0_0_1 = (RuleCall)cNameOutputPortCrossReference_0_0.eContents().get(1);
 		private final Keyword cEqualsSignKeyword_1 = (Keyword)cGroup.eContents().get(1);
 		private final Assignment cValueAssignment_2 = (Assignment)cGroup.eContents().get(2);
-		private final RuleCall cValueOrParserRuleCall_2_0 = (RuleCall)cValueAssignment_2.eContents().get(0);
+		private final Alternatives cValueAlternatives_2_0 = (Alternatives)cValueAssignment_2.eContents().get(0);
+		private final RuleCall cValueConcatExprParserRuleCall_2_0_0 = (RuleCall)cValueAlternatives_2_0.eContents().get(0);
+		private final RuleCall cValueOrParserRuleCall_2_0_1 = (RuleCall)cValueAlternatives_2_0.eContents().get(1);
 		private final Keyword cSemicolonKeyword_3 = (Keyword)cGroup.eContents().get(3);
 		
 		//Command:
-		//	name=[OutputPort] "=" value=Or ";";
+		//	name=[OutputPort] "=" value=(ConcatExpr | Or) ";";
 		@Override public ParserRule getRule() { return rule; }
 
-		//name=[OutputPort] "=" value=Or ";"
+		//name=[OutputPort] "=" value=(ConcatExpr | Or) ";"
 		public Group getGroup() { return cGroup; }
 
 		//name=[OutputPort]
@@ -906,14 +908,68 @@ public class FSMDSLGrammarAccess extends AbstractGrammarElementFinder {
 		//"="
 		public Keyword getEqualsSignKeyword_1() { return cEqualsSignKeyword_1; }
 
-		//value=Or
+		//value=(ConcatExpr | Or)
 		public Assignment getValueAssignment_2() { return cValueAssignment_2; }
 
+		//ConcatExpr | Or
+		public Alternatives getValueAlternatives_2_0() { return cValueAlternatives_2_0; }
+
+		//ConcatExpr
+		public RuleCall getValueConcatExprParserRuleCall_2_0_0() { return cValueConcatExprParserRuleCall_2_0_0; }
+
 		//Or
-		public RuleCall getValueOrParserRuleCall_2_0() { return cValueOrParserRuleCall_2_0; }
+		public RuleCall getValueOrParserRuleCall_2_0_1() { return cValueOrParserRuleCall_2_0_1; }
 
 		//";"
 		public Keyword getSemicolonKeyword_3() { return cSemicolonKeyword_3; }
+	}
+
+	public class ConcatExprElements extends AbstractParserRuleElementFinder {
+		private final ParserRule rule = (ParserRule) GrammarUtil.findRuleForName(getGrammar(), "ConcatExpr");
+		private final Group cGroup = (Group)rule.eContents().get(1);
+		private final Action cConcatExprAction_0 = (Action)cGroup.eContents().get(0);
+		private final Keyword cLeftCurlyBracketKeyword_1 = (Keyword)cGroup.eContents().get(1);
+		private final Assignment cArgsAssignment_2 = (Assignment)cGroup.eContents().get(2);
+		private final RuleCall cArgsOrParserRuleCall_2_0 = (RuleCall)cArgsAssignment_2.eContents().get(0);
+		private final Group cGroup_3 = (Group)cGroup.eContents().get(3);
+		private final Keyword cCommaKeyword_3_0 = (Keyword)cGroup_3.eContents().get(0);
+		private final Assignment cArgsAssignment_3_1 = (Assignment)cGroup_3.eContents().get(1);
+		private final RuleCall cArgsOrParserRuleCall_3_1_0 = (RuleCall)cArgsAssignment_3_1.eContents().get(0);
+		private final Keyword cRightCurlyBracketKeyword_4 = (Keyword)cGroup.eContents().get(4);
+		
+		//ConcatExpr returns BoolExpr:
+		//	{ConcatExpr} "{" args+=Or ("," args+=Or)* "}";
+		@Override public ParserRule getRule() { return rule; }
+
+		//{ConcatExpr} "{" args+=Or ("," args+=Or)* "}"
+		public Group getGroup() { return cGroup; }
+
+		//{ConcatExpr}
+		public Action getConcatExprAction_0() { return cConcatExprAction_0; }
+
+		//"{"
+		public Keyword getLeftCurlyBracketKeyword_1() { return cLeftCurlyBracketKeyword_1; }
+
+		//args+=Or
+		public Assignment getArgsAssignment_2() { return cArgsAssignment_2; }
+
+		//Or
+		public RuleCall getArgsOrParserRuleCall_2_0() { return cArgsOrParserRuleCall_2_0; }
+
+		//("," args+=Or)*
+		public Group getGroup_3() { return cGroup_3; }
+
+		//","
+		public Keyword getCommaKeyword_3_0() { return cCommaKeyword_3_0; }
+
+		//args+=Or
+		public Assignment getArgsAssignment_3_1() { return cArgsAssignment_3_1; }
+
+		//Or
+		public RuleCall getArgsOrParserRuleCall_3_1_0() { return cArgsOrParserRuleCall_3_1_0; }
+
+		//"}"
+		public Keyword getRightCurlyBracketKeyword_4() { return cRightCurlyBracketKeyword_4; }
 	}
 
 	public class RefElements extends AbstractParserRuleElementFinder {
@@ -1263,6 +1319,7 @@ public class FSMDSLGrammarAccess extends AbstractGrammarElementFinder {
 	private final StateElements pState;
 	private final TransitionElements pTransition;
 	private final CommandElements pCommand;
+	private final ConcatExprElements pConcatExpr;
 	private final RefElements pRef;
 	private final RangeElements pRange;
 	private final PredicateElements pPredicate;
@@ -1298,6 +1355,7 @@ public class FSMDSLGrammarAccess extends AbstractGrammarElementFinder {
 		this.pState = new StateElements();
 		this.pTransition = new TransitionElements();
 		this.pCommand = new CommandElements();
+		this.pConcatExpr = new ConcatExprElements();
 		this.pRef = new RefElements();
 		this.pRange = new RangeElements();
 		this.pPredicate = new PredicateElements();
@@ -1472,13 +1530,23 @@ public class FSMDSLGrammarAccess extends AbstractGrammarElementFinder {
 	}
 
 	//Command:
-	//	name=[OutputPort] "=" value=Or ";";
+	//	name=[OutputPort] "=" value=(ConcatExpr | Or) ";";
 	public CommandElements getCommandAccess() {
 		return pCommand;
 	}
 	
 	public ParserRule getCommandRule() {
 		return getCommandAccess().getRule();
+	}
+
+	//ConcatExpr returns BoolExpr:
+	//	{ConcatExpr} "{" args+=Or ("," args+=Or)* "}";
+	public ConcatExprElements getConcatExprAccess() {
+		return pConcatExpr;
+	}
+	
+	public ParserRule getConcatExprRule() {
+		return getConcatExprAccess().getRule();
 	}
 
 	//Ref returns BoolExpr:

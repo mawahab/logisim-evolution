@@ -34,8 +34,12 @@ class PrettyPrinter {
 //		}
 		'''(«FOR i:b.args SEPARATOR "+"»«pp(i)»«ENDFOR»)'''.toString
 	}
-	def static dispatch pp(AndExpr b) {
 
+	def static dispatch pp(ConcatExpr b) {
+		'''{«FOR i:b.args SEPARATOR ","»«pp(i)»«ENDFOR»}'''.toString
+	}
+
+	def static dispatch pp(AndExpr b) {
 		'''(«FOR i:b.args SEPARATOR "."»«pp(i)»«ENDFOR»)'''.toString
 	}
 
@@ -56,7 +60,10 @@ class PrettyPrinter {
 	}
 	def static dispatch pp(PortRef b) {
 		if(b.range!=null) {
-			b.port.name + "["+b.range.lb+":"+b.range.ub+"]"
+			if(b.range.ub!=-1)
+				b.port.name + "["+b.range.ub+":"+b.range.lb+"]"
+			else
+				b.port.name + "["+b.range.lb+"]"
 		} else {
 			b.port.name
 		}

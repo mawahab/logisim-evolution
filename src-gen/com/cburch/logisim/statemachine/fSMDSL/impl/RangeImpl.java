@@ -29,205 +29,201 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
 public class RangeImpl extends MinimalEObjectImpl.Container implements Range
 {
   /**
-   * The default value of the '{@link #getUb() <em>Ub</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getUb() <em>Ub</em>}' attribute.
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getUb()
-   * @generated
-   * @ordered
-   */
-  protected static final int UB_EDEFAULT = 0;
+	 * @see #getUb()
+	 * @generated
+	 * @ordered
+	 */
+  protected static final int UB_EDEFAULT = -1;
 
   /**
-   * The cached value of the '{@link #getUb() <em>Ub</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getUb() <em>Ub</em>}' attribute.
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getUb()
-   * @generated
-   * @ordered
-   */
+	 * @see #getUb()
+	 * @generated
+	 * @ordered
+	 */
   protected int ub = UB_EDEFAULT;
 
   /**
-   * The default value of the '{@link #getLb() <em>Lb</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getLb() <em>Lb</em>}' attribute.
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getLb()
-   * @generated
-   * @ordered
-   */
-  protected static final int LB_EDEFAULT = 0;
+	 * @see #getLb()
+	 * @generated
+	 * @ordered
+	 */
+  protected static final int LB_EDEFAULT = -1;
 
   /**
-   * The cached value of the '{@link #getLb() <em>Lb</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getLb() <em>Lb</em>}' attribute.
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #getLb()
-   * @generated
-   * @ordered
-   */
+	 * @see #getLb()
+	 * @generated
+	 * @ordered
+	 */
   protected int lb = LB_EDEFAULT;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   protected RangeImpl()
   {
-    super();
-  }
+		super();
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   @Override
   protected EClass eStaticClass()
   {
-    return FSMDSLPackage.Literals.RANGE;
-  }
+		return FSMDSLPackage.Literals.RANGE;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public int getUb()
   {
-    return ub;
-  }
+		return ub;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public void setUb(int newUb)
   {
-    int oldUb = ub;
-    ub = newUb;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, FSMDSLPackage.RANGE__UB, oldUb, ub));
-  }
+		int oldUb = ub;
+		ub = newUb;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, FSMDSLPackage.RANGE__UB, oldUb, ub));
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public int getLb()
   {
-    return lb;
-  }
+		return lb;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public void setLb(int newLb)
   {
-    int oldLb = lb;
-    lb = newLb;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, FSMDSLPackage.RANGE__LB, oldLb, lb));
-  }
+		int oldLb = lb;
+		lb = newLb;
+		if (eNotificationRequired())
+			eNotify(new ENotificationImpl(this, Notification.SET, FSMDSLPackage.RANGE__LB, oldLb, lb));
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   @Override
   public Object eGet(int featureID, boolean resolve, boolean coreType)
   {
-    switch (featureID)
-    {
-      case FSMDSLPackage.RANGE__UB:
-        return getUb();
-      case FSMDSLPackage.RANGE__LB:
-        return getLb();
-    }
-    return super.eGet(featureID, resolve, coreType);
-  }
+		switch (featureID) {
+			case FSMDSLPackage.RANGE__UB:
+				return getUb();
+			case FSMDSLPackage.RANGE__LB:
+				return getLb();
+		}
+		return super.eGet(featureID, resolve, coreType);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   @Override
   public void eSet(int featureID, Object newValue)
   {
-    switch (featureID)
-    {
-      case FSMDSLPackage.RANGE__UB:
-        setUb((Integer)newValue);
-        return;
-      case FSMDSLPackage.RANGE__LB:
-        setLb((Integer)newValue);
-        return;
-    }
-    super.eSet(featureID, newValue);
-  }
+		switch (featureID) {
+			case FSMDSLPackage.RANGE__UB:
+				setUb((Integer)newValue);
+				return;
+			case FSMDSLPackage.RANGE__LB:
+				setLb((Integer)newValue);
+				return;
+		}
+		super.eSet(featureID, newValue);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   @Override
   public void eUnset(int featureID)
   {
-    switch (featureID)
-    {
-      case FSMDSLPackage.RANGE__UB:
-        setUb(UB_EDEFAULT);
-        return;
-      case FSMDSLPackage.RANGE__LB:
-        setLb(LB_EDEFAULT);
-        return;
-    }
-    super.eUnset(featureID);
-  }
+		switch (featureID) {
+			case FSMDSLPackage.RANGE__UB:
+				setUb(UB_EDEFAULT);
+				return;
+			case FSMDSLPackage.RANGE__LB:
+				setLb(LB_EDEFAULT);
+				return;
+		}
+		super.eUnset(featureID);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   @Override
   public boolean eIsSet(int featureID)
   {
-    switch (featureID)
-    {
-      case FSMDSLPackage.RANGE__UB:
-        return ub != UB_EDEFAULT;
-      case FSMDSLPackage.RANGE__LB:
-        return lb != LB_EDEFAULT;
-    }
-    return super.eIsSet(featureID);
-  }
+		switch (featureID) {
+			case FSMDSLPackage.RANGE__UB:
+				return ub != UB_EDEFAULT;
+			case FSMDSLPackage.RANGE__LB:
+				return lb != LB_EDEFAULT;
+		}
+		return super.eIsSet(featureID);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   @Override
   public String toString()
   {
-    if (eIsProxy()) return super.toString();
+		if (eIsProxy()) return super.toString();
 
-    StringBuffer result = new StringBuffer(super.toString());
-    result.append(" (ub: ");
-    result.append(ub);
-    result.append(", lb: ");
-    result.append(lb);
-    result.append(')');
-    return result.toString();
-  }
+		StringBuffer result = new StringBuffer(super.toString());
+		result.append(" (ub: ");
+		result.append(ub);
+		result.append(", lb: ");
+		result.append(lb);
+		result.append(')');
+		return result.toString();
+	}
 
 } //RangeImpl

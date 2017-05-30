@@ -42,6 +42,7 @@ import java.util.WeakHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.bfh.logisim.hdlgenerator.HDLGeneratorFactory;
 import com.cburch.logisim.data.Attribute;
 import com.cburch.logisim.data.AttributeSet;
 import com.cburch.logisim.data.Attributes;
@@ -65,6 +66,7 @@ import com.cburch.logisim.statemachine.simulator.FSMSimulator;
 import com.cburch.logisim.tools.key.BitWidthConfigurator;
 import com.cburch.logisim.util.GraphicsUtil;
 import com.cburch.logisim.util.StringUtil;
+import com.sun.java_cup.internal.runtime.virtual_parse_stack;
 
 public class FSMEntity extends InstanceFactory {
 
@@ -138,6 +140,7 @@ public class FSMEntity extends InstanceFactory {
 	public FSMEntity() {
 		super("FSM Entity", Strings.getter("fsmComponent"));
 		this.contentListeners = new WeakHashMap<Instance, FSMEntityListener>();
+		
 		setAttributes(
 					new Attribute[] { 
 							StdAttr.WIDTH, 
@@ -149,7 +152,7 @@ public class FSMEntity extends InstanceFactory {
 					new Object[] { 
 							BitWidth.create(8), 
 							StdAttr.TRIG_RISING, 
-							"", 
+							"fsm0", 
 							StdAttr.DEFAULT_LABEL_FONT, 
 							false, 
 					}
@@ -160,10 +163,33 @@ public class FSMEntity extends InstanceFactory {
 	}
 
 	@Override
+	public String getName() {
+		return super.getName();
+	}
+
+	@Override
+	public HDLGeneratorFactory getHDLGenerator(String HDLIdentifier, AttributeSet attrs) {
+		return super.getHDLGenerator(HDLIdentifier, attrs);
+	}
+
+	@Override
+	public boolean HDLSupportedComponent(String HDLIdentifier, AttributeSet attrs) {
+		if (MyHDLGenerator == null)
+			MyHDLGenerator = new FSMHDLGeneratorFactory();
+		return MyHDLGenerator.HDLTargetSupported(HDLIdentifier, attrs);
+	}
+
+	
+	@Override
 	protected void configureNewInstance(Instance instance) {
 		FSMContent content = instance.getAttributeValue(CONTENT_ATTR);
 		this.simulator = new FSMSimulator(content.getFsm());
 		FSMEntityListener listener = new FSMEntityListener(instance);
+
+		Bounds bds = instance.getBounds();
+		instance.setTextField(StdAttr.LABEL, StdAttr.LABEL_FONT, bds.getX()
+				+ bds.getWidth() / 2, bds.getY() - 3, GraphicsUtil.H_CENTER,
+				GraphicsUtil.V_BASELINE);
 
 		contentListeners.put(instance, listener);
 		content.addFSMModelListener(listener);
@@ -181,6 +207,8 @@ public class FSMEntity extends InstanceFactory {
 	public String getHDLName(AttributeSet attrs) {
 		return attrs.getValue(CONTENT_ATTR).getName().toLowerCase();
 	}
+
+
 
 	@Override
 	public String getHDLTopName(AttributeSet attrs) {
@@ -204,12 +232,6 @@ public class FSMEntity extends InstanceFactory {
 	}
 
 	
-	public boolean HDLSupportedComponent(String HDLIdentifier,
-			AttributeSet attrs, char Vendor) {
-		if (MyHDLGenerator == null)
-			MyHDLGenerator = new FSMHDLGeneratorFactory();
-		return MyHDLGenerator.HDLTargetSupported(HDLIdentifier, attrs);
-	}
 
 	@Override
 	protected void instanceAttributeChanged(Instance instance, Attribute<?> attr) {
@@ -281,19 +303,29 @@ public class FSMEntity extends InstanceFactory {
 					GraphicsUtil.H_LEFT, GraphicsUtil.V_CENTER);
 		
 		for (int i = 0; i < inputs.length; i++) {
+			String name = inputs[i].getToolTip();
+			int width2 = inputs[i].getFixedBitWidth().getWidth();
+			if (width2!=1) {
+				name = name + "["+(width2-1)+":0]";
+			}
 			GraphicsUtil.drawText(g, StringUtil.resizeString(
-					inputs[i].getToolTip(), metric, (WIDTH / 2) - X_PADDING),
+					name, metric, (WIDTH / 2) - X_PADDING),
 					bds.getX() + 5, bds.getY() + HEIGHT - 2 + ((i+ctrl.length) * PORT_GAP),
 					GraphicsUtil.H_LEFT, GraphicsUtil.V_CENTER);
 			
 		}
-		for (int i = 0; i < outputs.length; i++)
+		for (int i = 0; i < outputs.length; i++) {
+			String name = outputs[i].getToolTip();
+			int width2 = outputs[i].getFixedBitWidth().getWidth();
+			if (width2!=1) {
+				name = name + "["+(width2-1)+":0]";
+			}
 			GraphicsUtil.drawText(g, StringUtil.resizeString(
-					outputs[i].getToolTip(), metric, (WIDTH / 2) - X_PADDING),
+					name, metric, (WIDTH / 2) - X_PADDING),
 					bds.getX() + WIDTH - 5, bds.getY() + HEIGHT - 2
 							+ ((i+ctrl.length) * PORT_GAP), GraphicsUtil.H_RIGHT,
 					GraphicsUtil.V_CENTER);
-
+		}
 		painter.drawBounds();
 		painter.drawPorts();
 	}
@@ -336,20 +368,18 @@ public class FSMEntity extends InstanceFactory {
 			simulator.reset();
 		} else {
 			if (triggered && enable != Value.FALSE) {
-				
 				for (int i =0; i< content.getInputsNumber();i++) {
 					Value in = istate.getPortValue(i+offsetInput);
 					if (in.isFullyDefined()) {
 						InputPort ip = content.inMap.get(content.inputs[i]);
-						boolean val = in.toIntValue()==1;
-						System.out.println("Input "+ip.getName()+ "="+val);
-						simulator.setInput(ip, val);
+						System.out.println("Input "+ip.getName()+ "="+in.toBinaryString());
+						simulator.setInput(ip, "\""+in.toBinaryString()+"\"");
 					} else {
 						throw new RuntimeException(in+" not fullly defined");
 					}
 				}
 				State nextState = simulator.update();
-				if(nextState==null) throw new RuntimeException("Eroor");
+				if(nextState==null) throw new RuntimeException("Error : no next state");
 				data.setState(nextState);
 				
 			}
@@ -358,9 +388,14 @@ public class FSMEntity extends InstanceFactory {
 		for (int i =0; i< content.getOutputsNumber();i++) {
 			Port key = content.outputs[i];
 			OutputPort op = content.outMap.get(key);
-			boolean res = simulator.getOutput(i);
+			String res = simulator.getOutput(i);
+			String substring = res.substring(1, res.length()-1);
+			int parseInt = Integer.parseInt(substring,2);
+			Value v= Value.createKnown(BitWidth.create(substring.length()), parseInt);
+			System.out.println("Output="+res+" => "+parseInt+" => v="+v.toBinaryString());
+			
 			int portIndex = istate.getPortIndex(content.outputs[i]);
-			istate.setPort(portIndex, res?Value.TRUE:Value.FALSE,DELAY); 
+			istate.setPort(portIndex, v,DELAY); 
 			System.out.println("Output["+i+","+op.getName()+"]="+res);
 		}
 		

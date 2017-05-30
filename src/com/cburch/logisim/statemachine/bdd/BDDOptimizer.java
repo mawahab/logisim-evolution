@@ -9,9 +9,11 @@ import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
+import com.cburch.logisim.statemachine.PrettyPrinter;
 import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
+import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
 import com.cburch.logisim.statemachine.fSMDSL.InputPort;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
@@ -48,7 +50,7 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 
 	public BDDOptimizer(BoolExpr bexp) {
 		BoolExpr copy=EcoreUtil.copy(bexp);
-		copy = new RemoveCompare().replace(copy);
+		copy = new RemoveBitVectors().replace(copy);
 		in = new CollectFlags().collect(copy);
 		int bddsize = in.size() * in.size();
 		bdd = new BDD(bddsize);
@@ -83,7 +85,10 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 		return varBDDAnd;
 	}
 
-	
+	public Integer caseConcatExpr(ConcatExpr object) {
+		throw new UnsupportedOperationException("Unsupported operator "+PrettyPrinter.pp(object));
+		
+	}
 	public Integer caseConstant(Constant object) {
 		String value =object.getValue();
 		if (value.equals(ONE)) {
@@ -101,7 +106,7 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 	public Integer casePortRef(PortRef pref) {
 		InputPort icp = (InputPort) pref.getPort();
 		if (!in.contains(icp)) {
-			throw new RuntimeException("Inconsistency in "+ this.getClass().getSimpleName());
+			throw new RuntimeException("Inconsistency in "+ PrettyPrinter.pp(pref));
 		} else {
 			int width = icp.getWidth();
 			if (width>1) {
@@ -115,7 +120,7 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 						return varProduct;
 					}
 				}
-				throw new RuntimeException("No port width other than 1"+ this.getClass().getSimpleName());
+				throw new RuntimeException("No port width other than 1 for "+ PrettyPrinter.pp(pref));
 			} else {
 				int varProduct = map.getBDDVarFor(icp, 0);
 				map.map(pref, varProduct);
@@ -205,8 +210,7 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 
 			// if (bddVar<=1) throw new
 			// UnsupportedOperationException("Not yet implemented");
-			Entry<InputPort, Integer> entry = map
-					.getICPortForBDDvar(bddInputVar);
+			Entry<InputPort, Integer> entry = map.getICPortForBDDvar(bddInputVar);
 			InputPort port = entry.getKey();
 
 			PortRef t;
@@ -219,7 +223,7 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 				t = pref(port, entry.getValue(),  entry.getValue());
 				nT = not(pref(port, entry.getValue(),  entry.getValue()));
 			} else {
-				throw new RuntimeException("Illegal port width");
+				throw new RuntimeException("Illegal port width "+port.getWidth()+" for port "+port.getName());
 			}
 
 			/**

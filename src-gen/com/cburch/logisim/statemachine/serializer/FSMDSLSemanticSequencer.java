@@ -3,17 +3,12 @@
  */
 package com.cburch.logisim.statemachine.serializer;
 
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.xtext.serializer.acceptor.SequenceFeeder;
-import org.eclipse.xtext.serializer.sequencer.AbstractDelegatingSemanticSequencer;
-import org.eclipse.xtext.serializer.sequencer.ISemanticNodeProvider.INodesForEObjectProvider;
-import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransient;
-
 import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.CommandStmt;
+import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
 import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
@@ -30,6 +25,18 @@ import com.cburch.logisim.statemachine.fSMDSL.State;
 import com.cburch.logisim.statemachine.fSMDSL.Transition;
 import com.cburch.logisim.statemachine.services.FSMDSLGrammarAccess;
 import com.google.inject.Inject;
+import com.google.inject.Provider;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.xtext.serializer.acceptor.ISemanticSequenceAcceptor;
+import org.eclipse.xtext.serializer.acceptor.SequenceFeeder;
+import org.eclipse.xtext.serializer.diagnostic.ISemanticSequencerDiagnosticProvider;
+import org.eclipse.xtext.serializer.diagnostic.ISerializationDiagnostic.Acceptor;
+import org.eclipse.xtext.serializer.sequencer.AbstractDelegatingSemanticSequencer;
+import org.eclipse.xtext.serializer.sequencer.GenericSequencer;
+import org.eclipse.xtext.serializer.sequencer.ISemanticNodeProvider.INodesForEObjectProvider;
+import org.eclipse.xtext.serializer.sequencer.ISemanticSequencer;
+import org.eclipse.xtext.serializer.sequencer.ITransientValueService;
+import org.eclipse.xtext.serializer.sequencer.ITransientValueService.ValueTransient;
 
 @SuppressWarnings("all")
 public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer {
@@ -54,6 +61,9 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 				return; 
 			case FSMDSLPackage.COMMAND_STMT:
 				sequence_CommandStmt(context, (CommandStmt) semanticObject); 
+				return; 
+			case FSMDSLPackage.CONCAT_EXPR:
+				sequence_ConcatExpr(context, (ConcatExpr) semanticObject); 
 				return; 
 			case FSMDSLPackage.CONSTANT:
 				sequence_Constant(context, (Constant) semanticObject); 
@@ -159,20 +169,19 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Constraint:
-	 *     (name=[OutputPort|ID] value=Or)
+	 *     (name=[OutputPort|ID] (value=ConcatExpr | value=Or))
 	 */
 	protected void sequence_Command(EObject context, Command semanticObject) {
-		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, FSMDSLPackage.Literals.COMMAND__NAME) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, FSMDSLPackage.Literals.COMMAND__NAME));
-			if(transientValues.isValueTransient(semanticObject, FSMDSLPackage.Literals.COMMAND__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, FSMDSLPackage.Literals.COMMAND__VALUE));
-		}
-		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
-		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getCommandAccess().getNameOutputPortIDTerminalRuleCall_0_0_1(), semanticObject.getName());
-		feeder.accept(grammarAccess.getCommandAccess().getValueOrParserRuleCall_2_0(), semanticObject.getValue());
-		feeder.finish();
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (args+=Or args+=Or*)
+	 */
+	protected void sequence_ConcatExpr(EObject context, ConcatExpr semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	

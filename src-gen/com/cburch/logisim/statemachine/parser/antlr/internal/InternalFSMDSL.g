@@ -1433,25 +1433,121 @@ ruleCommand returns [EObject current=null]
     }
 (
 (
+(
 		{ 
-	        newCompositeNode(grammarAccess.getCommandAccess().getValueOrParserRuleCall_2_0()); 
+	        newCompositeNode(grammarAccess.getCommandAccess().getValueConcatExprParserRuleCall_2_0_0()); 
 	    }
-		lv_value_2_0=ruleOr		{
+		lv_value_2_1=ruleConcatExpr		{
 	        if ($current==null) {
 	            $current = createModelElementForParent(grammarAccess.getCommandRule());
 	        }
        		set(
        			$current, 
        			"value",
-        		lv_value_2_0, 
+        		lv_value_2_1, 
+        		"ConcatExpr");
+	        afterParserOrEnumRuleCall();
+	    }
+
+    |		{ 
+	        newCompositeNode(grammarAccess.getCommandAccess().getValueOrParserRuleCall_2_0_1()); 
+	    }
+		lv_value_2_2=ruleOr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getCommandRule());
+	        }
+       		set(
+       			$current, 
+       			"value",
+        		lv_value_2_2, 
         		"Or");
 	        afterParserOrEnumRuleCall();
 	    }
 
 )
+
+)
 )	otherlv_3=';' 
     {
     	newLeafNode(otherlv_3, grammarAccess.getCommandAccess().getSemicolonKeyword_3());
+    }
+)
+;
+
+
+
+
+
+// Entry rule entryRuleConcatExpr
+entryRuleConcatExpr returns [EObject current=null] 
+	:
+	{ newCompositeNode(grammarAccess.getConcatExprRule()); }
+	 iv_ruleConcatExpr=ruleConcatExpr 
+	 { $current=$iv_ruleConcatExpr.current; } 
+	 EOF 
+;
+
+// Rule ConcatExpr
+ruleConcatExpr returns [EObject current=null] 
+    @init { enterRule(); 
+    }
+    @after { leaveRule(); }:
+((
+	{ 
+	  /* */ 
+	}
+    {
+        $current = forceCreateModelElement(
+            grammarAccess.getConcatExprAccess().getConcatExprAction_0(),
+            $current);
+    }
+)	otherlv_1='{' 
+    {
+    	newLeafNode(otherlv_1, grammarAccess.getConcatExprAccess().getLeftCurlyBracketKeyword_1());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getConcatExprAccess().getArgsOrParserRuleCall_2_0()); 
+	    }
+		lv_args_2_0=ruleOr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getConcatExprRule());
+	        }
+       		add(
+       			$current, 
+       			"args",
+        		lv_args_2_0, 
+        		"Or");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+)(	otherlv_3=',' 
+    {
+    	newLeafNode(otherlv_3, grammarAccess.getConcatExprAccess().getCommaKeyword_3_0());
+    }
+(
+(
+		{ 
+	        newCompositeNode(grammarAccess.getConcatExprAccess().getArgsOrParserRuleCall_3_1_0()); 
+	    }
+		lv_args_4_0=ruleOr		{
+	        if ($current==null) {
+	            $current = createModelElementForParent(grammarAccess.getConcatExprRule());
+	        }
+       		add(
+       			$current, 
+       			"args",
+        		lv_args_4_0, 
+        		"Or");
+	        afterParserOrEnumRuleCall();
+	    }
+
+)
+))*	otherlv_5='}' 
+    {
+    	newLeafNode(otherlv_5, grammarAccess.getConcatExprAccess().getRightCurlyBracketKeyword_4());
     }
 )
 ;

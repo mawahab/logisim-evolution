@@ -24,55 +24,57 @@ import org.eclipse.emf.ecore.EObject;
 public interface Range extends EObject
 {
   /**
-   * Returns the value of the '<em><b>Ub</b></em>' attribute.
-   * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Ub</b></em>' attribute.
+	 * The default value is <code>"-1"</code>.
+	 * <!-- begin-user-doc -->
    * <p>
    * If the meaning of the '<em>Ub</em>' attribute isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Ub</em>' attribute.
-   * @see #setUb(int)
-   * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#getRange_Ub()
-   * @model
-   * @generated
-   */
+	 * @return the value of the '<em>Ub</em>' attribute.
+	 * @see #setUb(int)
+	 * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#getRange_Ub()
+	 * @model default="-1"
+	 * @generated
+	 */
   int getUb();
 
   /**
-   * Sets the value of the '{@link com.cburch.logisim.statemachine.fSMDSL.Range#getUb <em>Ub</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link com.cburch.logisim.statemachine.fSMDSL.Range#getUb <em>Ub</em>}' attribute.
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Ub</em>' attribute.
-   * @see #getUb()
-   * @generated
-   */
+	 * @param value the new value of the '<em>Ub</em>' attribute.
+	 * @see #getUb()
+	 * @generated
+	 */
   void setUb(int value);
 
   /**
-   * Returns the value of the '<em><b>Lb</b></em>' attribute.
-   * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Lb</b></em>' attribute.
+	 * The default value is <code>"-1"</code>.
+	 * <!-- begin-user-doc -->
    * <p>
    * If the meaning of the '<em>Lb</em>' attribute isn't clear,
    * there really should be more of a description here...
    * </p>
    * <!-- end-user-doc -->
-   * @return the value of the '<em>Lb</em>' attribute.
-   * @see #setLb(int)
-   * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#getRange_Lb()
-   * @model
-   * @generated
-   */
+	 * @return the value of the '<em>Lb</em>' attribute.
+	 * @see #setLb(int)
+	 * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#getRange_Lb()
+	 * @model default="-1"
+	 * @generated
+	 */
   int getLb();
 
   /**
-   * Sets the value of the '{@link com.cburch.logisim.statemachine.fSMDSL.Range#getLb <em>Lb</em>}' attribute.
-   * <!-- begin-user-doc -->
+	 * Sets the value of the '{@link com.cburch.logisim.statemachine.fSMDSL.Range#getLb <em>Lb</em>}' attribute.
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Lb</em>' attribute.
-   * @see #getLb()
-   * @generated
-   */
+	 * @param value the new value of the '<em>Lb</em>' attribute.
+	 * @see #getLb()
+	 * @generated
+	 */
   void setLb(int value);
 
 } // Range

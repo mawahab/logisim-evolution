@@ -97,7 +97,7 @@ public class RegisterFile extends InstanceFactory {
 				int address = 16*c+r;
 				g.drawRect(locX+35, locY, 80, ROW_HEIGHT-3);
 				g.drawString("R" + address, locX, locY+13);
-				String code = Integer.toHexString(data.getValue(address));
+				String code = Integer.toHexString(data.getValue(address)).toUpperCase();
 				while (code.length() < ((nr_of_bits+1)/4)) {    //pad with 16 0's
 	        		code = "0" + code;
 	  			}

@@ -4,6 +4,7 @@ import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
+import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
@@ -51,7 +52,11 @@ public class PortReferenceFix {
   }
   
   protected void _replaceRef(final BoolExpr b) {
-    throw new UnsupportedOperationException("NYI");
+    Class<? extends BoolExpr> _class = b.getClass();
+    String _simpleName = _class.getSimpleName();
+    String _plus = ("Support for class " + _simpleName);
+    String _plus_1 = (_plus + " NYI");
+    throw new UnsupportedOperationException(_plus_1);
   }
   
   protected void _replaceRef(final Constant b) {
@@ -74,6 +79,14 @@ public class PortReferenceFix {
   }
   
   protected void _replaceRef(final CmpExpr b) {
+    EList<BoolExpr> _args = b.getArgs();
+    final Consumer<BoolExpr> _function = (BoolExpr a) -> {
+      this.replaceRef(a);
+    };
+    _args.forEach(_function);
+  }
+  
+  protected void _replaceRef(final ConcatExpr b) {
     EList<BoolExpr> _args = b.getArgs();
     final Consumer<BoolExpr> _function = (BoolExpr a) -> {
       this.replaceRef(a);
@@ -107,6 +120,9 @@ public class PortReferenceFix {
       return;
     } else if (b instanceof CmpExpr) {
       _replaceRef((CmpExpr)b);
+      return;
+    } else if (b instanceof ConcatExpr) {
+      _replaceRef((ConcatExpr)b);
       return;
     } else if (b instanceof Constant) {
       _replaceRef((Constant)b);

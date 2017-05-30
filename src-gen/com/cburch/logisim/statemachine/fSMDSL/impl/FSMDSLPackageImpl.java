@@ -8,6 +8,7 @@ import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.CommandStmt;
+import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
 import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLFactory;
@@ -43,1111 +44,1145 @@ import org.eclipse.emf.ecore.impl.EPackageImpl;
 public class FSMDSLPackageImpl extends EPackageImpl implements FSMDSLPackage
 {
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass topEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass commandStmtEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass predicateStmtEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass shortInputEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass shortOutputEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass fsmEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass fsmElementEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass portEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass commandListEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass layoutInfoEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass stateEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass transitionEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass commandEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass boolExprEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass rangeEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass inputPortEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass outputPortEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
+  private EClass concatExprEClass = null;
+
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+	 * @generated
+	 */
   private EClass portRefEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass defaultPredicateEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass orExprEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass andExprEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass cmpExprEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass notExprEClass = null;
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private EClass constantEClass = null;
 
   /**
-   * Creates an instance of the model <b>Package</b>, registered with
-   * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
-   * package URI value.
-   * <p>Note: the correct way to create the package is via the static
-   * factory method {@link #init init()}, which also performs
-   * initialization of the package, or returns the registered package,
-   * if one already exists.
-   * <!-- begin-user-doc -->
+	 * Creates an instance of the model <b>Package</b>, registered with
+	 * {@link org.eclipse.emf.ecore.EPackage.Registry EPackage.Registry} by the package
+	 * package URI value.
+	 * <p>Note: the correct way to create the package is via the static
+	 * factory method {@link #init init()}, which also performs
+	 * initialization of the package, or returns the registered package,
+	 * if one already exists.
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see org.eclipse.emf.ecore.EPackage.Registry
-   * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#eNS_URI
-   * @see #init()
-   * @generated
-   */
+	 * @see org.eclipse.emf.ecore.EPackage.Registry
+	 * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#eNS_URI
+	 * @see #init()
+	 * @generated
+	 */
   private FSMDSLPackageImpl()
   {
-    super(eNS_URI, FSMDSLFactory.eINSTANCE);
-  }
+		super(eNS_URI, FSMDSLFactory.eINSTANCE);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private static boolean isInited = false;
 
   /**
-   * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-   * 
-   * <p>This method is used to initialize {@link FSMDSLPackage#eINSTANCE} when that field is accessed.
-   * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
-   * <!-- begin-user-doc -->
+	 * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
+	 * 
+	 * <p>This method is used to initialize {@link FSMDSLPackage#eINSTANCE} when that field is accessed.
+	 * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @see #eNS_URI
-   * @see #createPackageContents()
-   * @see #initializePackageContents()
-   * @generated
-   */
+	 * @see #eNS_URI
+	 * @see #createPackageContents()
+	 * @see #initializePackageContents()
+	 * @generated
+	 */
   public static FSMDSLPackage init()
   {
-    if (isInited) return (FSMDSLPackage)EPackage.Registry.INSTANCE.getEPackage(FSMDSLPackage.eNS_URI);
+		if (isInited) return (FSMDSLPackage)EPackage.Registry.INSTANCE.getEPackage(FSMDSLPackage.eNS_URI);
 
-    // Obtain or create and register package
-    FSMDSLPackageImpl theFSMDSLPackage = (FSMDSLPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof FSMDSLPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new FSMDSLPackageImpl());
+		// Obtain or create and register package
+		FSMDSLPackageImpl theFSMDSLPackage = (FSMDSLPackageImpl)(EPackage.Registry.INSTANCE.get(eNS_URI) instanceof FSMDSLPackageImpl ? EPackage.Registry.INSTANCE.get(eNS_URI) : new FSMDSLPackageImpl());
 
-    isInited = true;
+		isInited = true;
 
-    // Create package meta-data objects
-    theFSMDSLPackage.createPackageContents();
+		// Create package meta-data objects
+		theFSMDSLPackage.createPackageContents();
 
-    // Initialize created meta-data
-    theFSMDSLPackage.initializePackageContents();
+		// Initialize created meta-data
+		theFSMDSLPackage.initializePackageContents();
 
-    // Mark meta-data to indicate it can't be changed
-    theFSMDSLPackage.freeze();
+		// Mark meta-data to indicate it can't be changed
+		theFSMDSLPackage.freeze();
 
   
-    // Update the registry and return the package
-    EPackage.Registry.INSTANCE.put(FSMDSLPackage.eNS_URI, theFSMDSLPackage);
-    return theFSMDSLPackage;
-  }
+		// Update the registry and return the package
+		EPackage.Registry.INSTANCE.put(FSMDSLPackage.eNS_URI, theFSMDSLPackage);
+		return theFSMDSLPackage;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getTOP()
   {
-    return topEClass;
-  }
+		return topEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getCommandStmt()
   {
-    return commandStmtEClass;
-  }
+		return commandStmtEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getCommandStmt_In()
   {
-    return (EReference)commandStmtEClass.getEStructuralFeatures().get(0);
-  }
+		return (EReference)commandStmtEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getCommandStmt_Out()
   {
-    return (EReference)commandStmtEClass.getEStructuralFeatures().get(1);
-  }
+		return (EReference)commandStmtEClass.getEStructuralFeatures().get(1);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getCommandStmt_Commands()
   {
-    return (EReference)commandStmtEClass.getEStructuralFeatures().get(2);
-  }
+		return (EReference)commandStmtEClass.getEStructuralFeatures().get(2);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getPredicateStmt()
   {
-    return predicateStmtEClass;
-  }
+		return predicateStmtEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getPredicateStmt_In()
   {
-    return (EReference)predicateStmtEClass.getEStructuralFeatures().get(0);
-  }
+		return (EReference)predicateStmtEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getPredicateStmt_Predicate()
   {
-    return (EReference)predicateStmtEClass.getEStructuralFeatures().get(1);
-  }
+		return (EReference)predicateStmtEClass.getEStructuralFeatures().get(1);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getShortInput()
   {
-    return shortInputEClass;
-  }
+		return shortInputEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getShortOutput()
   {
-    return shortOutputEClass;
-  }
+		return shortOutputEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getFSM()
   {
-    return fsmEClass;
-  }
+		return fsmEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getFSM_Name()
   {
-    return (EAttribute)fsmEClass.getEStructuralFeatures().get(0);
-  }
+		return (EAttribute)fsmEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getFSM_In()
   {
-    return (EReference)fsmEClass.getEStructuralFeatures().get(1);
-  }
+		return (EReference)fsmEClass.getEStructuralFeatures().get(1);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getFSM_Out()
   {
-    return (EReference)fsmEClass.getEStructuralFeatures().get(2);
-  }
+		return (EReference)fsmEClass.getEStructuralFeatures().get(2);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getFSM_Width()
   {
-    return (EAttribute)fsmEClass.getEStructuralFeatures().get(3);
-  }
+		return (EAttribute)fsmEClass.getEStructuralFeatures().get(3);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getFSM_Start()
   {
-    return (EReference)fsmEClass.getEStructuralFeatures().get(4);
-  }
+		return (EReference)fsmEClass.getEStructuralFeatures().get(4);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getFSM_States()
   {
-    return (EReference)fsmEClass.getEStructuralFeatures().get(5);
-  }
+		return (EReference)fsmEClass.getEStructuralFeatures().get(5);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getFSMElement()
   {
-    return fsmElementEClass;
-  }
+		return fsmElementEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getFSMElement_Layout()
   {
-    return (EReference)fsmElementEClass.getEStructuralFeatures().get(0);
-  }
+		return (EReference)fsmElementEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getPort()
   {
-    return portEClass;
-  }
+		return portEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getPort_Name()
   {
-    return (EAttribute)portEClass.getEStructuralFeatures().get(0);
-  }
+		return (EAttribute)portEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getPort_Width()
   {
-    return (EAttribute)portEClass.getEStructuralFeatures().get(1);
-  }
+		return (EAttribute)portEClass.getEStructuralFeatures().get(1);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getCommandList()
   {
-    return commandListEClass;
-  }
+		return commandListEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getCommandList_Commands()
   {
-    return (EReference)commandListEClass.getEStructuralFeatures().get(0);
-  }
+		return (EReference)commandListEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getLayoutInfo()
   {
-    return layoutInfoEClass;
-  }
+		return layoutInfoEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getLayoutInfo_X()
   {
-    return (EAttribute)layoutInfoEClass.getEStructuralFeatures().get(0);
-  }
+		return (EAttribute)layoutInfoEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getLayoutInfo_Y()
   {
-    return (EAttribute)layoutInfoEClass.getEStructuralFeatures().get(1);
-  }
+		return (EAttribute)layoutInfoEClass.getEStructuralFeatures().get(1);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getLayoutInfo_Width()
   {
-    return (EAttribute)layoutInfoEClass.getEStructuralFeatures().get(2);
-  }
+		return (EAttribute)layoutInfoEClass.getEStructuralFeatures().get(2);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getLayoutInfo_Height()
   {
-    return (EAttribute)layoutInfoEClass.getEStructuralFeatures().get(3);
-  }
+		return (EAttribute)layoutInfoEClass.getEStructuralFeatures().get(3);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getState()
   {
-    return stateEClass;
-  }
+		return stateEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getState_Name()
   {
-    return (EAttribute)stateEClass.getEStructuralFeatures().get(0);
-  }
+		return (EAttribute)stateEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getState_Code()
   {
-    return (EAttribute)stateEClass.getEStructuralFeatures().get(1);
-  }
+		return (EAttribute)stateEClass.getEStructuralFeatures().get(1);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getState_CommandList()
   {
-    return (EReference)stateEClass.getEStructuralFeatures().get(2);
-  }
+		return (EReference)stateEClass.getEStructuralFeatures().get(2);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getState_Transition()
   {
-    return (EReference)stateEClass.getEStructuralFeatures().get(3);
-  }
+		return (EReference)stateEClass.getEStructuralFeatures().get(3);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getTransition()
   {
-    return transitionEClass;
-  }
+		return transitionEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getTransition_Src()
   {
-    return (EReference)transitionEClass.getEStructuralFeatures().get(0);
-  }
+		return (EReference)transitionEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getTransition_Dst()
   {
-    return (EReference)transitionEClass.getEStructuralFeatures().get(1);
-  }
+		return (EReference)transitionEClass.getEStructuralFeatures().get(1);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getTransition_Predicate()
   {
-    return (EReference)transitionEClass.getEStructuralFeatures().get(2);
-  }
+		return (EReference)transitionEClass.getEStructuralFeatures().get(2);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getCommand()
   {
-    return commandEClass;
-  }
+		return commandEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getCommand_Name()
   {
-    return (EReference)commandEClass.getEStructuralFeatures().get(0);
-  }
+		return (EReference)commandEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getCommand_Value()
   {
-    return (EReference)commandEClass.getEStructuralFeatures().get(1);
-  }
+		return (EReference)commandEClass.getEStructuralFeatures().get(1);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getBoolExpr()
   {
-    return boolExprEClass;
-  }
+		return boolExprEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getRange()
   {
-    return rangeEClass;
-  }
+		return rangeEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getRange_Ub()
   {
-    return (EAttribute)rangeEClass.getEStructuralFeatures().get(0);
-  }
+		return (EAttribute)rangeEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getRange_Lb()
   {
-    return (EAttribute)rangeEClass.getEStructuralFeatures().get(1);
-  }
+		return (EAttribute)rangeEClass.getEStructuralFeatures().get(1);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getInputPort()
   {
-    return inputPortEClass;
-  }
+		return inputPortEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getOutputPort()
   {
-    return outputPortEClass;
-  }
+		return outputPortEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
+  public EClass getConcatExpr()
+  {
+		return concatExprEClass;
+	}
+
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+	 * @generated
+	 */
+  public EReference getConcatExpr_Args()
+  {
+		return (EReference)concatExprEClass.getEStructuralFeatures().get(0);
+	}
+
+  /**
+	 * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+	 * @generated
+	 */
   public EClass getPortRef()
   {
-    return portRefEClass;
-  }
+		return portRefEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getPortRef_Port()
   {
-    return (EReference)portRefEClass.getEStructuralFeatures().get(0);
-  }
+		return (EReference)portRefEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getPortRef_Range()
   {
-    return (EReference)portRefEClass.getEStructuralFeatures().get(1);
-  }
+		return (EReference)portRefEClass.getEStructuralFeatures().get(1);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getDefaultPredicate()
   {
-    return defaultPredicateEClass;
-  }
+		return defaultPredicateEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getOrExpr()
   {
-    return orExprEClass;
-  }
+		return orExprEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getOrExpr_Args()
   {
-    return (EReference)orExprEClass.getEStructuralFeatures().get(0);
-  }
+		return (EReference)orExprEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getAndExpr()
   {
-    return andExprEClass;
-  }
+		return andExprEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getAndExpr_Args()
   {
-    return (EReference)andExprEClass.getEStructuralFeatures().get(0);
-  }
+		return (EReference)andExprEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getCmpExpr()
   {
-    return cmpExprEClass;
-  }
+		return cmpExprEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getCmpExpr_Args()
   {
-    return (EReference)cmpExprEClass.getEStructuralFeatures().get(0);
-  }
+		return (EReference)cmpExprEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getCmpExpr_Op()
   {
-    return (EAttribute)cmpExprEClass.getEStructuralFeatures().get(1);
-  }
+		return (EAttribute)cmpExprEClass.getEStructuralFeatures().get(1);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getNotExpr()
   {
-    return notExprEClass;
-  }
+		return notExprEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EReference getNotExpr_Args()
   {
-    return (EReference)notExprEClass.getEStructuralFeatures().get(0);
-  }
+		return (EReference)notExprEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EClass getConstant()
   {
-    return constantEClass;
-  }
+		return constantEClass;
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public EAttribute getConstant_Value()
   {
-    return (EAttribute)constantEClass.getEStructuralFeatures().get(0);
-  }
+		return (EAttribute)constantEClass.getEStructuralFeatures().get(0);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public FSMDSLFactory getFSMDSLFactory()
   {
-    return (FSMDSLFactory)getEFactoryInstance();
-  }
+		return (FSMDSLFactory)getEFactoryInstance();
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private boolean isCreated = false;
 
   /**
-   * Creates the meta-model objects for the package.  This method is
-   * guarded to have no affect on any invocation but its first.
-   * <!-- begin-user-doc -->
+	 * Creates the meta-model objects for the package.  This method is
+	 * guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public void createPackageContents()
   {
-    if (isCreated) return;
-    isCreated = true;
+		if (isCreated) return;
+		isCreated = true;
 
-    // Create classes and their features
-    topEClass = createEClass(TOP);
+		// Create classes and their features
+		topEClass = createEClass(TOP);
 
-    commandStmtEClass = createEClass(COMMAND_STMT);
-    createEReference(commandStmtEClass, COMMAND_STMT__IN);
-    createEReference(commandStmtEClass, COMMAND_STMT__OUT);
-    createEReference(commandStmtEClass, COMMAND_STMT__COMMANDS);
+		commandStmtEClass = createEClass(COMMAND_STMT);
+		createEReference(commandStmtEClass, COMMAND_STMT__IN);
+		createEReference(commandStmtEClass, COMMAND_STMT__OUT);
+		createEReference(commandStmtEClass, COMMAND_STMT__COMMANDS);
 
-    predicateStmtEClass = createEClass(PREDICATE_STMT);
-    createEReference(predicateStmtEClass, PREDICATE_STMT__IN);
-    createEReference(predicateStmtEClass, PREDICATE_STMT__PREDICATE);
+		predicateStmtEClass = createEClass(PREDICATE_STMT);
+		createEReference(predicateStmtEClass, PREDICATE_STMT__IN);
+		createEReference(predicateStmtEClass, PREDICATE_STMT__PREDICATE);
 
-    shortInputEClass = createEClass(SHORT_INPUT);
+		shortInputEClass = createEClass(SHORT_INPUT);
 
-    shortOutputEClass = createEClass(SHORT_OUTPUT);
+		shortOutputEClass = createEClass(SHORT_OUTPUT);
 
-    fsmEClass = createEClass(FSM);
-    createEAttribute(fsmEClass, FSM__NAME);
-    createEReference(fsmEClass, FSM__IN);
-    createEReference(fsmEClass, FSM__OUT);
-    createEAttribute(fsmEClass, FSM__WIDTH);
-    createEReference(fsmEClass, FSM__START);
-    createEReference(fsmEClass, FSM__STATES);
+		fsmEClass = createEClass(FSM);
+		createEAttribute(fsmEClass, FSM__NAME);
+		createEReference(fsmEClass, FSM__IN);
+		createEReference(fsmEClass, FSM__OUT);
+		createEAttribute(fsmEClass, FSM__WIDTH);
+		createEReference(fsmEClass, FSM__START);
+		createEReference(fsmEClass, FSM__STATES);
 
-    fsmElementEClass = createEClass(FSM_ELEMENT);
-    createEReference(fsmElementEClass, FSM_ELEMENT__LAYOUT);
+		fsmElementEClass = createEClass(FSM_ELEMENT);
+		createEReference(fsmElementEClass, FSM_ELEMENT__LAYOUT);
 
-    portEClass = createEClass(PORT);
-    createEAttribute(portEClass, PORT__NAME);
-    createEAttribute(portEClass, PORT__WIDTH);
+		portEClass = createEClass(PORT);
+		createEAttribute(portEClass, PORT__NAME);
+		createEAttribute(portEClass, PORT__WIDTH);
 
-    commandListEClass = createEClass(COMMAND_LIST);
-    createEReference(commandListEClass, COMMAND_LIST__COMMANDS);
+		commandListEClass = createEClass(COMMAND_LIST);
+		createEReference(commandListEClass, COMMAND_LIST__COMMANDS);
 
-    layoutInfoEClass = createEClass(LAYOUT_INFO);
-    createEAttribute(layoutInfoEClass, LAYOUT_INFO__X);
-    createEAttribute(layoutInfoEClass, LAYOUT_INFO__Y);
-    createEAttribute(layoutInfoEClass, LAYOUT_INFO__WIDTH);
-    createEAttribute(layoutInfoEClass, LAYOUT_INFO__HEIGHT);
+		layoutInfoEClass = createEClass(LAYOUT_INFO);
+		createEAttribute(layoutInfoEClass, LAYOUT_INFO__X);
+		createEAttribute(layoutInfoEClass, LAYOUT_INFO__Y);
+		createEAttribute(layoutInfoEClass, LAYOUT_INFO__WIDTH);
+		createEAttribute(layoutInfoEClass, LAYOUT_INFO__HEIGHT);
 
-    stateEClass = createEClass(STATE);
-    createEAttribute(stateEClass, STATE__NAME);
-    createEAttribute(stateEClass, STATE__CODE);
-    createEReference(stateEClass, STATE__COMMAND_LIST);
-    createEReference(stateEClass, STATE__TRANSITION);
+		stateEClass = createEClass(STATE);
+		createEAttribute(stateEClass, STATE__NAME);
+		createEAttribute(stateEClass, STATE__CODE);
+		createEReference(stateEClass, STATE__COMMAND_LIST);
+		createEReference(stateEClass, STATE__TRANSITION);
 
-    transitionEClass = createEClass(TRANSITION);
-    createEReference(transitionEClass, TRANSITION__SRC);
-    createEReference(transitionEClass, TRANSITION__DST);
-    createEReference(transitionEClass, TRANSITION__PREDICATE);
+		transitionEClass = createEClass(TRANSITION);
+		createEReference(transitionEClass, TRANSITION__SRC);
+		createEReference(transitionEClass, TRANSITION__DST);
+		createEReference(transitionEClass, TRANSITION__PREDICATE);
 
-    commandEClass = createEClass(COMMAND);
-    createEReference(commandEClass, COMMAND__NAME);
-    createEReference(commandEClass, COMMAND__VALUE);
+		commandEClass = createEClass(COMMAND);
+		createEReference(commandEClass, COMMAND__NAME);
+		createEReference(commandEClass, COMMAND__VALUE);
 
-    boolExprEClass = createEClass(BOOL_EXPR);
+		boolExprEClass = createEClass(BOOL_EXPR);
 
-    rangeEClass = createEClass(RANGE);
-    createEAttribute(rangeEClass, RANGE__UB);
-    createEAttribute(rangeEClass, RANGE__LB);
+		rangeEClass = createEClass(RANGE);
+		createEAttribute(rangeEClass, RANGE__UB);
+		createEAttribute(rangeEClass, RANGE__LB);
 
-    inputPortEClass = createEClass(INPUT_PORT);
+		inputPortEClass = createEClass(INPUT_PORT);
 
-    outputPortEClass = createEClass(OUTPUT_PORT);
+		outputPortEClass = createEClass(OUTPUT_PORT);
 
-    portRefEClass = createEClass(PORT_REF);
-    createEReference(portRefEClass, PORT_REF__PORT);
-    createEReference(portRefEClass, PORT_REF__RANGE);
+		concatExprEClass = createEClass(CONCAT_EXPR);
+		createEReference(concatExprEClass, CONCAT_EXPR__ARGS);
 
-    defaultPredicateEClass = createEClass(DEFAULT_PREDICATE);
+		portRefEClass = createEClass(PORT_REF);
+		createEReference(portRefEClass, PORT_REF__PORT);
+		createEReference(portRefEClass, PORT_REF__RANGE);
 
-    orExprEClass = createEClass(OR_EXPR);
-    createEReference(orExprEClass, OR_EXPR__ARGS);
+		defaultPredicateEClass = createEClass(DEFAULT_PREDICATE);
 
-    andExprEClass = createEClass(AND_EXPR);
-    createEReference(andExprEClass, AND_EXPR__ARGS);
+		orExprEClass = createEClass(OR_EXPR);
+		createEReference(orExprEClass, OR_EXPR__ARGS);
 
-    cmpExprEClass = createEClass(CMP_EXPR);
-    createEReference(cmpExprEClass, CMP_EXPR__ARGS);
-    createEAttribute(cmpExprEClass, CMP_EXPR__OP);
+		andExprEClass = createEClass(AND_EXPR);
+		createEReference(andExprEClass, AND_EXPR__ARGS);
 
-    notExprEClass = createEClass(NOT_EXPR);
-    createEReference(notExprEClass, NOT_EXPR__ARGS);
+		cmpExprEClass = createEClass(CMP_EXPR);
+		createEReference(cmpExprEClass, CMP_EXPR__ARGS);
+		createEAttribute(cmpExprEClass, CMP_EXPR__OP);
 
-    constantEClass = createEClass(CONSTANT);
-    createEAttribute(constantEClass, CONSTANT__VALUE);
-  }
+		notExprEClass = createEClass(NOT_EXPR);
+		createEReference(notExprEClass, NOT_EXPR__ARGS);
+
+		constantEClass = createEClass(CONSTANT);
+		createEAttribute(constantEClass, CONSTANT__VALUE);
+	}
 
   /**
-   * <!-- begin-user-doc -->
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   private boolean isInitialized = false;
 
   /**
-   * Complete the initialization of the package and its meta-model.  This
-   * method is guarded to have no affect on any invocation but its first.
-   * <!-- begin-user-doc -->
+	 * Complete the initialization of the package and its meta-model.  This
+	 * method is guarded to have no affect on any invocation but its first.
+	 * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
-   * @generated
-   */
+	 * @generated
+	 */
   public void initializePackageContents()
   {
-    if (isInitialized) return;
-    isInitialized = true;
+		if (isInitialized) return;
+		isInitialized = true;
 
-    // Initialize package
-    setName(eNAME);
-    setNsPrefix(eNS_PREFIX);
-    setNsURI(eNS_URI);
+		// Initialize package
+		setName(eNAME);
+		setNsPrefix(eNS_PREFIX);
+		setNsURI(eNS_URI);
 
-    // Create type parameters
+		// Create type parameters
 
-    // Set bounds for type parameters
+		// Set bounds for type parameters
 
-    // Add supertypes to classes
-    commandStmtEClass.getESuperTypes().add(this.getTOP());
-    predicateStmtEClass.getESuperTypes().add(this.getTOP());
-    fsmEClass.getESuperTypes().add(this.getTOP());
-    fsmEClass.getESuperTypes().add(this.getFSMElement());
-    portEClass.getESuperTypes().add(this.getFSMElement());
-    commandListEClass.getESuperTypes().add(this.getFSMElement());
-    stateEClass.getESuperTypes().add(this.getFSMElement());
-    transitionEClass.getESuperTypes().add(this.getFSMElement());
-    inputPortEClass.getESuperTypes().add(this.getShortInput());
-    inputPortEClass.getESuperTypes().add(this.getPort());
-    outputPortEClass.getESuperTypes().add(this.getShortOutput());
-    outputPortEClass.getESuperTypes().add(this.getPort());
-    portRefEClass.getESuperTypes().add(this.getBoolExpr());
-    defaultPredicateEClass.getESuperTypes().add(this.getBoolExpr());
-    orExprEClass.getESuperTypes().add(this.getBoolExpr());
-    andExprEClass.getESuperTypes().add(this.getBoolExpr());
-    cmpExprEClass.getESuperTypes().add(this.getBoolExpr());
-    notExprEClass.getESuperTypes().add(this.getBoolExpr());
-    constantEClass.getESuperTypes().add(this.getBoolExpr());
+		// Add supertypes to classes
+		commandStmtEClass.getESuperTypes().add(this.getTOP());
+		predicateStmtEClass.getESuperTypes().add(this.getTOP());
+		fsmEClass.getESuperTypes().add(this.getTOP());
+		fsmEClass.getESuperTypes().add(this.getFSMElement());
+		portEClass.getESuperTypes().add(this.getFSMElement());
+		commandListEClass.getESuperTypes().add(this.getFSMElement());
+		stateEClass.getESuperTypes().add(this.getFSMElement());
+		transitionEClass.getESuperTypes().add(this.getFSMElement());
+		inputPortEClass.getESuperTypes().add(this.getShortInput());
+		inputPortEClass.getESuperTypes().add(this.getPort());
+		outputPortEClass.getESuperTypes().add(this.getShortOutput());
+		outputPortEClass.getESuperTypes().add(this.getPort());
+		concatExprEClass.getESuperTypes().add(this.getBoolExpr());
+		portRefEClass.getESuperTypes().add(this.getBoolExpr());
+		defaultPredicateEClass.getESuperTypes().add(this.getBoolExpr());
+		orExprEClass.getESuperTypes().add(this.getBoolExpr());
+		andExprEClass.getESuperTypes().add(this.getBoolExpr());
+		cmpExprEClass.getESuperTypes().add(this.getBoolExpr());
+		notExprEClass.getESuperTypes().add(this.getBoolExpr());
+		constantEClass.getESuperTypes().add(this.getBoolExpr());
 
-    // Initialize classes and features; add operations and parameters
-    initEClass(topEClass, com.cburch.logisim.statemachine.fSMDSL.TOP.class, "TOP", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		// Initialize classes and features; add operations and parameters
+		initEClass(topEClass, com.cburch.logisim.statemachine.fSMDSL.TOP.class, "TOP", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(commandStmtEClass, CommandStmt.class, "CommandStmt", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getCommandStmt_In(), this.getShortInput(), null, "in", null, 0, -1, CommandStmt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getCommandStmt_Out(), this.getShortOutput(), null, "out", null, 0, -1, CommandStmt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getCommandStmt_Commands(), this.getCommand(), null, "commands", null, 0, -1, CommandStmt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(commandStmtEClass, CommandStmt.class, "CommandStmt", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getCommandStmt_In(), this.getShortInput(), null, "in", null, 0, -1, CommandStmt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCommandStmt_Out(), this.getShortOutput(), null, "out", null, 0, -1, CommandStmt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCommandStmt_Commands(), this.getCommand(), null, "commands", null, 0, -1, CommandStmt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(predicateStmtEClass, PredicateStmt.class, "PredicateStmt", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getPredicateStmt_In(), this.getShortInput(), null, "in", null, 0, -1, PredicateStmt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getPredicateStmt_Predicate(), this.getBoolExpr(), null, "predicate", null, 0, 1, PredicateStmt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(predicateStmtEClass, PredicateStmt.class, "PredicateStmt", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getPredicateStmt_In(), this.getShortInput(), null, "in", null, 0, -1, PredicateStmt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPredicateStmt_Predicate(), this.getBoolExpr(), null, "predicate", null, 0, 1, PredicateStmt.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(shortInputEClass, ShortInput.class, "ShortInput", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(shortInputEClass, ShortInput.class, "ShortInput", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(shortOutputEClass, ShortOutput.class, "ShortOutput", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(shortOutputEClass, ShortOutput.class, "ShortOutput", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(fsmEClass, com.cburch.logisim.statemachine.fSMDSL.FSM.class, "FSM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getFSM_Name(), ecorePackage.getEString(), "name", null, 0, 1, com.cburch.logisim.statemachine.fSMDSL.FSM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getFSM_In(), this.getPort(), null, "in", null, 0, -1, com.cburch.logisim.statemachine.fSMDSL.FSM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getFSM_Out(), this.getPort(), null, "out", null, 0, -1, com.cburch.logisim.statemachine.fSMDSL.FSM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getFSM_Width(), ecorePackage.getEInt(), "width", null, 0, 1, com.cburch.logisim.statemachine.fSMDSL.FSM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getFSM_Start(), this.getState(), null, "start", null, 0, 1, com.cburch.logisim.statemachine.fSMDSL.FSM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getFSM_States(), this.getState(), null, "states", null, 0, -1, com.cburch.logisim.statemachine.fSMDSL.FSM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(fsmEClass, com.cburch.logisim.statemachine.fSMDSL.FSM.class, "FSM", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getFSM_Name(), ecorePackage.getEString(), "name", null, 0, 1, com.cburch.logisim.statemachine.fSMDSL.FSM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFSM_In(), this.getPort(), null, "in", null, 0, -1, com.cburch.logisim.statemachine.fSMDSL.FSM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFSM_Out(), this.getPort(), null, "out", null, 0, -1, com.cburch.logisim.statemachine.fSMDSL.FSM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getFSM_Width(), ecorePackage.getEInt(), "width", null, 0, 1, com.cburch.logisim.statemachine.fSMDSL.FSM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFSM_Start(), this.getState(), null, "start", null, 0, 1, com.cburch.logisim.statemachine.fSMDSL.FSM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getFSM_States(), this.getState(), null, "states", null, 0, -1, com.cburch.logisim.statemachine.fSMDSL.FSM.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(fsmElementEClass, FSMElement.class, "FSMElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getFSMElement_Layout(), this.getLayoutInfo(), null, "layout", null, 0, 1, FSMElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(fsmElementEClass, FSMElement.class, "FSMElement", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getFSMElement_Layout(), this.getLayoutInfo(), null, "layout", null, 0, 1, FSMElement.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(portEClass, Port.class, "Port", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getPort_Name(), ecorePackage.getEString(), "name", null, 0, 1, Port.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getPort_Width(), ecorePackage.getEInt(), "width", null, 0, 1, Port.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(portEClass, Port.class, "Port", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getPort_Name(), ecorePackage.getEString(), "name", null, 0, 1, Port.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getPort_Width(), ecorePackage.getEInt(), "width", null, 0, 1, Port.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(commandListEClass, CommandList.class, "CommandList", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getCommandList_Commands(), this.getCommand(), null, "commands", null, 0, -1, CommandList.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(commandListEClass, CommandList.class, "CommandList", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getCommandList_Commands(), this.getCommand(), null, "commands", null, 0, -1, CommandList.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(layoutInfoEClass, LayoutInfo.class, "LayoutInfo", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getLayoutInfo_X(), ecorePackage.getEInt(), "x", null, 0, 1, LayoutInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getLayoutInfo_Y(), ecorePackage.getEInt(), "y", null, 0, 1, LayoutInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getLayoutInfo_Width(), ecorePackage.getEInt(), "width", null, 0, 1, LayoutInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getLayoutInfo_Height(), ecorePackage.getEInt(), "height", null, 0, 1, LayoutInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(layoutInfoEClass, LayoutInfo.class, "LayoutInfo", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getLayoutInfo_X(), ecorePackage.getEInt(), "x", null, 0, 1, LayoutInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLayoutInfo_Y(), ecorePackage.getEInt(), "y", null, 0, 1, LayoutInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLayoutInfo_Width(), ecorePackage.getEInt(), "width", null, 0, 1, LayoutInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getLayoutInfo_Height(), ecorePackage.getEInt(), "height", null, 0, 1, LayoutInfo.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(stateEClass, State.class, "State", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getState_Name(), ecorePackage.getEString(), "name", null, 0, 1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getState_Code(), ecorePackage.getEString(), "code", null, 0, 1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getState_CommandList(), this.getCommandList(), null, "commandList", null, 0, 1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getState_Transition(), this.getTransition(), null, "transition", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(stateEClass, State.class, "State", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getState_Name(), ecorePackage.getEString(), "name", null, 0, 1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getState_Code(), ecorePackage.getEString(), "code", null, 0, 1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getState_CommandList(), this.getCommandList(), null, "commandList", null, 0, 1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getState_Transition(), this.getTransition(), null, "transition", null, 0, -1, State.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(transitionEClass, Transition.class, "Transition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getTransition_Src(), this.getState(), null, "src", null, 0, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getTransition_Dst(), this.getState(), null, "dst", null, 0, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getTransition_Predicate(), this.getBoolExpr(), null, "predicate", null, 0, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(transitionEClass, Transition.class, "Transition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getTransition_Src(), this.getState(), null, "src", null, 0, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTransition_Dst(), this.getState(), null, "dst", null, 0, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getTransition_Predicate(), this.getBoolExpr(), null, "predicate", null, 0, 1, Transition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(commandEClass, Command.class, "Command", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getCommand_Name(), this.getOutputPort(), null, "name", null, 0, 1, Command.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getCommand_Value(), this.getBoolExpr(), null, "value", null, 0, 1, Command.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(commandEClass, Command.class, "Command", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getCommand_Name(), this.getOutputPort(), null, "name", null, 0, 1, Command.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getCommand_Value(), this.getBoolExpr(), null, "value", null, 0, 1, Command.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(boolExprEClass, BoolExpr.class, "BoolExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(boolExprEClass, BoolExpr.class, "BoolExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(rangeEClass, Range.class, "Range", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getRange_Ub(), ecorePackage.getEInt(), "ub", null, 0, 1, Range.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getRange_Lb(), ecorePackage.getEInt(), "lb", null, 0, 1, Range.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(rangeEClass, Range.class, "Range", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getRange_Ub(), ecorePackage.getEInt(), "ub", "-1", 0, 1, Range.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getRange_Lb(), ecorePackage.getEInt(), "lb", "-1", 0, 1, Range.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(inputPortEClass, InputPort.class, "InputPort", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(inputPortEClass, InputPort.class, "InputPort", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(outputPortEClass, OutputPort.class, "OutputPort", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(outputPortEClass, OutputPort.class, "OutputPort", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(portRefEClass, PortRef.class, "PortRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getPortRef_Port(), this.getPort(), null, "port", null, 0, 1, PortRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEReference(getPortRef_Range(), this.getRange(), null, "range", null, 0, 1, PortRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(concatExprEClass, ConcatExpr.class, "ConcatExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getConcatExpr_Args(), this.getBoolExpr(), null, "args", null, 0, -1, ConcatExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(defaultPredicateEClass, DefaultPredicate.class, "DefaultPredicate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEClass(portRefEClass, PortRef.class, "PortRef", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getPortRef_Port(), this.getPort(), null, "port", null, 0, 1, PortRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEReference(getPortRef_Range(), this.getRange(), null, "range", null, 0, 1, PortRef.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(orExprEClass, OrExpr.class, "OrExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getOrExpr_Args(), this.getBoolExpr(), null, "args", null, 0, -1, OrExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(defaultPredicateEClass, DefaultPredicate.class, "DefaultPredicate", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
-    initEClass(andExprEClass, AndExpr.class, "AndExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getAndExpr_Args(), this.getBoolExpr(), null, "args", null, 0, -1, AndExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(orExprEClass, OrExpr.class, "OrExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getOrExpr_Args(), this.getBoolExpr(), null, "args", null, 0, -1, OrExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(cmpExprEClass, CmpExpr.class, "CmpExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getCmpExpr_Args(), this.getBoolExpr(), null, "args", null, 0, -1, CmpExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-    initEAttribute(getCmpExpr_Op(), ecorePackage.getEString(), "op", null, 0, 1, CmpExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(andExprEClass, AndExpr.class, "AndExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getAndExpr_Args(), this.getBoolExpr(), null, "args", null, 0, -1, AndExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(notExprEClass, NotExpr.class, "NotExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEReference(getNotExpr_Args(), this.getBoolExpr(), null, "args", null, 0, -1, NotExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(cmpExprEClass, CmpExpr.class, "CmpExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getCmpExpr_Args(), this.getBoolExpr(), null, "args", null, 0, -1, CmpExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEAttribute(getCmpExpr_Op(), ecorePackage.getEString(), "op", null, 0, 1, CmpExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    initEClass(constantEClass, Constant.class, "Constant", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-    initEAttribute(getConstant_Value(), ecorePackage.getEString(), "value", null, 0, 1, Constant.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+		initEClass(notExprEClass, NotExpr.class, "NotExpr", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEReference(getNotExpr_Args(), this.getBoolExpr(), null, "args", null, 0, -1, NotExpr.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-    // Create resource
-    createResource(eNS_URI);
-  }
+		initEClass(constantEClass, Constant.class, "Constant", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+		initEAttribute(getConstant_Value(), ecorePackage.getEString(), "value", null, 0, 1, Constant.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+		// Create resource
+		createResource(eNS_URI);
+	}
 
 } //FSMDSLPackageImpl

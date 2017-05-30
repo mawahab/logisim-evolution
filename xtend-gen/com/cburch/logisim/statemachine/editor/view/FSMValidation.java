@@ -2,9 +2,11 @@ package com.cburch.logisim.statemachine.editor.view;
 
 import com.cburch.logisim.statemachine.PrettyPrinter;
 import com.cburch.logisim.statemachine.bdd.BDDOptimizer;
+import com.cburch.logisim.statemachine.bdd.BitWidthAnalyzer;
 import com.cburch.logisim.statemachine.editor.view.FSMCustomFactory;
 import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
+import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
@@ -14,6 +16,8 @@ import com.cburch.logisim.statemachine.fSMDSL.FSMElement;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Port;
+import com.cburch.logisim.statemachine.fSMDSL.PortRef;
+import com.cburch.logisim.statemachine.fSMDSL.Range;
 import com.cburch.logisim.statemachine.fSMDSL.State;
 import com.cburch.logisim.statemachine.fSMDSL.Transition;
 import com.google.common.base.Objects;
@@ -26,6 +30,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtext.xbase.lib.Conversions;
+import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 
@@ -38,6 +43,8 @@ public class FSMValidation {
   private List<String> warnings = new ArrayList<String>();
   
   private List<String> errors = new ArrayList<String>();
+  
+  private BitWidthAnalyzer analyzer = new BitWidthAnalyzer();
   
   public FSMValidation(final FSM fsm) {
     this.fsm = fsm;
@@ -118,10 +125,22 @@ public class FSMValidation {
     EList<Command> _commands = cl.getCommands();
     for (final Command c : _commands) {
       {
-        BoolExpr _value = c.getValue();
-        this.validateExpr(_value, false);
+        try {
+          BoolExpr _value = c.getValue();
+          this.analyzer.computeBitwidth(_value);
+        } catch (final Throwable _t) {
+          if (_t instanceof RuntimeException) {
+            final RuntimeException e = (RuntimeException)_t;
+            String _message = e.getMessage();
+            this.error(_message);
+          } else {
+            throw Exceptions.sneakyThrow(_t);
+          }
+        }
         BoolExpr _value_1 = c.getValue();
-        final BDDOptimizer optimizer = new BDDOptimizer(_value_1);
+        this.validateExpr(_value_1, false);
+        BoolExpr _value_2 = c.getValue();
+        final BDDOptimizer optimizer = new BDDOptimizer(_value_2);
         optimizer.simplify();
         boolean _isAlwaysFalse = optimizer.isAlwaysFalse();
         if (_isAlwaysFalse) {
@@ -163,36 +182,55 @@ public class FSMValidation {
       BoolExpr _predicate_2 = t.getPredicate();
       boolean _not = (!(_predicate_2 instanceof DefaultPredicate));
       if (_not) {
-        boolean _xblockexpression_1 = false;
-        {
-          final BDDOptimizer optimizer = new BDDOptimizer(p);
-          optimizer.simplify();
-          boolean _isAlwaysFalse = optimizer.isAlwaysFalse();
-          if (_isAlwaysFalse) {
+        boolean _xtrycatchfinallyexpression = false;
+        try {
+          boolean _xblockexpression_1 = false;
+          {
+            final BDDOptimizer optimizer = new BDDOptimizer(p);
+            optimizer.simplify();
+            boolean _isAlwaysFalse = optimizer.isAlwaysFalse();
+            if (_isAlwaysFalse) {
+              String _pp = PrettyPrinter.pp(t);
+              String _plus = ("Transition  " + _pp);
+              String _plus_1 = (_plus + " can never be taken (evaluated to 0)");
+              this.error(_plus_1);
+            }
+            boolean _xifexpression_1 = false;
+            boolean _and = false;
+            boolean _isAlwaysTrue = optimizer.isAlwaysTrue();
+            if (!_isAlwaysTrue) {
+              _and = false;
+            } else {
+              BoolExpr _predicate_3 = t.getPredicate();
+              boolean _not_1 = (!(_predicate_3 instanceof DefaultPredicate));
+              _and = _not_1;
+            }
+            if (_and) {
+              String _pp_1 = PrettyPrinter.pp(t);
+              String _plus_2 = ("Transition " + _pp_1);
+              String _plus_3 = (_plus_2 + " is always taken (evaluated to 1)");
+              _xifexpression_1 = this.warning(_plus_3);
+            }
+            _xblockexpression_1 = _xifexpression_1;
+          }
+          _xtrycatchfinallyexpression = _xblockexpression_1;
+        } catch (final Throwable _t) {
+          if (_t instanceof Exception) {
+            final Exception e = (Exception)_t;
             String _pp = PrettyPrinter.pp(t);
-            String _plus = ("Transition  " + _pp);
-            String _plus_1 = (_plus + " can never be taken (evaluated to 0)");
-            this.error(_plus_1);
-          }
-          boolean _xifexpression_1 = false;
-          boolean _and = false;
-          boolean _isAlwaysTrue = optimizer.isAlwaysTrue();
-          if (!_isAlwaysTrue) {
-            _and = false;
+            String _plus = ("BDD analysis for " + _pp);
+            String _plus_1 = (_plus + " failed : ");
+            String _message = e.getMessage();
+            String _plus_2 = (_plus_1 + _message);
+            String _plus_3 = (_plus_2 + "\n");
+            StackTraceElement[] _stackTrace = e.getStackTrace();
+            String _plus_4 = (_plus_3 + _stackTrace);
+            _xtrycatchfinallyexpression = this.error(_plus_4);
           } else {
-            BoolExpr _predicate_3 = t.getPredicate();
-            boolean _not_1 = (!(_predicate_3 instanceof DefaultPredicate));
-            _and = _not_1;
+            throw Exceptions.sneakyThrow(_t);
           }
-          if (_and) {
-            String _pp_1 = PrettyPrinter.pp(t);
-            String _plus_2 = ("Transition " + _pp_1);
-            String _plus_3 = (_plus_2 + " is always taken (evaluated to 1)");
-            _xifexpression_1 = this.warning(_plus_3);
-          }
-          _xblockexpression_1 = _xifexpression_1;
         }
-        _xifexpression = _xblockexpression_1;
+        _xifexpression = _xtrycatchfinallyexpression;
       }
       _xblockexpression = _xifexpression;
     }
@@ -299,6 +337,24 @@ public class FSMValidation {
     return null;
   }
   
+  public Boolean _validateExpr(final CmpExpr b, final boolean predicate) {
+    EList<BoolExpr> _args = b.getArgs();
+    int _size = _args.size();
+    boolean _notEquals = (_size != 2);
+    if (_notEquals) {
+      String _pp = PrettyPrinter.pp(b);
+      String _plus = ("Inconsistent number of arguments for " + _pp);
+      String _plus_1 = (_plus + " ");
+      this.error(_plus_1);
+    }
+    EList<BoolExpr> _args_1 = b.getArgs();
+    final Consumer<BoolExpr> _function = (BoolExpr a) -> {
+      this.validateExpr(a, predicate);
+    };
+    _args_1.forEach(_function);
+    return null;
+  }
+  
   public Boolean _validateExpr(final AndExpr b, final boolean predicate) {
     EList<BoolExpr> _args = b.getArgs();
     final Consumer<BoolExpr> _function = (BoolExpr a) -> {
@@ -318,9 +374,88 @@ public class FSMValidation {
   }
   
   public Boolean _validateExpr(final Constant b, final boolean predicate) {
+    return null;
+  }
+  
+  public Boolean _validateExpr(final PortRef b, final boolean predicate) {
     boolean _xifexpression = false;
-    if (predicate) {
-      _xifexpression = this.error("\"0\" and \"1\" not allowed in predicate, use \"default\" keyword instead");
+    Range _range = b.getRange();
+    boolean _notEquals = (!Objects.equal(_range, null));
+    if (_notEquals) {
+      boolean _xblockexpression = false;
+      {
+        Range _range_1 = b.getRange();
+        int _ub = _range_1.getUb();
+        Port _port = b.getPort();
+        int _width = _port.getWidth();
+        int _minus = (_width - 1);
+        boolean _greaterThan = (_ub > _minus);
+        if (_greaterThan) {
+          Range _range_2 = b.getRange();
+          int _ub_1 = _range_2.getUb();
+          String _plus = ("Inconsistent range [" + Integer.valueOf(_ub_1));
+          String _plus_1 = (_plus + ":");
+          Range _range_3 = b.getRange();
+          int _lb = _range_3.getLb();
+          String _plus_2 = (_plus_1 + Integer.valueOf(_lb));
+          String _plus_3 = (_plus_2 + "] for port ");
+          Port _port_1 = b.getPort();
+          String _name = _port_1.getName();
+          String _plus_4 = (_plus_3 + _name);
+          String _plus_5 = (_plus_4 + "[");
+          Port _port_2 = b.getPort();
+          int _width_1 = _port_2.getWidth();
+          int _minus_1 = (_width_1 - 1);
+          String _plus_6 = (_plus_5 + Integer.valueOf(_minus_1));
+          String _plus_7 = (_plus_6 + ":0]");
+          this.error(_plus_7);
+        }
+        Range _range_4 = b.getRange();
+        int _lb_1 = _range_4.getLb();
+        Port _port_3 = b.getPort();
+        int _width_2 = _port_3.getWidth();
+        int _minus_2 = (_width_2 - 1);
+        boolean _greaterThan_1 = (_lb_1 > _minus_2);
+        if (_greaterThan_1) {
+          Range _range_5 = b.getRange();
+          int _ub_2 = _range_5.getUb();
+          String _plus_8 = ("Inconsistent range [" + Integer.valueOf(_ub_2));
+          String _plus_9 = (_plus_8 + ":");
+          Range _range_6 = b.getRange();
+          int _lb_2 = _range_6.getLb();
+          String _plus_10 = (_plus_9 + Integer.valueOf(_lb_2));
+          String _plus_11 = (_plus_10 + "] for port ");
+          Port _port_4 = b.getPort();
+          String _name_1 = _port_4.getName();
+          String _plus_12 = (_plus_11 + _name_1);
+          String _plus_13 = (_plus_12 + "[");
+          Port _port_5 = b.getPort();
+          int _width_3 = _port_5.getWidth();
+          int _minus_3 = (_width_3 - 1);
+          String _plus_14 = (_plus_13 + Integer.valueOf(_minus_3));
+          String _plus_15 = (_plus_14 + ":0]");
+          this.error(_plus_15);
+        }
+        boolean _xifexpression_1 = false;
+        Range _range_7 = b.getRange();
+        int _lb_3 = _range_7.getLb();
+        Range _range_8 = b.getRange();
+        int _lb_4 = _range_8.getLb();
+        boolean _greaterThan_2 = (_lb_3 > _lb_4);
+        if (_greaterThan_2) {
+          Range _range_9 = b.getRange();
+          int _ub_3 = _range_9.getUb();
+          String _plus_16 = ("Inconsistent range [" + Integer.valueOf(_ub_3));
+          String _plus_17 = (_plus_16 + ":");
+          Range _range_10 = b.getRange();
+          int _lb_5 = _range_10.getLb();
+          String _plus_18 = (_plus_17 + Integer.valueOf(_lb_5));
+          String _plus_19 = (_plus_18 + "] ");
+          _xifexpression_1 = this.error(_plus_19);
+        }
+        _xblockexpression = _xifexpression_1;
+      }
+      _xifexpression = _xblockexpression;
     }
     return Boolean.valueOf(_xifexpression);
   }
@@ -353,6 +488,8 @@ public class FSMValidation {
   public Boolean validateExpr(final BoolExpr b, final boolean predicate) {
     if (b instanceof AndExpr) {
       return _validateExpr((AndExpr)b, predicate);
+    } else if (b instanceof CmpExpr) {
+      return _validateExpr((CmpExpr)b, predicate);
     } else if (b instanceof Constant) {
       return _validateExpr((Constant)b, predicate);
     } else if (b instanceof DefaultPredicate) {
@@ -361,6 +498,8 @@ public class FSMValidation {
       return _validateExpr((NotExpr)b, predicate);
     } else if (b instanceof OrExpr) {
       return _validateExpr((OrExpr)b, predicate);
+    } else if (b instanceof PortRef) {
+      return _validateExpr((PortRef)b, predicate);
     } else if (b != null) {
       return _validateExpr(b, predicate);
     } else {

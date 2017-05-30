@@ -23,6 +23,7 @@ import com.cburch.logisim.statemachine.fSMDSL.CmpExpr
 import java.io.FileNotFoundException
 import com.cburch.logisim.statemachine.fSMDSL.InputPort
 import com.cburch.logisim.statemachine.fSMDSL.OutputPort
+import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr
 
 class FSMVHDLCodeGen{
 
@@ -46,20 +47,31 @@ class FSMVHDLCodeGen{
 		ios.addAll(e.in)
 		ios.addAll(e.out)
 		'''
-		library IEEE;  
-		use IEEE.std_logic_1164.all; 
-		
-		entity «e.name» is port (
-			clk : in std_logic;
-			clr : in std_logic;
-			en  : in std_logic;
-			«FOR i:ios SEPARATOR ";"»
-				«genPort(i)»
-			«ENDFOR»
-		);
-		end entity;
+«««		library IEEE;  
+«««		use IEEE.std_logic_1164.all; 
+«««		
+«««		entity «e.name» is port (
+«««			clk : in std_logic;
+«««			clr : in std_logic;
+«««			en  : in std_logic;
+«««			«FOR i:ios SEPARATOR ";"»
+«««				«genPort(i)»
+«««			«ENDFOR»
+«««		);
+«««		end entity;
 		
 		architecture RTL of «e.name» is
+			
+			function BOOL_TO_SL(X : boolean)
+              return std_logic is
+			begin
+			  if X then
+			    return '1';
+			  else
+			    return '0';
+			  end if;
+			end BOOL_TO_SL;
+			
 			type state_type is («e.states.map[s|"S_"+s.name].reduce[s1,s2|s1+','+s2]»);  
 			signal symCS : state_type ;  
 			signal CS : std_logic_vector(«e.width-1» downto 0) ;  
@@ -78,10 +90,12 @@ class FSMVHDLCodeGen{
 					CS <= «e.start.name»;
 					symCS <= S_«e.start.name»;
 				elsif rising_edge(clk) then
-					case (CS) is
-						«FOR s:e.states»«genTransition(s)»«ENDFOR» 
-						when others => null;
-					end case; 
+					if en='1'then
+						case (CS) is
+							«FOR s:e.states»«genTransition(s)»«ENDFOR» 
+							when others => null;
+						end case; 
+					end if;
 				end if;
 			end process;
 			
@@ -102,7 +116,7 @@ class FSMVHDLCodeGen{
 		val value= if(port.width==1) {
 			"'0'"
 		} else {
-			'''"«Integer.toBinaryString((1<<port.width)-1)» "'''
+			'''"«Integer.toBinaryString((1<<port.width)-1)»"'''
 		}
 		'''«port.name» <= «value»;'''
 	}
@@ -129,27 +143,30 @@ class FSMVHDLCodeGen{
 	}
 	def genTransition(State state) {
 		'''when «state.name» =>
+				«IF getDefault(state)!=null»
+				-- default transition
+				CS <= «getDefault(state).dst.name»;
+				symCS <= S_«getDefault(state).dst.name»;
+				«ENDIF»
 				«FOR t:state.transition.filter[t|!(t.predicate instanceof DefaultPredicate)]»
 				if «genPred(t.predicate)»='1'  then
 					CS <= «t.dst.name»;
 					symCS <= S_«t.dst.name»;
 				end if;
 				«ENDFOR»
-				«IF getDefault(state)!=null»
-				-- default transition
-				CS <= «getDefault(state).dst.name»;
-				symCS <= S_«getDefault(state).dst.name»;
-				«ENDIF»
 		'''
 	}
 	
 
 	def static dispatch genPred(CmpExpr b) {
 		switch(b.op) {
-			case "==" : {'''(«genPred(b.args.get(0))»==«genPred(b.args.get(1))»)'''}
-			case "!=" : {'''(«genPred(b.args.get(0))»/=«genPred(b.args.get(1))»)'''}
+			case "==" : {'''BOOL_TO_SL(«genPred(b.args.get(0))»=«genPred(b.args.get(1))»)'''}
+			case "!=" : {'''BOOL_TO_SL(«genPred(b.args.get(0))»/=«genPred(b.args.get(1))»)'''}
 			default : throw new UnsupportedOperationException("Not implemented")			
 		}
+	}
+	def static dispatch genPred(ConcatExpr b) {
+		'''(«FOR i:b.args SEPARATOR " & "»«genPred(i)»«ENDFOR»)'''.toString
 	}
 	def static dispatch genPred(OrExpr b) {
 		'''(«FOR i:b.args SEPARATOR " or "»«genPred(i)»«ENDFOR»)'''.toString
@@ -162,7 +179,14 @@ class FSMVHDLCodeGen{
 		
 	}
 	def static dispatch genPred(PortRef b) {
-		b.port.name
+		if(b.range!=null) {
+			if (b.range.ub!=-1)
+		  		'''«b.port.name»(«b.range.ub» downto «b.range.lb»)'''.toString
+		  	else
+		  		'''«b.port.name»(«b.range.lb»)'''.toString
+		} else {
+			b.port.name
+		}
 	}
 	def static dispatch genPred(Constant b) {
 		if(b.value.length>3) 
@@ -174,12 +198,12 @@ class FSMVHDLCodeGen{
 				case "\"1\"" : return "ONE"
 				 
 				default :{
-					throw new UnsupportedOperationException("Invalivd one-bit value "+b.value);					
+					throw new UnsupportedOperationException("Invalid one-bit value "+b.value);					
 				}
 			}
 		}
 		
-			b.value.replace('"','\'') 
+		//b.value.replace('"','\'') 
 	}
 
 

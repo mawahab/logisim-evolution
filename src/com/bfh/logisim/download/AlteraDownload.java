@@ -274,6 +274,7 @@ public class AlteraDownload {
 						+ ".pof");
 			}
 			MyReporter.AddInfo(command.toString());
+			System.out.println(command.toString());
 			ProcessBuilder Altera1 = new ProcessBuilder(command);
 			Altera1.directory(new File(SandboxPath));
 			final Process CreateProject = Altera1.start();

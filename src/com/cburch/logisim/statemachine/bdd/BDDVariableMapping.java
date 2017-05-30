@@ -77,7 +77,6 @@ public class BDDVariableMapping  {
 			}
 		}
 		throw new RuntimeException("Error, could not find corresponding Port for BDD node "+bddInputVar);
-		
 	}
 
 	public BoolExpr getExpressionForBDDvar(Integer var) {

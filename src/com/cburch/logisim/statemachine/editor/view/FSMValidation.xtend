@@ -16,14 +16,20 @@ import javax.swing.JOptionPane
 import java.util.HashSet
 import java.util.List
 import java.util.ArrayList
- 
+import java.util.HashMap
+import javax.management.RuntimeErrorException
+import com.cburch.logisim.statemachine.fSMDSL.BoolExpr
+import org.eclipse.emf.common.util.EList
+import com.cburch.logisim.statemachine.bdd.BitWidthAnalyzer
+
 class FSMValidation{
 
 	FSM fsm
 	
 	HashSet<State> targets = new HashSet<State>();
 	List<String> warnings= new ArrayList<String>()
-	List<String> errors= new ArrayList<String>()
+	List<String> errors= new ArrayList<String>();
+	BitWidthAnalyzer analyzer = new BitWidthAnalyzer
 
 	new(FSM fsm) {
 		this.fsm=fsm;
@@ -68,6 +74,11 @@ class FSMValidation{
 	}
 	public def dispatch validate(CommandList cl) {
 		for(c : cl.commands) {
+			try {
+				analyzer.computeBitwidth(c.value)
+			} catch (RuntimeException e) {
+				 error(e.message)
+			}
 			validateExpr(c.value,false)
 			val optimizer = new BDDOptimizer(c.value);
 			optimizer.simplify
@@ -86,16 +97,21 @@ class FSMValidation{
 		if(t.predicate==null) {
 			throw new RuntimeException("null Predicate");
 		}
+		
 		validateExpr(t.predicate,true)
 		if(!(t.predicate instanceof DefaultPredicate)) {
-			val optimizer = new BDDOptimizer(p);
-			optimizer.simplify
-			if (optimizer.isAlwaysFalse()) {
-				error("Transition  "+PrettyPrinter.pp(t)+" can never be taken (evaluated to 0)");
+			try {
+				val optimizer = new BDDOptimizer(p);
+				optimizer.simplify
+				if (optimizer.isAlwaysFalse()) {
+					error("Transition  "+PrettyPrinter.pp(t)+" can never be taken (evaluated to 0)");
+				}
+				if (optimizer.isAlwaysTrue() && (!(t.predicate instanceof DefaultPredicate) )) {
+					warning("Transition "+PrettyPrinter.pp(t)+" is always taken (evaluated to 1)");
+				}		
+			} catch(Exception e) {
+				error("BDD analysis for "+PrettyPrinter.pp(t)+" failed : "+e.message+"\n"+e.stackTrace);
 			}
-			if (optimizer.isAlwaysTrue() && (!(t.predicate instanceof DefaultPredicate) )) {
-				warning("Transition "+PrettyPrinter.pp(t)+" is always taken (evaluated to 1)");
-			}		
 		}
 	}
 	
@@ -136,12 +152,21 @@ class FSMValidation{
 		
 	}
 
-	public def dispatch  validateExpr(BoolExpr b, boolean predicate) {}
+	public def dispatch  validateExpr(BoolExpr b, boolean predicate) {
+		
+	}
 
 	public def  dispatch validateExpr(OrExpr b, boolean predicate) {
 		b.args.forEach[a|validateExpr(a,predicate)]
 	}
 	
+	public def  dispatch validateExpr(CmpExpr b, boolean predicate) {
+		if (b.args.size!=2) error("Inconsistent number of arguments for "+PrettyPrinter.pp(b)+" ");
+		b.args.forEach[a|validateExpr(a,predicate)]
+	}
+	
+	
+
 	public def dispatch validateExpr(AndExpr b, boolean predicate) {
 		b.args.forEach[a|validateExpr(a,predicate)]
 	}
@@ -151,8 +176,20 @@ class FSMValidation{
 	}
 	
 	public def dispatch validateExpr(Constant b, boolean predicate) {
-		if (predicate) {
-			error("\"0\" and \"1\" not allowed in predicate, use \"default\" keyword instead");
+
+	}
+	
+	public def dispatch validateExpr(PortRef b, boolean predicate) {
+		if (b.range!=null) {
+			if (b.range.ub>b.port.width-1) {
+				error("Inconsistent range ["+b.range.ub+":"+b.range.lb+"] for port "+b.port.name+"["+(b.port.width-1)+":0]");
+			}
+			if (b.range.lb>b.port.width-1) {
+				error("Inconsistent range ["+b.range.ub+":"+b.range.lb+"] for port "+b.port.name+"["+(b.port.width-1)+":0]");
+			}
+			if (b.range.lb>b.range.lb) {
+				error("Inconsistent range ["+b.range.ub+":"+b.range.lb+"] ");
+			}
 		}
 	}
 	

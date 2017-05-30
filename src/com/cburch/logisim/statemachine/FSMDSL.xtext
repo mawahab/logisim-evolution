@@ -64,8 +64,11 @@ Transition:
 	(((src=[State])? '->')|("goto")) dst=[State] ('when' predicate=Predicate)? (layout=LayoutInfo) ';';
  
 Command:
-	name=[OutputPort] '=' value=Or ';';
+	name=[OutputPort] '=' value=(ConcatExpr|Or) ';';
 	
+ConcatExpr returns BoolExpr:
+	{ConcatExpr}'{' args+=Or (',' args+=Or)* '}'
+;
 
 Ref returns BoolExpr:
 	{PortRef} port=[Port] (range=Range)?	

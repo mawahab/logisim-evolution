@@ -73,12 +73,18 @@ public class FSMHDLGeneratorFactory extends AbstractHDLGeneratorFactory {
 			AttributeSet attrs) {
 		SortedMap<String, Integer> inputs = new TreeMap<String, Integer>();
 
-		Port[] rawInputs = attrs.getValue(FSMEntity.CONTENT_ATTR).getInputs();
+		FSMContent value = attrs.getValue(FSMEntity.CONTENT_ATTR);
+		Port[] rawInputs = value.getInputs();
 		for (int i = 0; i < rawInputs.length; i++)
 			inputs.put(rawInputs[i].getToolTip(), rawInputs[i]
 					.getFixedBitWidth().getWidth());
 
-		return inputs;
+		inputs.put("Clk", 1);
+		inputs.put("CLR", 1);
+		inputs.put("EN", 1);
+		
+	
+	return inputs;
 	}
 
 	@Override
@@ -106,12 +112,17 @@ public class FSMHDLGeneratorFactory extends AbstractHDLGeneratorFactory {
 		Port[] inputs = content.getInputs();
 		Port[] outputs = content.getOutputs();
 
+		PortMap.putAll(GetNetMap("Clk", true,ComponentInfo,  0, Reporter, HDLType, Nets));
+		PortMap.putAll(GetNetMap("Clr", true,ComponentInfo,  1, Reporter, HDLType, Nets));
+		PortMap.putAll(GetNetMap("EN", true,ComponentInfo,   2, Reporter, HDLType, Nets));
+
 		for (int i = 0; i < inputs.length; i++)
 			PortMap.putAll(GetNetMap(inputs[i].getToolTip(), true,
-					ComponentInfo, i, Reporter, HDLType, Nets));
+					ComponentInfo, i+3, Reporter, HDLType, Nets));
+		
 		for (int i = 0; i < outputs.length; i++)
 			PortMap.putAll(GetNetMap(outputs[i].getToolTip(), true,
-					ComponentInfo, i + inputs.length, Reporter, HDLType, Nets));
+					ComponentInfo, i + inputs.length+3, Reporter, HDLType, Nets));
 
 		return PortMap;
 	}

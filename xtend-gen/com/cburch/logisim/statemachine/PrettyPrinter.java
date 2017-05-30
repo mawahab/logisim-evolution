@@ -5,6 +5,7 @@ import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
+import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
 import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate;
 import com.cburch.logisim.statemachine.fSMDSL.FSMElement;
@@ -113,6 +114,26 @@ public class PrettyPrinter {
     return _builder.toString();
   }
   
+  protected static String _pp(final ConcatExpr b) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("{");
+    {
+      EList<BoolExpr> _args = b.getArgs();
+      boolean _hasElements = false;
+      for(final BoolExpr i : _args) {
+        if (!_hasElements) {
+          _hasElements = true;
+        } else {
+          _builder.appendImmediate(",", "");
+        }
+        Object _pp = PrettyPrinter.pp(i);
+        _builder.append(_pp, "");
+      }
+    }
+    _builder.append("}");
+    return _builder.toString();
+  }
+  
   protected static String _pp(final AndExpr b) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("(");
@@ -174,20 +195,35 @@ public class PrettyPrinter {
     Range _range = b.getRange();
     boolean _notEquals = (!Objects.equal(_range, null));
     if (_notEquals) {
-      Port _port = b.getPort();
-      String _name = _port.getName();
-      String _plus = (_name + "[");
+      String _xifexpression_1 = null;
       Range _range_1 = b.getRange();
-      int _lb = _range_1.getLb();
-      String _plus_1 = (_plus + Integer.valueOf(_lb));
-      String _plus_2 = (_plus_1 + ":");
-      Range _range_2 = b.getRange();
-      int _ub = _range_2.getUb();
-      String _plus_3 = (_plus_2 + Integer.valueOf(_ub));
-      _xifexpression = (_plus_3 + "]");
+      int _ub = _range_1.getUb();
+      boolean _notEquals_1 = (_ub != (-1));
+      if (_notEquals_1) {
+        Port _port = b.getPort();
+        String _name = _port.getName();
+        String _plus = (_name + "[");
+        Range _range_2 = b.getRange();
+        int _ub_1 = _range_2.getUb();
+        String _plus_1 = (_plus + Integer.valueOf(_ub_1));
+        String _plus_2 = (_plus_1 + ":");
+        Range _range_3 = b.getRange();
+        int _lb = _range_3.getLb();
+        String _plus_3 = (_plus_2 + Integer.valueOf(_lb));
+        _xifexpression_1 = (_plus_3 + "]");
+      } else {
+        Port _port_1 = b.getPort();
+        String _name_1 = _port_1.getName();
+        String _plus_4 = (_name_1 + "[");
+        Range _range_4 = b.getRange();
+        int _lb_1 = _range_4.getLb();
+        String _plus_5 = (_plus_4 + Integer.valueOf(_lb_1));
+        _xifexpression_1 = (_plus_5 + "]");
+      }
+      _xifexpression = _xifexpression_1;
     } else {
-      Port _port_1 = b.getPort();
-      _xifexpression = _port_1.getName();
+      Port _port_2 = b.getPort();
+      _xifexpression = _port_2.getName();
     }
     return _xifexpression;
   }
@@ -207,6 +243,8 @@ public class PrettyPrinter {
       return _pp((CmpExpr)b);
     } else if (b instanceof CommandList) {
       return _pp((CommandList)b);
+    } else if (b instanceof ConcatExpr) {
+      return _pp((ConcatExpr)b);
     } else if (b instanceof Constant) {
       return _pp((Constant)b);
     } else if (b instanceof DefaultPredicate) {

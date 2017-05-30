@@ -62,8 +62,8 @@ public interface StdAttr {
 			.forOption("trigger", Strings.getter("stdTriggerAttr"),
 					new AttributeOption[] { TRIG_RISING, TRIG_FALLING });
 
-	public static final Attribute<String> LABEL = Attributes.forString("label",
-			Strings.getter("stdLabelAttr"));
+	public static final Attribute<String> LABEL = Attributes.forString("label",Strings.getter("stdLabelAttr"));
+	
 	public static final Attribute<Font> LABEL_FONT = Attributes.forFont(
 			"labelfont", Strings.getter("stdLabelFontAttr"));
 	public static final Font DEFAULT_LABEL_FONT = new Font("SansSerif",

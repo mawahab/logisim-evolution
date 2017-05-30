@@ -9,28 +9,40 @@ import com.cburch.logisim.statemachine.fSMDSL.FSMDSLFactory
 import com.cburch.logisim.statemachine.fSMDSL.PortRef
 import org.eclipse.emf.ecore.util.EcoreUtil
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr
+import com.cburch.logisim.statemachine.PrettyPrinter
+import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr
 
-class RemoveCompare {
+class RemoveBitVectors {
 
+	final static boolean VERBOSE = true;
+		BitWidthAnalyzer analyzer = new BitWidthAnalyzer
+	
 	new() {
 		
 	}
 	
 	def dispatch replace(BoolExpr e) {
+		print("replace "+e+ " by ")
+		
 		val list = EcoreUtil.getAllContents(e,false).filter(typeof(CmpExpr)).toList
 		for (n:list) {
 			println("")
 			EcoreUtil.replace(n,slice(n))
 		}
+		println(" "+PrettyPrinter.pp(e))
 		e
 	}
 	def dispatch replace(CmpExpr  e) {
+		print("replace "+PrettyPrinter.pp(e)+ " by ")
+
 		val list = EcoreUtil.getAllContents(e,false).filter(typeof(CmpExpr)).toList
 		for (n:list) {
 			println("Replace ")
 			EcoreUtil.replace(n,slice(n))
 		}
-		slice(e)
+		val res= slice(e)
+		println(" "+PrettyPrinter.pp(res))
+		res;
 	}
 
 	def dispatch BoolExpr slice(BoolExpr e, int offset) {
@@ -97,6 +109,20 @@ class RemoveCompare {
 		var and= FSMDSLFactory.eINSTANCE.createAndExpr
 		and.args.addAll(e.args.map[arg| slice(arg,offset)])
 		and
+	}
+
+	def dispatch BoolExpr slice(ConcatExpr e, int offset) {
+		analyzer.computeBitwidth(e)
+		var current = offset
+		for (arg : e.args) {
+			val width = analyzer.getBitwidth(arg); 
+			if(current<width) {
+				return slice(arg,offset)
+			}
+			current = current - width;			
+		}
+		throw new IndexOutOfBoundsException("Offset "+offset+" is out of bound w.r.t to expression "+e)
+		
 	}
 
 	def dispatch BoolExpr slice(OrExpr e, int offset) {
