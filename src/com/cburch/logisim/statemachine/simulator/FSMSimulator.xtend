@@ -19,6 +19,10 @@ class FSMSimulator {
 	HashMap<Port,String> inputs;
 	HashMap<Port,String> outputs;
 	
+	static final char ONE_C = '1';
+	static final char ZERO_C = '0';
+	
+	
 	new(FSM fsm) {
 		this.fsm=fsm;
 		inputs =  new HashMap<Port,String>();
@@ -67,15 +71,6 @@ class FSMSimulator {
 	def reset() {
 		current=fsm.start
 	}
-	def setInput(String ip,String b) {
-		for(Port p : inputs.keySet) {
-			if(p.name==ip) {
-				setInput(p as InputPort,b);
-				return;
-			}
-		}
-		throw new RuntimeException(ip+" is not a known input for fsm "+fsm.name+ " "+fsm.in.map[p|p.name])
-	}
 
 	def getOutput(int i) {
 		try {
@@ -89,16 +84,12 @@ class FSMSimulator {
 		inputs.put(ip,b)
 	}
 	
-	def update() {
+	def updateState() { 
 		println("Current state "+current.name)
 		for (Port e : inputs.keySet) {
-			println("\tinputs"+e.name+"=>"+inputs.get(e))
+			println("\tinputs "+e.name+"=>"+inputs.get(e))
 		}  
-		for (Command c : current.commandList.commands) {
-			val res= eval(c.value)
-			outputs.replace(c.getName(), res);
-			println("\t"+c.name.name+"="+res)
-		}  
+		
 		var State defaultDst =null;
 		var State nextDst =null;
 		for (Transition t : current.transition) {
@@ -124,9 +115,30 @@ class FSMSimulator {
 		return current;
 	}
 	
+	def updateCommands() {
+		for (Command c : current.commandList.commands) {
+			val res= eval(c.value)
+			outputs.replace(c.getName(), res);
+			println("\t"+c.name.name+"="+res)
+		}  
+	}
+
 	def dispatch String eval(BoolExpr exp) {
 		 throw new RuntimeException("Unsupported operation"+PrettyPrinter.pp(exp));
 	}
+
+	def dispatch String eval(ConcatExpr exp) {
+		val r  = new StringBuffer()
+		for(arg : exp.args) {
+			r.append(unquote(eval(arg)))
+		}
+		quote(r.toString)
+	}
+
+	def unquote(String s) {
+		s.substring(1,s.length-1)		
+	}
+
 
 	def dispatch String eval(DefaultPredicate exp) {
 		ZERO
@@ -218,14 +230,24 @@ class FSMSimulator {
 		var width = -1;
 		var List<String> l= new ArrayList<String>(); 
 		var notExpr = ""
-		val res = (eval(b.args.get(0)))
-		l+= res
-		width = res.length
-		notExpr = zeros(width);
-		for(i:0..width-1) {
-	 		notExpr.setCharAt(not(res.charAt(i)),i)
-	 	}
-		quote(notExpr)
+		
+		
+		var res = eval(b.args.get(0))
+		res= res.replace('0', '@');
+		res= res.replace('1', '0');
+		res= res.replace('@', '1');
+		
+//		l+= res
+//		width = res.length
+//		notExpr = zeros(width);
+//		for(i:0..width-1) {
+//			val c= res.charAt(i)
+//			val neg=not(c)
+//	 		notExpr.setCharAt(neg,i+1)
+//	 	}
+//		val r= quote(notExpr)
+		println("eval("+PrettyPrinter.pp(b)+")="+res)
+		res
 		
 	}
 
@@ -238,7 +260,14 @@ class FSMSimulator {
 	}
 
 	def char not(char c) {
-		if (c=='1' ) '0' else '1'
+		
+		switch(c) { 
+		  case '0' : '1' 
+		  case '1' : '0' 
+		  default : {
+		  	throw new RuntimeException("Unsupported value "+c+", only '0' or '1' supported");
+		  }  
+		}
 	}
 
 	def dispatch String eval(PortRef b) {

@@ -6,6 +6,7 @@ import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
+import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
 import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
@@ -41,6 +42,10 @@ public class FSMSimulator {
   private HashMap<Port, String> inputs;
   
   private HashMap<Port, String> outputs;
+  
+  private final static char ONE_C = '1';
+  
+  private final static char ZERO_C = '0';
   
   public FSMSimulator(final FSM fsm) {
     this.fsm = fsm;
@@ -121,28 +126,6 @@ public class FSMSimulator {
     return this.current = _start;
   }
   
-  public void setInput(final String ip, final String b) {
-    Set<Port> _keySet = this.inputs.keySet();
-    for (final Port p : _keySet) {
-      String _name = p.getName();
-      boolean _equals = Objects.equal(_name, ip);
-      if (_equals) {
-        this.setInput(((InputPort) p), b);
-        return;
-      }
-    }
-    String _name_1 = this.fsm.getName();
-    String _plus = ((ip + " is not a known input for fsm ") + _name_1);
-    String _plus_1 = (_plus + " ");
-    EList<Port> _in = this.fsm.getIn();
-    final Function1<Port, String> _function = (Port p_1) -> {
-      return p_1.getName();
-    };
-    List<String> _map = ListExtensions.<Port, String>map(_in, _function);
-    String _plus_2 = (_plus_1 + _map);
-    throw new RuntimeException(_plus_2);
-  }
-  
   public String getOutput(final int i) {
     try {
       EList<Port> _out = this.fsm.getOut();
@@ -172,34 +155,18 @@ public class FSMSimulator {
     return this.inputs.put(ip, b);
   }
   
-  public State update() {
+  public State updateState() {
     String _name = this.current.getName();
     String _plus = ("Current state " + _name);
     InputOutput.<String>println(_plus);
     Set<Port> _keySet = this.inputs.keySet();
     for (final Port e : _keySet) {
       String _name_1 = e.getName();
-      String _plus_1 = ("\tinputs" + _name_1);
+      String _plus_1 = ("\tinputs " + _name_1);
       String _plus_2 = (_plus_1 + "=>");
       String _get = this.inputs.get(e);
       String _plus_3 = (_plus_2 + _get);
       InputOutput.<String>println(_plus_3);
-    }
-    CommandList _commandList = this.current.getCommandList();
-    EList<Command> _commands = _commandList.getCommands();
-    for (final Command c : _commands) {
-      {
-        BoolExpr _value = c.getValue();
-        final String res = this.eval(_value);
-        OutputPort _name_2 = c.getName();
-        this.outputs.replace(_name_2, res);
-        OutputPort _name_3 = c.getName();
-        String _name_4 = _name_3.getName();
-        String _plus_4 = ("\t" + _name_4);
-        String _plus_5 = (_plus_4 + "=");
-        String _plus_6 = (_plus_5 + res);
-        InputOutput.<String>println(_plus_6);
-      }
     }
     State defaultDst = null;
     State nextDst = null;
@@ -244,10 +211,51 @@ public class FSMSimulator {
     return this.current;
   }
   
+  public void updateCommands() {
+    CommandList _commandList = this.current.getCommandList();
+    EList<Command> _commands = _commandList.getCommands();
+    for (final Command c : _commands) {
+      {
+        BoolExpr _value = c.getValue();
+        final String res = this.eval(_value);
+        OutputPort _name = c.getName();
+        this.outputs.replace(_name, res);
+        OutputPort _name_1 = c.getName();
+        String _name_2 = _name_1.getName();
+        String _plus = ("\t" + _name_2);
+        String _plus_1 = (_plus + "=");
+        String _plus_2 = (_plus_1 + res);
+        InputOutput.<String>println(_plus_2);
+      }
+    }
+  }
+  
   protected String _eval(final BoolExpr exp) {
     String _pp = PrettyPrinter.pp(exp);
     String _plus = ("Unsupported operation" + _pp);
     throw new RuntimeException(_plus);
+  }
+  
+  protected String _eval(final ConcatExpr exp) {
+    String _xblockexpression = null;
+    {
+      final StringBuffer r = new StringBuffer();
+      EList<BoolExpr> _args = exp.getArgs();
+      for (final BoolExpr arg : _args) {
+        String _eval = this.eval(arg);
+        String _unquote = this.unquote(_eval);
+        r.append(_unquote);
+      }
+      String _string = r.toString();
+      _xblockexpression = this.quote(_string);
+    }
+    return _xblockexpression;
+  }
+  
+  public String unquote(final String s) {
+    int _length = s.length();
+    int _minus = (_length - 1);
+    return s.substring(1, _minus);
   }
   
   protected String _eval(final DefaultPredicate exp) {
@@ -412,19 +420,19 @@ public class FSMSimulator {
       String notExpr = "";
       EList<BoolExpr> _args_1 = b.getArgs();
       BoolExpr _get = _args_1.get(0);
-      final String res = this.eval(_get);
-      l.add(res);
-      int _length = res.length();
-      width = _length;
-      String _zeros = this.zeros(width);
-      notExpr = _zeros;
-      IntegerRange _upTo = new IntegerRange(0, (width - 1));
-      for (final Integer i : _upTo) {
-        char _charAt = res.charAt((i).intValue());
-        char _not = this.not(_charAt);
-        this.setCharAt(notExpr, _not, (i).intValue());
-      }
-      _xblockexpression = this.quote(notExpr);
+      String res = this.eval(_get);
+      String _replace = res.replace("0", "@");
+      res = _replace;
+      String _replace_1 = res.replace("1", "0");
+      res = _replace_1;
+      String _replace_2 = res.replace("@", "1");
+      res = _replace_2;
+      String _pp_1 = PrettyPrinter.pp(b);
+      String _plus_1 = ("eval(" + _pp_1);
+      String _plus_2 = (_plus_1 + ")=");
+      String _plus_3 = (_plus_2 + res);
+      InputOutput.<String>println(_plus_3);
+      _xblockexpression = res;
     }
     return _xblockexpression;
   }
@@ -466,14 +474,24 @@ public class FSMSimulator {
   }
   
   public char not(final char c) {
-    char _xifexpression = (char) 0;
-    boolean _equals = Objects.equal(Character.valueOf(c), "1");
-    if (_equals) {
-      _xifexpression = '0';
-    } else {
-      _xifexpression = '1';
+    char _switchResult = (char) 0;
+    boolean _matched = false;
+    if (!_matched) {
+      if (Objects.equal(c, "0")) {
+        _matched=true;
+        _switchResult = '1';
+      }
     }
-    return _xifexpression;
+    if (!_matched) {
+      if (Objects.equal(c, "1")) {
+        _matched=true;
+        _switchResult = '0';
+      }
+    }
+    if (!_matched) {
+      throw new RuntimeException((("Unsupported value " + Character.valueOf(c)) + ", only \'0\' or \'1\' supported"));
+    }
+    return _switchResult;
   }
   
   protected String _eval(final PortRef b) {
@@ -507,6 +525,8 @@ public class FSMSimulator {
       return _eval((AndExpr)b);
     } else if (b instanceof CmpExpr) {
       return _eval((CmpExpr)b);
+    } else if (b instanceof ConcatExpr) {
+      return _eval((ConcatExpr)b);
     } else if (b instanceof Constant) {
       return _eval((Constant)b);
     } else if (b instanceof DefaultPredicate) {

@@ -211,7 +211,7 @@ public class KeyPad extends InstanceFactory {
 				ps[i] = new Port((i+1 ) * KEY_WIDTH, 0, Port.INPUT, 1);
 							
 			} else {
-				ps[i] = new Port((i-4 +1 ) * KEY_WIDTH, KEY_HEIGHT*4+2*BORDER, Port.OUTPUT, 1);
+				ps[i] = new Port(KEY_WIDTH*4+2*BORDER, (i-4 +1 )* KEY_WIDTH, Port.OUTPUT, 1);
 			}
 		}
 		instance.setPorts(ps);
@@ -264,10 +264,10 @@ public class KeyPad extends InstanceFactory {
 		GraphicsUtil.switchToWidth(g, 1);
 		
 		for (int i=0;i<4; i++) {
-			g.drawString("C"+i,bds.getX()+KEY_WIDTH/2+i*KEY_WIDTH, bds.getY()+4);
+			GraphicsUtil.drawCenteredText(g,"C"+i,bds.getX()+KEY_WIDTH/2+i*KEY_WIDTH+BORDER, bds.getY()+BORDER/2);
 		}
 		for (int i=0;i<4; i++) {
-			g.drawString("L"+i,bds.getX()+KEY_WIDTH/2+i*KEY_WIDTH, bds.getY()+KEY_HEIGHT*4+2*BORDER-5);
+			GraphicsUtil.drawCenteredText(g,"L"+i,bds.getX()+KEY_WIDTH*4+2*BORDER-5, bds.getY()+KEY_HEIGHT/2+i*KEY_WIDTH+BORDER);
 		}
 		
 		//g.drawString(magrux, bds.getX(), bds.getY());
@@ -279,11 +279,11 @@ public class KeyPad extends InstanceFactory {
 					g.setColor(Color.darkGray);
 					g.fillRect(locX, locY, KEY_WIDTH-4, KEY_HEIGHT-4);
 					g.setColor(Color.WHITE);
-					g.drawString(Integer.toHexString(4*i+j).toUpperCase(), locX, locY+KEY_HEIGHT/2);
+					GraphicsUtil.drawCenteredText(g, Integer.toHexString(4*i+j).toUpperCase(), locX+KEY_WIDTH/2, locY+KEY_HEIGHT/2);
 					g.setColor(Color.BLACK);
 				} else {
 					g.drawRect(locX, locY, KEY_WIDTH-4, KEY_HEIGHT-4);
-					g.drawString(Integer.toHexString(4*i+j), locX, locY+KEY_HEIGHT/2);
+					GraphicsUtil.drawCenteredText(g, Integer.toHexString(4*i+j).toUpperCase(), locX+KEY_WIDTH/2, locY+KEY_HEIGHT/2);
 				}
 			}
 		}
@@ -323,19 +323,15 @@ public class KeyPad extends InstanceFactory {
 			pins = new State();
 			state.setData(pins);
 		}
-		
-		int command =0;
-		
-		for (int i = 0; i < 4; i++) {
-			if (state.getPortValue(3-i) == Value.TRUE) {
-				command = command | 0x1;
+
+		for (int row = 0; row < 4; row++) {
+			Value pinstate =Value.FALSE;
+			for (int col = 0; col < 4; col++) {
+				if(pins.isActive(col, row) && (state.getPortValue(col)==Value.TRUE)) {
+					pinstate = Value.TRUE ;
+				}
 			}
-			command = command << 1;
-		}
-				
-		for (int i = 0; i < 4; i++) {
-			Value pinstate = (pins.isActive(i, command)) ? Value.TRUE : Value.FALSE;
-			state.setPort(i+4, pinstate, 1);
+			state.setPort(row+4, pinstate, 1);
 		}
 	}
 

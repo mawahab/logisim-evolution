@@ -36,6 +36,8 @@ class FSMRemoveElement{
 	
 	def dispatch remove(Transition t) {
 		(t.eContainer as State).transition.remove(t);
+		t.src=null;
+		t.dst=null;
 	}
 
 	def dispatch replaceByZero(PortRef pr) {

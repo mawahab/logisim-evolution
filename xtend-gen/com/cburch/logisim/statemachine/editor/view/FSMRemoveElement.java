@@ -59,7 +59,10 @@ public class FSMRemoveElement {
   protected Boolean _remove(final Transition t) {
     EObject _eContainer = t.eContainer();
     EList<Transition> _transition = ((State) _eContainer).getTransition();
-    return Boolean.valueOf(_transition.remove(t));
+    _transition.remove(t);
+    t.setSrc(null);
+    t.setDst(null);
+    return null;
   }
   
   protected void _replaceByZero(final PortRef pr) {

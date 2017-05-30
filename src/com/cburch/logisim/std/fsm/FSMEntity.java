@@ -128,7 +128,7 @@ public class FSMEntity extends InstanceFactory {
 	private static final int CLR = 1;
 	private static final int EN = 2;
 
-	private static final int DELAY = 8;
+	private static final int DELAY = 0;
 
 	private WeakHashMap<Instance, FSMEntityListener> contentListeners;
 
@@ -266,15 +266,15 @@ public class FSMEntity extends InstanceFactory {
 			g.setColor(Color.LIGHT_GRAY);
 			//g.fillRect(x0 + 20, y0 + 20, 80, 16);
 			g.setColor(Color.black);
-			String cs = currentState.getName();
-			if (cs!=null) {
-				GraphicsUtil.drawCenteredText(g, cs, x0, y0 + 8);
+			String cs = "Undefined";
+			if(currentState!=null) {
+				cs = currentState.getName();
+				String code = currentState.getCode();
+				if(code!=null)	{
+					GraphicsUtil.drawCenteredText(g, code, x0, y0 + 8+metric.getHeight());
+				}
 			}
-			//if()
-			String code = currentState.getCode();
-			if(code!=null)	{
-				GraphicsUtil.drawCenteredText(g, code, x0, y0 + 8+metric.getHeight());
-			}
+			GraphicsUtil.drawCenteredText(g, cs, x0, y0 + 8);
 			g.setColor(Color.black);
 		}
 
@@ -367,36 +367,54 @@ public class FSMEntity extends InstanceFactory {
 			data.setState(fsm.getStart());
 			simulator.reset();
 		} else {
-			if (triggered && enable != Value.FALSE) {
+			if (triggered && enable != Value.FALSE && data.getState()!=null) {
+				boolean error= false;
 				for (int i =0; i< content.getInputsNumber();i++) {
 					Value in = istate.getPortValue(i+offsetInput);
+					InputPort ip = content.inMap.get(content.inputs[i]);
 					if (in.isFullyDefined()) {
-						InputPort ip = content.inMap.get(content.inputs[i]);
 						System.out.println("Input "+ip.getName()+ "="+in.toBinaryString());
 						simulator.setInput(ip, "\""+in.toBinaryString()+"\"");
 					} else {
-						throw new RuntimeException(in+" not fullly defined");
+						simulator.setInput(ip, "\""+Value.createUnknown(in.getBitWidth()).toBinaryString()+"\"");
+						error=true;// FIXME : propagate 
 					}
 				}
-				State nextState = simulator.update();
-				if(nextState==null) throw new RuntimeException("Error : no next state");
-				data.setState(nextState);
+				if(!error) {
+					State nextState = simulator.updateState();
+					if(nextState==null) throw new RuntimeException("Error : no next state ");
+					data.setState(nextState);
+				} else {
+					data.setState(null);
+				}
 				
 			}
 		}
-
-		for (int i =0; i< content.getOutputsNumber();i++) {
-			Port key = content.outputs[i];
-			OutputPort op = content.outMap.get(key);
-			String res = simulator.getOutput(i);
-			String substring = res.substring(1, res.length()-1);
-			int parseInt = Integer.parseInt(substring,2);
-			Value v= Value.createKnown(BitWidth.create(substring.length()), parseInt);
-			System.out.println("Output="+res+" => "+parseInt+" => v="+v.toBinaryString());
+		if (data.getState()!=null) {
+			simulator.updateCommands();
+			for (int i =0; i< content.getOutputsNumber();i++) {
+				Port key = content.outputs[i];
+				OutputPort op = content.outMap.get(key);
+				String res = simulator.getOutput(i);
+				String substring = res.substring(1, res.length()-1);
+				int parseInt = Integer.parseInt(substring,2);
+				Value v= Value.createKnown(BitWidth.create(substring.length()), parseInt);
+				System.out.println("Output="+res+" => "+parseInt+" => v="+v.toBinaryString());
+				
+				int portIndex = istate.getPortIndex(content.outputs[i]);
+				istate.setPort(portIndex, v,DELAY); 
+				System.out.println("Output["+i+","+op.getName()+"]="+res);
+			}
+		} else {
+			for (int i =0; i< content.getOutputsNumber();i++) {
+				Port key = content.outputs[i];
+				Value v= Value.createUnknown(key.getFixedBitWidth());
+				int portIndex = istate.getPortIndex(key);
+				istate.setPort(portIndex, v,DELAY); 
+				OutputPort op = content.outMap.get(key);
+				System.out.println("Output["+i+","+op.getName()+"]="+v.toBinaryString());
+			}
 			
-			int portIndex = istate.getPortIndex(content.outputs[i]);
-			istate.setPort(portIndex, v,DELAY); 
-			System.out.println("Output["+i+","+op.getName()+"]="+res);
 		}
 		
 	}
