@@ -169,7 +169,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 					quote("0")
 				}
 			}
-			case "!=" :{
+			case "/=" :{
 				if (equ) {
 					quote("0")
 				} else {

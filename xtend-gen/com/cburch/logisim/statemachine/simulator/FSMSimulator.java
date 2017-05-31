@@ -303,7 +303,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
           }
           _switchResult = _xifexpression;
           break;
-        case "!=":
+        case "/=":
           String _xifexpression_1 = null;
           if (equ) {
             _xifexpression_1 = this.quote("0");
