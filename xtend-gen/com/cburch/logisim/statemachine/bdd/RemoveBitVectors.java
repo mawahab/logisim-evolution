@@ -170,10 +170,15 @@ public class RemoveBitVectors {
               BoolExpr _equ = this.equ(left, right);
               slice = _equ;
               break;
-            case "!=":
+            case "/=":
               BoolExpr _nequ = this.nequ(left, right);
               slice = _nequ;
               break;
+            default:
+              String _op_1 = e.getOp();
+              String _plus = ("Invalid compare operator " + _op_1);
+              String _plus_1 = (_plus + " only ==,/= allowed");
+              throw new UnsupportedOperationException(_plus_1);
           }
           boolean _notEquals = (!Objects.equal(slice, null));
           if (_notEquals) {

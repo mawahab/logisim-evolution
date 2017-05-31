@@ -132,7 +132,6 @@ public class FSMEntity extends InstanceFactory {
 
 	private WeakHashMap<Instance, FSMEntityListener> contentListeners;
 
-	private FSMSimulator simulator;
 
 	public static final Attribute<Boolean> ATTR_SHOW_IN_TAB = Attributes.forBoolean("showInTab",
 			Strings.getter("registerShowInTab"));
@@ -183,7 +182,6 @@ public class FSMEntity extends InstanceFactory {
 	@Override
 	protected void configureNewInstance(Instance instance) {
 		FSMContent content = instance.getAttributeValue(CONTENT_ATTR);
-		this.simulator = new FSMSimulator(content.getFsm());
 		FSMEntityListener listener = new FSMEntityListener(instance);
 
 		Bounds bds = instance.getBounds();
@@ -245,10 +243,10 @@ public class FSMEntity extends InstanceFactory {
 	public void paintInstance(InstancePainter painter) {
 		Graphics g = painter.getGraphics();
 		FSMContent content = painter.getAttributeValue(CONTENT_ATTR);
-		FSMStateData state = (FSMStateData) painter.getData();
-		if (state == null) {
-			state = new FSMStateData(content.getFsm().getStart(),0);
-			painter.setData(state);
+		FSMSimulator fsmSimulator = (FSMSimulator) painter.getData();
+		if (fsmSimulator == null) {
+			fsmSimulator = new FSMSimulator(content.getFsm());
+			painter.setData(fsmSimulator);
 		}
 
 		
@@ -261,7 +259,7 @@ public class FSMEntity extends InstanceFactory {
 				StringUtil.resizeString("FSM:"+content.getName(), metric, WIDTH), x0,
 				y0, GraphicsUtil.H_CENTER, GraphicsUtil.V_BOTTOM);
 
-		State currentState = state.getState();
+		State currentState = fsmSimulator.getCurrentState();
 		if (painter.getShowState()) {
 			g.setColor(Color.LIGHT_GRAY);
 			//g.fillRect(x0 + 20, y0 + 20, 80, 16);
@@ -344,66 +342,55 @@ public class FSMEntity extends InstanceFactory {
 
 	
 	public void propagate(InstanceState istate) {
-		FSMStateData data = (FSMStateData) istate.getData();
+		FSMSimulator fsmSim = (FSMSimulator) istate.getData();
 		FSMContent content = istate.getAttributeValue(CONTENT_ATTR);
 		updatePorts(istate.getInstance());
 		FSM fsm = content.getFsm();
-		System.out.println("FSM id:"+fsm.hashCode());
-		if (simulator.getFSM()!=fsm) {
-			simulator = new FSMSimulator(fsm);
-		}
-		if (data == null) {
-			data = new FSMStateData(fsm.getStart(),0);
-			istate.setData(data);
+		System.out.println("Propagate event for FSM "+fsm.getName());
+		if (fsmSim == null) {
+			fsmSim = new FSMSimulator(fsm);
+			istate.setData(fsmSim);
 		}
 
 		Value clk = istate.getPortValue(CLK);
 		Value clear = istate.getPortValue(CLR);
 		Value enable = istate.getPortValue(EN);
-		boolean triggered = data.updateClock(clk, null);// triggerType);
+		boolean triggered = fsmSim.updateClock(clk, null);// triggerType);
 		int offsetInput = content.getControls().length;
 
 		if (clear == Value.TRUE) {
-			data.setState(fsm.getStart());
-			simulator.reset();
+			fsmSim.reset();
 		} else {
-			if (triggered && enable != Value.FALSE && data.getState()!=null) {
+			if (triggered && enable != Value.FALSE && fsmSim.getCurrentState()!=null) {
 				boolean error= false;
 				for (int i =0; i< content.getInputsNumber();i++) {
 					Value in = istate.getPortValue(i+offsetInput);
 					InputPort ip = content.inMap.get(content.inputs[i]);
 					if (in.isFullyDefined()) {
-						System.out.println("Input "+ip.getName()+ "="+in.toBinaryString());
-						simulator.setInput(ip, "\""+in.toBinaryString()+"\"");
+						fsmSim.setInput(ip, "\""+in.toBinaryString()+"\"");
 					} else {
-						simulator.setInput(ip, "\""+Value.createUnknown(in.getBitWidth()).toBinaryString()+"\"");
+						System.err.println("Warning : undefined input value for "+ip.getName()+ "="+in.toBinaryString());
+						fsmSim.setInput(ip, "\""+Value.createUnknown(in.getBitWidth()).toBinaryString()+"\"");
 						error=true;// FIXME : propagate 
 					}
 				}
 				if(!error) {
-					State nextState = simulator.updateState();
+					State nextState = fsmSim.updateState();
 					if(nextState==null) throw new RuntimeException("Error : no next state ");
-					data.setState(nextState);
-				} else {
-					data.setState(null);
 				}
 				
 			}
 		}
-		if (data.getState()!=null) {
-			simulator.updateCommands();
+		if (fsmSim.getCurrentState()!=null) {
+			fsmSim.updateCommands();
 			for (int i =0; i< content.getOutputsNumber();i++) {
-				Port key = content.outputs[i];
-				OutputPort op = content.outMap.get(key);
-				String res = simulator.getOutput(i);
+				String res = fsmSim.getOutput(i);
 				String substring = res.substring(1, res.length()-1);
 				int parseInt = Integer.parseInt(substring,2);
 				Value v= Value.createKnown(BitWidth.create(substring.length()), parseInt);
-				System.out.println("Output="+res+" => "+parseInt+" => v="+v.toBinaryString());
 				
 				int portIndex = istate.getPortIndex(content.outputs[i]);
 				istate.setPort(portIndex, v,DELAY); 
-				System.out.println("Output["+i+","+op.getName()+"]="+res);
 			}
 		} else {
 			for (int i =0; i< content.getOutputsNumber();i++) {
@@ -411,8 +398,6 @@ public class FSMEntity extends InstanceFactory {
 				Value v= Value.createUnknown(key.getFixedBitWidth());
 				int portIndex = istate.getPortIndex(key);
 				istate.setPort(portIndex, v,DELAY); 
-				OutputPort op = content.outMap.get(key);
-				System.out.println("Output["+i+","+op.getName()+"]="+v.toBinaryString());
 			}
 			
 		}

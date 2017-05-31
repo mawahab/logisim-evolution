@@ -58,6 +58,8 @@ public class FSMSelectionZone {
   
   private int ymax;
   
+  private final static boolean VERBOSE = false;
+  
   public int updateBoundingBox(final FSMElement e) {
     int _xblockexpression = (int) 0;
     {
@@ -238,7 +240,7 @@ public class FSMSelectionZone {
       int _plus_9 = (_y_1 + _height);
       String _plus_10 = (_plus_8 + Integer.valueOf(_plus_9));
       String _plus_11 = (_plus_10 + "]");
-      InputOutput.<String>println(_plus_11);
+      this.debug(_plus_11);
       LayoutInfo _layout = e.getLayout();
       boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, _layout);
       if (_inRectangle) {
@@ -248,6 +250,14 @@ public class FSMSelectionZone {
       _xblockexpression = false;
     }
     return _xblockexpression;
+  }
+  
+  public String debug(final String string) {
+    String _xifexpression = null;
+    if (FSMSelectionZone.VERBOSE) {
+      _xifexpression = InputOutput.<String>println(string);
+    }
+    return _xifexpression;
   }
   
   public static boolean inRectangle(final int x, final int y, final LayoutInfo l) {
@@ -340,11 +350,11 @@ public class FSMSelectionZone {
       int _plus_7 = (_y_1 + _height);
       String _plus_8 = (_plus_6 + Integer.valueOf(_plus_7));
       String _plus_9 = (_plus_8 + "]");
-      InputOutput.<String>println(_plus_9);
+      this.debug(_plus_9);
       LayoutInfo _layout = e.getLayout();
       boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, _layout);
       if (_inRectangle) {
-        InputOutput.<String>println("\tYES !");
+        this.debug("\tYES !");
         return true;
       }
       _xblockexpression = false;
@@ -372,7 +382,7 @@ public class FSMSelectionZone {
       int _plus_8 = (_y_1 + FSMDrawing.FSM_TITLE_HEIGHT);
       String _plus_9 = (_plus_7 + Integer.valueOf(_plus_8));
       String _plus_10 = (_plus_9 + "]");
-      InputOutput.<String>println(_plus_10);
+      this.debug(_plus_10);
       boolean _and = false;
       int _x_2 = l.getX();
       boolean _greaterThan = (p.x > _x_2);
@@ -398,7 +408,7 @@ public class FSMSelectionZone {
           _and_1 = _lessThan_1;
         }
         if (_and_1) {
-          InputOutput.<String>println("\tYES !");
+          this.debug("\tYES !");
           return true;
         }
       }
@@ -431,9 +441,9 @@ public class FSMSelectionZone {
       String _plus_9 = (_plus_8 + "] -> distance = ");
       String _plus_10 = (_plus_9 + Double.valueOf(distance));
       String _plus_11 = (_plus_10 + "  ");
-      InputOutput.<String>println(_plus_11);
+      this.debug(_plus_11);
       if ((distance < radius)) {
-        InputOutput.<String>println("\tYES !");
+        this.debug("\tYES !");
         return true;
       }
       _xblockexpression = false;
@@ -457,7 +467,7 @@ public class FSMSelectionZone {
       int _height = l.getHeight();
       String _plus_6 = (_plus_5 + Integer.valueOf(_height));
       String _plus_7 = (_plus_6 + ",]   ");
-      InputOutput.<String>println(_plus_7);
+      this.debug(_plus_7);
       boolean _and = false;
       LayoutInfo _layout = e.getLayout();
       boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, _layout);
@@ -469,7 +479,7 @@ public class FSMSelectionZone {
         _and = _notEquals;
       }
       if (_and) {
-        InputOutput.<String>println("\tYES !");
+        this.debug("\tYES !");
         return true;
       }
       _xblockexpression = false;
@@ -497,11 +507,11 @@ public class FSMSelectionZone {
       int _plus_7 = (_y_1 + _height);
       String _plus_8 = (_plus_6 + Integer.valueOf(_plus_7));
       String _plus_9 = (_plus_8 + "]");
-      InputOutput.<String>println(_plus_9);
+      this.debug(_plus_9);
       LayoutInfo _layout = e.getLayout();
       boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, _layout);
       if (_inRectangle) {
-        InputOutput.<String>println("\tYES !");
+        this.debug("\tYES !");
         return true;
       }
       _xblockexpression = false;
@@ -529,11 +539,11 @@ public class FSMSelectionZone {
       int _plus_7 = (_y_1 + _height);
       String _plus_8 = (_plus_6 + Integer.valueOf(_plus_7));
       String _plus_9 = (_plus_8 + "]");
-      InputOutput.<String>println(_plus_9);
+      this.debug(_plus_9);
       LayoutInfo _layout = e.getLayout();
       boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, _layout);
       if (_inRectangle) {
-        InputOutput.<String>println("\tYES !");
+        this.debug("\tYES !");
         return true;
       }
       _xblockexpression = false;

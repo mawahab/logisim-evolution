@@ -162,21 +162,28 @@ public class PrettyPrinter {
         EList<BoolExpr> _args = b.getArgs();
         BoolExpr _get = _args.get(0);
         Object _pp = PrettyPrinter.pp(_get);
-        String _plus = (_pp + "==");
+        String _plus = ("(" + _pp);
+        String _plus_1 = (_plus + "==");
         EList<BoolExpr> _args_1 = b.getArgs();
         BoolExpr _get_1 = _args_1.get(1);
         Object _pp_1 = PrettyPrinter.pp(_get_1);
-        _switchResult = (_plus + _pp_1);
+        String _plus_2 = (_plus_1 + _pp_1);
+        _switchResult = (_plus_2 + ")");
         break;
-      case "!=":
+      case "/=":
         EList<BoolExpr> _args_2 = b.getArgs();
         BoolExpr _get_2 = _args_2.get(0);
         Object _pp_2 = PrettyPrinter.pp(_get_2);
-        String _plus_1 = (_pp_2 + "!=");
+        String _plus_3 = ("(" + _pp_2);
+        String _plus_4 = (_plus_3 + "/=");
         EList<BoolExpr> _args_3 = b.getArgs();
         BoolExpr _get_3 = _args_3.get(1);
         Object _pp_3 = PrettyPrinter.pp(_get_3);
-        _switchResult = (_plus_1 + _pp_3);
+        String _plus_5 = (_plus_4 + _pp_3);
+        _switchResult = (_plus_5 + ")");
+        break;
+      default:
+        _switchResult = "????";
         break;
     }
     return _switchResult;

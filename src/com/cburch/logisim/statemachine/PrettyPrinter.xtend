@@ -46,11 +46,15 @@ class PrettyPrinter {
 	def static dispatch pp(CmpExpr b) {
 		switch(b.op) {
 			case "==" : {
-				pp(b.args.get(0))+"=="+pp(b.args.get(1)) 
+				"("+pp(b.args.get(0))+"=="+pp(b.args.get(1))+")" 
 			}
-			case "!=" : {
-				pp(b.args.get(0))+"!="+pp(b.args.get(1)) 
+			case "/=" : {
+				"("+pp(b.args.get(0))+"/="+pp(b.args.get(1))+")" 
 			}
+			default : {
+				"????"
+			}
+			
 		}
 	}
 

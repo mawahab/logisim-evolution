@@ -28,6 +28,8 @@ class FSMSelectionZone {
 	int ymin;	
 	int xmax;
 	int ymax;
+	
+	static final boolean VERBOSE=false
 
 	def updateBoundingBox(FSMElement e) {
 		xmin= Math.min(xmin, e.layout.x);
@@ -147,12 +149,16 @@ class FSMSelectionZone {
 
 	def dispatch boolean isWithinElement(Point p,FSMElement e) {
 		val l= e.layout	
-		println("check if ("+p.x+','+p.y+") within "+e.class+" ["+(l.x)+","+(l.y)+","+(l.x+l.width)+","+(l.y+l.height)+"]")
+		debug("check if ("+p.x+','+p.y+") within "+e.class+" ["+(l.x)+","+(l.y)+","+(l.x+l.width)+","+(l.y+l.height)+"]")
 		if (inRectangle(p.x,p.y,e.layout)) {
 			println("\tYES !")
 			return true
 		}
 		false
+	}
+	
+	def debug(String string) {
+		if (VERBOSE) println(string)
 	}
 
 	public static def inRectangle(int x, int y, LayoutInfo l) {
@@ -170,9 +176,9 @@ class FSMSelectionZone {
 	
 	def dispatch isWithinElement(Point p,CommandList e) {
 		val l= e.layout	
-		println("check if ("+p.x+','+p.y+") within CommandList["+(l.x)+","+(l.y)+","+(l.x+l.width)+","+(l.y+l.height)+"]")
+		debug("check if ("+p.x+','+p.y+") within CommandList["+(l.x)+","+(l.y)+","+(l.x+l.width)+","+(l.y+l.height)+"]")
 		if (inRectangle(p.x,p.y,e.layout)) {
-			println("\tYES !")
+			debug("\tYES !")
 			return true
 		}
 		false
@@ -180,10 +186,10 @@ class FSMSelectionZone {
 	
 	def dispatch isWithinElement(Point p,FSM e) {
 		val l= e.layout	
-		println("check if ("+p.x+','+p.y+") within FSM ["+(l.x)+","+(l.y+FSMDrawing.FSM_TITLE_HEIGHT)+","+(l.x+l.width)+","+((l.y+FSMDrawing.FSM_TITLE_HEIGHT))+"]")
+		debug("check if ("+p.x+','+p.y+") within FSM ["+(l.x)+","+(l.y+FSMDrawing.FSM_TITLE_HEIGHT)+","+(l.x+l.width)+","+((l.y+FSMDrawing.FSM_TITLE_HEIGHT))+"]")
 		if (p.x>l.x && p.x <(l.x+l.width)) {
 			if (p.y>l.y && p.y <(l.y+FSMDrawing.FSM_TITLE_HEIGHT)) {
-				println("\tYES !")
+				debug("\tYES !")
 				return true
 			}
 		}
@@ -196,9 +202,9 @@ class FSMSelectionZone {
 		val dx = (p.x - (l.x+radius)) 
 		val dy = (p.y - (l.y+radius))
 		val distance = Math.sqrt(dx*dx+dy*dy)
-		println("check if ("+p.x+','+p.y+") within circle["+(l.x+radius)+","+(l.y+radius)+","+radius+"] -> distance = "+distance+"  ")
+		debug("check if ("+p.x+','+p.y+") within circle["+(l.x+radius)+","+(l.y+radius)+","+radius+"] -> distance = "+distance+"  ")
 		if (distance<radius) {
-			println("\tYES !")
+			debug("\tYES !")
 			return true
 		}
 		false
@@ -206,9 +212,9 @@ class FSMSelectionZone {
 
 	def dispatch isWithinElement(Point p,Transition e) {
 		val l = e.layout
-		println("check if ("+p.x+','+p.y+") within Transition["+(l.x)+","+(l.y)+","+(l.width)+","+(l.height)+",]   ")
+		debug("check if ("+p.x+','+p.y+") within Transition["+(l.x)+","+(l.y)+","+(l.width)+","+(l.height)+",]   ")
 		if (inRectangle(p.x,p.y,e.layout) && e.dst!=null) {
-			println("\tYES !")
+			debug("\tYES !")
 			return true
 		}
 		false
@@ -216,9 +222,9 @@ class FSMSelectionZone {
 
 	def dispatch isWithinElement(Point p,InputPort e) {
 		val l= e.layout	
-		println('('+p.x+','+p.y+") within InPort["+(l.x)+","+(l.y)+","+(l.x+l.width)+","+(l.y+l.height)+"]")
+		debug('('+p.x+','+p.y+") within InPort["+(l.x)+","+(l.y)+","+(l.x+l.width)+","+(l.y+l.height)+"]")
 		if (inRectangle(p.x,p.y,e.layout)) {
-			println("\tYES !")
+			debug("\tYES !")
 			return true
 		}
 		false
@@ -226,9 +232,9 @@ class FSMSelectionZone {
 
 	def dispatch isWithinElement(Point p,OutputPort e) {
 		val l= e.layout	
-		println('('+p.x+','+p.y+") within OutPort["+(l.x)+","+(l.y)+","+(l.x+l.width)+","+(l.y+l.height)+"]")
+		debug('('+p.x+','+p.y+") within OutPort["+(l.x)+","+(l.y)+","+(l.x+l.width)+","+(l.y+l.height)+"]")
 		if (inRectangle(p.x,p.y,e.layout)) {
-			println("\tYES !")
+			debug("\tYES !")
 			return true
 		}
 		false

@@ -91,8 +91,11 @@ class RemoveBitVectors {
 				case "==" : {
 					slice = equ(left,right);
 				}
-				case "!=" : {
+				case "/=" : {
 					slice = nequ(left,right);
+				}
+				default: {
+					throw new UnsupportedOperationException("Invalid compare operator "+e.op+" only ==,/= allowed")
 				}
 			}
 			if(slice!=null)

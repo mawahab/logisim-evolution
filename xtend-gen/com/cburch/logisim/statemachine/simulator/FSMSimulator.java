@@ -1,5 +1,6 @@
 package com.cburch.logisim.statemachine.simulator;
 
+import com.cburch.logisim.instance.InstanceData;
 import com.cburch.logisim.statemachine.PrettyPrinter;
 import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
@@ -19,6 +20,7 @@ import com.cburch.logisim.statemachine.fSMDSL.PortRef;
 import com.cburch.logisim.statemachine.fSMDSL.Range;
 import com.cburch.logisim.statemachine.fSMDSL.State;
 import com.cburch.logisim.statemachine.fSMDSL.Transition;
+import com.cburch.logisim.std.memory.ClockState;
 import com.google.common.base.Objects;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +36,7 @@ import org.eclipse.xtext.xbase.lib.IntegerRange;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 
 @SuppressWarnings("all")
-public class FSMSimulator {
+public class FSMSimulator extends ClockState implements InstanceData {
   private FSM fsm;
   
   private State current;
@@ -56,6 +58,14 @@ public class FSMSimulator {
     State _start = fsm.getStart();
     this.current = _start;
     this.refreshPorts();
+  }
+  
+  public State setCurrentState(final State s) {
+    return this.current = s;
+  }
+  
+  public State getCurrentState() {
+    return this.current;
   }
   
   public String quote(final String s) {
@@ -156,17 +166,20 @@ public class FSMSimulator {
   }
   
   public State updateState() {
-    String _name = this.current.getName();
-    String _plus = ("Current state " + _name);
-    InputOutput.<String>println(_plus);
+    String _name = this.fsm.getName();
+    String _plus = ("FSM " + _name);
+    String _plus_1 = (_plus + " current state ");
+    String _name_1 = this.current.getName();
+    String _plus_2 = (_plus_1 + _name_1);
+    InputOutput.<String>println(_plus_2);
     Set<Port> _keySet = this.inputs.keySet();
     for (final Port e : _keySet) {
-      String _name_1 = e.getName();
-      String _plus_1 = ("\tinputs " + _name_1);
-      String _plus_2 = (_plus_1 + "=>");
+      String _name_2 = e.getName();
+      String _plus_3 = ("\tIn " + _name_2);
+      String _plus_4 = (_plus_3 + "=>");
       String _get = this.inputs.get(e);
-      String _plus_3 = (_plus_2 + _get);
-      InputOutput.<String>println(_plus_3);
+      String _plus_5 = (_plus_4 + _get);
+      InputOutput.<String>println(_plus_5);
     }
     State defaultDst = null;
     State nextDst = null;
@@ -174,8 +187,8 @@ public class FSMSimulator {
     for (final Transition t : _transition) {
       {
         String _pp = PrettyPrinter.pp(t);
-        String _plus_4 = ("Evaluating transition= " + _pp);
-        InputOutput.<String>println(_plus_4);
+        String _plus_6 = ("\tTransition= " + _pp);
+        InputOutput.<String>println(_plus_6);
         BoolExpr _predicate = t.getPredicate();
         if ((_predicate instanceof DefaultPredicate)) {
           State _dst = t.getDst();
@@ -187,11 +200,11 @@ public class FSMSimulator {
           if (_isTrue) {
             State _dst_1 = t.getDst();
             nextDst = _dst_1;
-            String _name_2 = nextDst.getName();
-            String _plus_5 = ("\nTransition fired : next state is " + _name_2);
-            InputOutput.<String>println(_plus_5);
+            String _name_3 = nextDst.getName();
+            String _plus_7 = ("\t\tTransition fired : next state is " + _name_3);
+            InputOutput.<String>println(_plus_7);
           } else {
-            InputOutput.<String>println("\nTransition not actived");
+            InputOutput.<String>println("\t\tTransition not actived");
           }
         }
       }
@@ -203,9 +216,9 @@ public class FSMSimulator {
       boolean _notEquals_1 = (!Objects.equal(defaultDst, null));
       if (_notEquals_1) {
         this.current = defaultDst;
-        String _name_2 = defaultDst.getName();
-        String _plus_4 = ("\nDefault transition fired " + _name_2);
-        InputOutput.<String>println(_plus_4);
+        String _name_3 = defaultDst.getName();
+        String _plus_6 = ("\t\tDefault transition fired " + _name_3);
+        InputOutput.<String>println(_plus_6);
       }
     }
     return this.current;
@@ -222,8 +235,8 @@ public class FSMSimulator {
         this.outputs.replace(_name, res);
         OutputPort _name_1 = c.getName();
         String _name_2 = _name_1.getName();
-        String _plus = ("\t" + _name_2);
-        String _plus_1 = (_plus + "=");
+        String _plus = ("\tSet " + _name_2);
+        String _plus_1 = (_plus + " to ");
         String _plus_2 = (_plus_1 + res);
         InputOutput.<String>println(_plus_2);
       }

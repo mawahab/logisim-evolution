@@ -8,10 +8,11 @@ import com.cburch.logisim.statemachine.fSMDSL.InputPort
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
-import java.util.Map.Entry
-import javax.management.RuntimeErrorException
 
-class FSMSimulator {
+import com.cburch.logisim.instance.InstanceData
+import com.cburch.logisim.std.memory.ClockState
+
+class FSMSimulator extends ClockState implements InstanceData {
 	
 	FSM fsm;
 	
@@ -30,7 +31,17 @@ class FSMSimulator {
 		current=fsm.start
 		refreshPorts
 	}
+	
 
+
+	def setCurrentState(State s) {
+		current = s;
+	}
+	
+	def getCurrentState() {
+		current ;
+	}
+	
 	def quote(String s) {
 		"\""+s+ "\"";
 	}
@@ -85,24 +96,24 @@ class FSMSimulator {
 	}
 	
 	def updateState() { 
-		println("Current state "+current.name)
+		println("FSM "+fsm.name+" current state "+current.name)
 		for (Port e : inputs.keySet) {
-			println("\tinputs "+e.name+"=>"+inputs.get(e))
+			println("\tIn "+e.name+"=>"+inputs.get(e))
 		}  
 		
 		var State defaultDst =null;
 		var State nextDst =null;
 		for (Transition t : current.transition) {
-			println("Evaluating transition= "+PrettyPrinter.pp(t))
+			println("\tTransition= "+PrettyPrinter.pp(t))
 			if(t.predicate instanceof DefaultPredicate) {
 				defaultDst = t.dst
 			} else {
 				val res = (eval(t.predicate))
 				if (isTrue(res)) {
 					nextDst= t.dst
-					println("\nTransition fired : next state is "+nextDst.name)
+					println("\t\tTransition fired : next state is "+nextDst.name)
 				} else {
-					println("\nTransition not actived")
+					println("\t\tTransition not actived")
 				}
 			}
 		}
@@ -110,7 +121,7 @@ class FSMSimulator {
 			current = nextDst
 		} else if (defaultDst!=null) {
 			current = defaultDst
-			println("\nDefault transition fired "+defaultDst.name)
+			println("\t\tDefault transition fired "+defaultDst.name)
 		}		
 		return current;
 	}
@@ -119,7 +130,7 @@ class FSMSimulator {
 		for (Command c : current.commandList.commands) {
 			val res= eval(c.value)
 			outputs.replace(c.getName(), res);
-			println("\t"+c.name.name+"="+res)
+			println("\tSet "+c.name.name+" to "+res)
 		}  
 	}
 
