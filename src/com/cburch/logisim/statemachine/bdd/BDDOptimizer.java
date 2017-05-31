@@ -52,7 +52,12 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 		BoolExpr copy=EcoreUtil.copy(bexp);
 		copy = new RemoveBitVectors().replace(copy);
 		in = new CollectFlags().collect(copy);
-		int bddsize = in.size() * in.size();
+		// FIXME 
+		int size = 0;
+		for(InputPort ip : in) {
+			size += size*ip.getWidth();
+		}
+		int bddsize = size*size ;
 		bdd = new BDD(bddsize);
 		map = new BDDVariableMapping(bdd);
 
@@ -86,7 +91,7 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 	}
 
 	public Integer caseConcatExpr(ConcatExpr object) {
-		throw new UnsupportedOperationException("Unsupported operator "+PrettyPrinter.pp(object));
+		throw new UnsupportedOperationException("BDD analysis dos not support operator "+PrettyPrinter.pp(object));
 		
 	}
 	public Integer caseConstant(Constant object) {
@@ -98,7 +103,7 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 			map.map(object, bdd.getZero());
 			return bdd.getZero();
 		} else {
-			throw new UnsupportedOperationException("Unknown value "+value);
+			throw new UnsupportedOperationException("BDD analysis dos not support unkown constant value "+value);
 		}
 	}
 
@@ -114,13 +119,13 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 				if(range!=null) {
 					int lb = range.getLb();
 					int ub = range.getUb();
-					if(lb==ub && lb<width) {
+					if((lb==ub || ub==-1) && lb<width) {
 						int varProduct = map.getBDDVarFor(icp, lb);
 						map.map(pref, varProduct);
 						return varProduct;
 					}
 				}
-				throw new RuntimeException("No port width other than 1 for "+ PrettyPrinter.pp(pref));
+				throw new RuntimeException("BDD analysis dos not support bitvector port references "+ PrettyPrinter.pp(pref));
 			} else {
 				int varProduct = map.getBDDVarFor(icp, 0);
 				map.map(pref, varProduct);

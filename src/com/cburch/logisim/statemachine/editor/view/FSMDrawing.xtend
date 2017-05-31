@@ -63,23 +63,30 @@ class FSMDrawing {
 		l.width = w;
 	}
 
-	def updateBoundingBox(CommandList e, Graphics2D g) {
+	def Pair<Integer,Integer> updateBoundingBox(CommandList e, Graphics2D g) {
 		var l = e.layout
 		val lineHeight = g.getFontMetrics().height
 		val nbCommands = e.commands.size
 		var height = Math.max(FSMCustomFactory.CMD_HEIGHT, 6 + lineHeight * nbCommands)
-		height
+		var width = FSMCustomFactory.CMD_WIDTH;
+		for(c : e.commands) {
+		  width = Math.max(width, 8+ g.getFontMetrics().stringWidth(PrettyPrinter.pp(c)));
+		}
+		new Pair<Integer,Integer>(width,height)
 	}
 
 	def dispatch drawElement(CommandList e, Graphics2D g, List<FSMElement> selection) {
 		highlightSelection(e,g,selection)
 		checkLayout(e);
 		var l = e.layout
-		val newH = updateBoundingBox(e,g)
-		if (newH!=l.height) {
+		val box = updateBoundingBox(e,g)
+		val int newW= box.key;
+		val int newH = box.value;
+		if (box.key!=l.height) {
 			l.x=l.x+l.height
 			l.height =newH;
 			l.x = l.x-l.height
+			l.width=newW
 		}
 		
 		val lineHeight = g.getFontMetrics().height

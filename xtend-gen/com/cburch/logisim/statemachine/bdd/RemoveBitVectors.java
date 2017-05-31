@@ -25,7 +25,6 @@ import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
-import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IteratorExtensions;
@@ -154,8 +153,10 @@ public class RemoveBitVectors {
       AndExpr and = FSMDSLFactory.eINSTANCE.createAndExpr();
       boolean canDoIt = true;
       int i = 0;
-      while (canDoIt) {
-        try {
+      this.analyzer.computeBitwidth(e);
+      final Integer bw = this.analyzer.getBitwidth(e);
+      for (i = 0; (i < (bw).intValue()); i++) {
+        {
           BoolExpr slice = null;
           EList<BoolExpr> _args = e.getArgs();
           BoolExpr _get = _args.get(0);
@@ -178,14 +179,6 @@ public class RemoveBitVectors {
           if (_notEquals) {
             EList<BoolExpr> _args_2 = and.getArgs();
             _args_2.add(slice);
-          }
-          i++;
-        } catch (final Throwable _t) {
-          if (_t instanceof IndexOutOfBoundsException) {
-            final IndexOutOfBoundsException ex = (IndexOutOfBoundsException)_t;
-            canDoIt = false;
-          } else {
-            throw Exceptions.sneakyThrow(_t);
           }
         }
       }
@@ -259,19 +252,29 @@ public class RemoveBitVectors {
   }
   
   protected BoolExpr _slice(final Constant e, final int offset) {
-    Constant _xblockexpression = null;
-    {
-      Constant c = FSMDSLFactory.eINSTANCE.createConstant();
-      StringConcatenation _builder = new StringConcatenation();
-      _builder.append("\"");
-      String _value = e.getValue();
-      char _charAt = _value.charAt((offset + 1));
-      _builder.append(_charAt, "");
-      _builder.append("\"");
-      c.setValue(_builder.toString());
-      _xblockexpression = c;
+    Constant _xifexpression = null;
+    String _value = e.getValue();
+    int _length = _value.length();
+    int _minus = (_length - 2);
+    boolean _lessEqualsThan = (offset <= _minus);
+    if (_lessEqualsThan) {
+      Constant _xblockexpression = null;
+      {
+        Constant c = FSMDSLFactory.eINSTANCE.createConstant();
+        StringConcatenation _builder = new StringConcatenation();
+        _builder.append("\"");
+        String _value_1 = e.getValue();
+        char _charAt = _value_1.charAt((offset + 1));
+        _builder.append(_charAt, "");
+        _builder.append("\"");
+        c.setValue(_builder.toString());
+        _xblockexpression = c;
+      }
+      _xifexpression = _xblockexpression;
+    } else {
+      throw new IndexOutOfBoundsException(((("Offset " + Integer.valueOf(offset)) + " is out of bound w.r.t to expression ") + e));
     }
-    return _xblockexpression;
+    return _xifexpression;
   }
   
   protected BoolExpr _slice(final PortRef e, final int offset) {
@@ -281,32 +284,41 @@ public class RemoveBitVectors {
     if (_notEquals) {
       PortRef _xblockexpression = null;
       {
+        boolean _and = false;
         Range _range_1 = e.getRange();
-        int _lb = _range_1.getLb();
-        int _plus = (offset + _lb);
-        Port _port = e.getPort();
-        int _width = _port.getWidth();
-        boolean _greaterEqualsThan = (_plus >= _width);
-        if (_greaterEqualsThan) {
-          Port _port_1 = e.getPort();
-          String _plus_1 = ((("Offset " + Integer.valueOf(offset)) + " is out of bound w.r.t to port ") + _port_1);
+        int _ub = _range_1.getUb();
+        boolean _notEquals_1 = (_ub != (-1));
+        if (!_notEquals_1) {
+          _and = false;
+        } else {
+          Range _range_2 = e.getRange();
+          int _lb = _range_2.getLb();
+          int _plus = (offset + _lb);
+          Range _range_3 = e.getRange();
+          int _ub_1 = _range_3.getUb();
+          boolean _greaterThan = (_plus > _ub_1);
+          _and = _greaterThan;
+        }
+        if (_and) {
+          Port _port = e.getPort();
+          String _plus_1 = ((("Offset " + Integer.valueOf(offset)) + " is out of bound w.r.t to port ") + _port);
           throw new IndexOutOfBoundsException(_plus_1);
         }
         PortRef pref = FSMDSLFactory.eINSTANCE.createPortRef();
-        Port _port_2 = e.getPort();
-        pref.setPort(_port_2);
+        Port _port_1 = e.getPort();
+        pref.setPort(_port_1);
         Range _createRange = FSMDSLFactory.eINSTANCE.createRange();
         pref.setRange(_createRange);
-        Range _range_2 = pref.getRange();
-        Range _range_3 = e.getRange();
-        int _lb_1 = _range_3.getLb();
-        int _plus_2 = (offset + _lb_1);
-        _range_2.setLb(_plus_2);
         Range _range_4 = pref.getRange();
         Range _range_5 = e.getRange();
-        int _lb_2 = _range_5.getLb();
+        int _lb_1 = _range_5.getLb();
+        int _plus_2 = (offset + _lb_1);
+        _range_4.setLb(_plus_2);
+        Range _range_6 = pref.getRange();
+        Range _range_7 = e.getRange();
+        int _lb_2 = _range_7.getLb();
         int _plus_3 = (offset + _lb_2);
-        _range_4.setUb(_plus_3);
+        _range_6.setUb(_plus_3);
         _xblockexpression = pref;
       }
       _xifexpression = _xblockexpression;

@@ -60,7 +60,7 @@ public class FSMCommandListEditPanel extends JPanel{
 				}
 				return commands;
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, this, "Error : "+e.getMessage(),JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Error : "+e.getMessage(), "Error in command predicate",JOptionPane.ERROR_MESSAGE);
 				return null;
 			}
 		}
@@ -69,7 +69,7 @@ public class FSMCommandListEditPanel extends JPanel{
 	public void configure() {
 		EList<Command> commands=null;
 		while(commands==null) {
-			int dialog = JOptionPane.showConfirmDialog(null, this, "Please specify transition predicate",JOptionPane.OK_CANCEL_OPTION);
+			int dialog = JOptionPane.showConfirmDialog(null, this, "Configure Command" ,JOptionPane.OK_CANCEL_OPTION);
 			commands = checkInput(dialog);
 		}
 		list.getCommands().clear();

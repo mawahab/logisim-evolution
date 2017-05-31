@@ -29,9 +29,9 @@ public class FSMCustomFactory {
   
   public static int CMD_OFFSETY = 15;
   
-  public static int CMD_WIDTH = 60;
+  public static int CMD_WIDTH = 30;
   
-  public static int CMD_HEIGHT = 40;
+  public static int CMD_HEIGHT = 20;
   
   public static int PRED_WIDTH = 20;
   

@@ -129,7 +129,8 @@ class FSMContent implements Cloneable {
 	}
 
 	static final String TEMPLATE = 
-	'''fsm example @[ 50 , 50 , 800 , 500 ] { in A [ 3 ] @[ 50 , 100 , 44 , 15 ] ; out
+	'''
+fsm example @[ 50 , 50 , 800 , 500 ] { in A [ 3 ] @[ 50 , 100 , 44 , 15 ] ; out
 X [ 4 ] @[ 807 , 140 , 43 , 15 ] ; codeWidth = 2 ; reset = S0 ; state S0 = "01"
 @[ 297 , 181 , 30 , 30 ] { commands @[ 246 , 173 , 50 , 40 ] { X = "0001" ; }
 transitions { S0 -> S1 when default @[ 432 , 151 , 50 , 21 ] ; S0 -> S3 when A

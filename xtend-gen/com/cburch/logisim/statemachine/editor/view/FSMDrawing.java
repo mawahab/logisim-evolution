@@ -28,6 +28,7 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.Pair;
 
 @SuppressWarnings("all")
 public class FSMDrawing {
@@ -92,8 +93,8 @@ public class FSMDrawing {
     l.setWidth(w);
   }
   
-  public int updateBoundingBox(final CommandList e, final Graphics2D g) {
-    int _xblockexpression = (int) 0;
+  public Pair<Integer, Integer> updateBoundingBox(final CommandList e, final Graphics2D g) {
+    Pair<Integer, Integer> _xblockexpression = null;
     {
       LayoutInfo l = e.getLayout();
       FontMetrics _fontMetrics = g.getFontMetrics();
@@ -101,7 +102,17 @@ public class FSMDrawing {
       EList<Command> _commands = e.getCommands();
       final int nbCommands = _commands.size();
       int height = Math.max(FSMCustomFactory.CMD_HEIGHT, (6 + (lineHeight * nbCommands)));
-      _xblockexpression = height;
+      int width = FSMCustomFactory.CMD_WIDTH;
+      EList<Command> _commands_1 = e.getCommands();
+      for (final Command c : _commands_1) {
+        FontMetrics _fontMetrics_1 = g.getFontMetrics();
+        String _pp = PrettyPrinter.pp(c);
+        int _stringWidth = _fontMetrics_1.stringWidth(_pp);
+        int _plus = (8 + _stringWidth);
+        int _max = Math.max(width, _plus);
+        width = _max;
+      }
+      _xblockexpression = new Pair<Integer, Integer>(Integer.valueOf(width), Integer.valueOf(height));
     }
     return _xblockexpression;
   }
@@ -110,9 +121,12 @@ public class FSMDrawing {
     this.highlightSelection(e, g, selection);
     this.checkLayout(e);
     LayoutInfo l = e.getLayout();
-    final int newH = this.updateBoundingBox(e, g);
+    final Pair<Integer, Integer> box = this.updateBoundingBox(e, g);
+    final int newW = (box.getKey()).intValue();
+    final int newH = (box.getValue()).intValue();
+    Integer _key = box.getKey();
     int _height = l.getHeight();
-    boolean _notEquals = (newH != _height);
+    boolean _notEquals = ((_key).intValue() != _height);
     if (_notEquals) {
       int _x = l.getX();
       int _height_1 = l.getHeight();
@@ -123,6 +137,7 @@ public class FSMDrawing {
       int _height_2 = l.getHeight();
       int _minus = (_x_1 - _height_2);
       l.setX(_minus);
+      l.setWidth(newW);
     }
     FontMetrics _fontMetrics = g.getFontMetrics();
     final int lineHeight = _fontMetrics.getHeight();

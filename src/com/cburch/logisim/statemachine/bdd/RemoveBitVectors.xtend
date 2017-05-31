@@ -80,27 +80,24 @@ class RemoveBitVectors {
 		var and= FSMDSLFactory.eINSTANCE.createAndExpr
 		var canDoIt =true;
 		var i = 0;
-		while(canDoIt) {
-			try {
-				var BoolExpr slice = null
-				val left= slice(e.args.get(0), i)
-				val right= slice(e.args.get(1), i)
-				
-				switch(e.op) {
-					case "==" : {
-						slice = equ(left,right);
-					}
-					case "!=" : {
-						slice = nequ(left,right);
-					}
+		analyzer.computeBitwidth(e);
+		val bw = analyzer.getBitwidth(e)
+		for(i= 0; i< bw; i++) {
+			var BoolExpr slice = null
+			val left= slice(e.args.get(0), i)
+			val right= slice(e.args.get(1), i)
+			
+			switch(e.op) {
+				case "==" : {
+					slice = equ(left,right);
 				}
-				if(slice!=null)
-					and.args.add(slice)
-					
-				i++
-			} catch (IndexOutOfBoundsException ex) {
-				canDoIt=false
+				case "!=" : {
+					slice = nequ(left,right);
+				}
 			}
+			if(slice!=null)
+				and.args.add(slice)
+				
 		}
 		and
 	}
@@ -137,14 +134,18 @@ class RemoveBitVectors {
 	}
 
 	def dispatch BoolExpr slice(Constant e, int offset) {
-		var c= FSMDSLFactory.eINSTANCE.createConstant
-		c.value='''"«e.value.charAt(offset+1)»"'''
-		c
+		if(offset<=e.value.length-2) {
+			var c= FSMDSLFactory.eINSTANCE.createConstant
+			c.value='''"«e.value.charAt(offset+1)»"'''
+			c
+		} else {
+			throw new IndexOutOfBoundsException("Offset "+offset+" is out of bound w.r.t to expression "+e)
+		}
 	}
 	
 	def dispatch BoolExpr slice(PortRef e, int offset) {
 		if (e.range!=null) {
-			if(offset+e.range.lb>=e.port.width) {
+			if(e.range.ub!=-1 && offset+e.range.lb>e.range.ub) {
 				throw new IndexOutOfBoundsException("Offset "+offset+" is out of bound w.r.t to port "+e.port)
 			}
 			var pref= FSMDSLFactory.eINSTANCE.createPortRef

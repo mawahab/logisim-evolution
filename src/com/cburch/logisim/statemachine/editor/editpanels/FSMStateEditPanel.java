@@ -55,7 +55,7 @@ public class FSMStateEditPanel extends JPanel{
 			char first = txt.charAt(0);
 			char last = txt.charAt(txt.length()-1);
 			if(first=='"'&& last=='"') {
-				txt=txt.substring(1, txt.length()-2);
+				txt=txt.substring(1, txt.length()-1);
 				for (char c : txt.toCharArray()) {
 					if (c != '0' && c != '1') {
 						JOptionPane.showMessageDialog(null, "Error: Please enter a binary code (instead of "+txt+")", "Error Message",
@@ -64,7 +64,7 @@ public class FSMStateEditPanel extends JPanel{
 						
 					}
 				}
-				if (txt.length()!=fsm.getWidth()) {
+				if ((txt.length())!=fsm.getWidth()) {
 					JOptionPane.showMessageDialog(null, "Error: Please enter a "+fsm.getWidth()+" bit code ", "Error Message",
 							JOptionPane.ERROR_MESSAGE);
 				}
