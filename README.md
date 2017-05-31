@@ -1,38 +1,18 @@
-logisim-evolution with fsm library
+# logisim-evolution with fsm library
 
-=================
-This repository is a fork from the official logisim-evolution repository (see official repository for more information) and host an early version of the tool with support for editing/analyzing and simulating Finite State Machines plus several other minor features listed below :
+This repository is a fork from the official logisim-evolution repository (see official repository for more information) and hosts an early version of logisim with experimental support for editing/analyzing and simulating Finite State Machines plus several other minor features including :
 
-- Support for DE0-CV board from Terasic
+- (incomplete) Support for DE0-CV board from Terasic
 - Keypad IO device (currently only for simulation)
-- Dual ported register file component
-
-## How to install this version of logisim-evolution
-You can find the latest version of the tool [here](http://www.irisa.fr/cosi/HOMEPAGE/Derrien/logisim/logisim-evolution.jar). [updated on may 31st, 2017]
-
-To execute it, click on the downloaded file or type in a console
-```bash
-java -jar logisim-evolution.jar
-```
-
-You can also compile it by yourself by cloning the repository on your local machine. Once this is done, enter the directory and execute
-```bash
-ant run
-```
-This also creates locally a .jar file, which needs to be fixed due to some library issue. To do so you must run the following command in the project folder containing the jar file.
-```
-zip -d logisim-evolution.jar 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*SF'
-```
-
-This jar can be distributed and used on other machines.
+- Dual ported register file component for easing the design of MIPS like CPUs
 
 # The logisim FSM editor
 
 * The tool menu contains an entry named FSM Tools, with the Finite State Machine component available as a building block.
 
-* By default, the menu instanciates a 4-state example FSM which demonstrates most of the features available in the tool. The FSM transition diagram can be viewed and modified within a graphical editor which is opened by clicking on the Content attribute.
+* By default, the menu instantiates a 4-state example FSM which demonstrates most of the features available in the tool. The FSM transition diagram can be viewed and modified within a graphical editor which is opened by clicking on the Content attribute.
 
-<img src="doc/en/html/guide/fsm/Screenshot.jpg" width="50%" height="50%" />    
+<img src="doc/en/html/guide/fsm/Screenshot.png" width="50%" height="50%" />    
 
 The editor is in advanced beta stage, it supports adding/editing/moving/copying/deleting elements through a context menu (use right click to make it appear). Elements can be selected (left click) and moved to make the diagram more readable.
 
@@ -51,6 +31,27 @@ In addition to syntactic analysis, the editor also checks that transitions from 
 
 * [FIXED] <del>Checker does not verify that all states have different binary codes, not that code size (in # bits) is consistent with the number of state on the FSM<del>.
  
+
+
+## How to install this version of logisim-evolution
+
+You can find the latest version of the tool [here](http://www.irisa.fr/cosi/HOMEPAGE/Derrien/logisim/logisim-evolution.jar). [updated on may 31st, 2017]
+
+To execute it, click on the downloaded file or type in a console
+```bash
+java -jar logisim-evolution.jar
+```
+
+You can also compile it by yourself by cloning the repository on your local machine. Once this is done, enter the directory and execute
+```bash
+ant run
+```
+This also creates locally a .jar file, which needs to be fixed due to some library issue. To do so you must run the following command in the project folder containing the jar file.
+```
+zip -d logisim-evolution.jar 'META-INF/*.SF' 'META-INF/*.RSA' 'META-INF/*SF'
+```
+
+This jar can be distributed and used on other machines.
 
 ## Editing logisim-evolution in Eclipse
 To import directly logisim-evolution in Eclipse, you can use Eclipse's import wizard:
