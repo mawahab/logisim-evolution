@@ -34,10 +34,6 @@ import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 
-/**
- * GecosScilabFrontend is a sample module. When the script evaluator encounters
- * the 'GecosScilabFrontend' function, it calls the compute method.
- */
 @SuppressWarnings("all")
 public class FSMSerializer {
   public static String saveAsString(final FSM fsm) {

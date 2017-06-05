@@ -72,6 +72,7 @@ class BoardWriterClass {
 	public static String PinLocationString = "FPGAPinName";
 	public static String ImageInformationString = "BoardPicture";
 	public static String MultiPinInformationString = "NrOfPins";
+	public static String MultiPinTypeInformationString = "PinType";
 	public static String MultiPinPrefixString = "FPGAPin_";
 	private DocumentBuilderFactory factory;
 	private DocumentBuilder parser;

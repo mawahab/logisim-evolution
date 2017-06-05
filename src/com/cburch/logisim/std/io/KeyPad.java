@@ -120,14 +120,28 @@ public class KeyPad extends InstanceFactory {
 
 	}
 
-	public static final ArrayList<String> GetLabels(int size) {
+
+	public static final ArrayList<String> GetLabels() {
 		ArrayList<String> LabelNames = new ArrayList<String>();
-		for (int i = 0; i < size; i++) {
-			LabelNames.add("sw_" + Integer.toString(i + 1));
-		}
+		LabelNames.addAll(GetInputLabels());
+		LabelNames.addAll(GetOutputLabels());
 		return LabelNames;
 	}
 
+	public static final ArrayList<String> GetOutputLabels() {
+		ArrayList<String> LabelNames = new ArrayList<String>();
+		for (int i = 0; i < 4; i++) {
+			LabelNames.add("L" + Integer.toString(i));
+		}
+		return LabelNames;
+	}
+	public static final ArrayList<String> GetInputLabels() {
+		ArrayList<String> LabelNames = new ArrayList<String>();
+		for (int i = 0; i < 4; i++) {
+			LabelNames.add("C" + Integer.toString(i));
+		}
+		return LabelNames;
+	}
 	private static final int KEY_WIDTH = 30;
 	private static final int KEY_HEIGHT= 30;
 	private static final int BORDER = 20;
@@ -142,21 +156,20 @@ public class KeyPad extends InstanceFactory {
 
 	public KeyPad() {
 		super("KeyPad", Strings.getter("KeyPadComponent"));
-		int dipSize = 8;
 		setAttributes(new Attribute[] { StdAttr.LABEL, Io.ATTR_LABEL_LOC,
-				StdAttr.LABEL_FONT, StdAttr.LABEL_COLOR, StdAttr.LABEL_VISIBILITY, ATTR_SIZE },
+				StdAttr.LABEL_FONT, StdAttr.LABEL_COLOR, StdAttr.LABEL_VISIBILITY },
 				new Object[] { "", Direction.EAST, StdAttr.DEFAULT_LABEL_FONT,
-						StdAttr.DEFAULT_LABEL_COLOR, false, dipSize });
+						StdAttr.DEFAULT_LABEL_COLOR, false });
 		setFacingAttribute(StdAttr.FACING);
 		setIconName("KeyPad.gif");
 		setInstancePoker(Poker.class);
-		MyIOInformation = new IOComponentInformationContainer(dipSize, 0, 0,
-				GetLabels(dipSize), null, null,
+		MyIOInformation = new IOComponentInformationContainer(4, 4, 0,
+				GetInputLabels(), GetOutputLabels(), null,
 				FPGAIOInformationContainer.IOComponentTypes.KeyPad);
-		MyIOInformation
-				.AddAlternateMapType(FPGAIOInformationContainer.IOComponentTypes.Button);
-		MyIOInformation
-				.AddAlternateMapType(FPGAIOInformationContainer.IOComponentTypes.Pin);
+//		MyIOInformation
+//				.AddAlternateMapType(FPGAIOInformationContainer.IOComponentTypes.Button);
+//		MyIOInformation
+//				.AddAlternateMapType(FPGAIOInformationContainer.IOComponentTypes.Pin);
 	}
 
 	private void computeTextField(Instance instance) {
@@ -200,8 +213,6 @@ public class KeyPad extends InstanceFactory {
 		instance.addAttributeListener();
 		configurePorts(instance);
 		computeTextField(instance);
-		MyIOInformation.setNrOfInports(instance.getAttributeValue(ATTR_SIZE),
-				GetLabels(instance.getAttributeValue(ATTR_SIZE)));
 	}
 
 	private void configurePorts(Instance instance) {
@@ -228,7 +239,7 @@ public class KeyPad extends InstanceFactory {
 	public boolean HDLSupportedComponent(String HDLIdentifier,
 			AttributeSet attrs) {
 		if (MyHDLGenerator == null) {
-			MyHDLGenerator = new ButtonHDLGeneratorFactory();
+			MyHDLGenerator = new KeypadHDLGeneratorFactory();
 		}
 		return MyHDLGenerator.HDLTargetSupported(HDLIdentifier, attrs);
 	}
@@ -237,14 +248,7 @@ public class KeyPad extends InstanceFactory {
 	protected void instanceAttributeChanged(Instance instance, Attribute<?> attr) {
 		if (attr == Io.ATTR_LABEL_LOC) {
 			computeTextField(instance);
-		} else if (attr == ATTR_SIZE) {
-			instance.recomputeBounds();
-			configurePorts(instance);
-			computeTextField(instance);
-			MyIOInformation.setNrOfInports(
-					instance.getAttributeValue(ATTR_SIZE),
-					GetLabels(instance.getAttributeValue(ATTR_SIZE)));
-		}
+		} 
 	}
 
 	@Override

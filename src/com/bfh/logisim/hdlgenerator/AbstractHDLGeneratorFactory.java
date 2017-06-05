@@ -758,7 +758,7 @@ public class AbstractHDLGeneratorFactory implements HDLGeneratorFactory {
 		String OpenBracket = (HDLType.equals(Settings.VHDL)) ? "(" : "[";
 		String CloseBracket = (HDLType.equals(Settings.VHDL)) ? ")" : "]";
 		String Inversion = (HDLType.equals(Settings.VHDL)) ? "NOT " : "~";
-		StringBuffer Temp = new StringBuffer();
+		StringBuffer buf = new StringBuffer();
 		NetlistComponent comp = MapInfo.GetComponent(ComponentIdentifier);
 		if (comp == null) {
 			Reporter.AddFatalError("Component not found, bizar");
@@ -787,48 +787,62 @@ public class AbstractHDLGeneratorFactory implements HDLGeneratorFactory {
 		int BubbleOffset = 0;
 		for (int MapOffset = 0; MapOffset < MyMaps.size(); MapOffset++) {
 			String map = MyMaps.get(MapOffset);
+			Contents.add("-- "+ComponentIdentifier);
+			int getNrOfOutputPins = MapInfo.GetNrOfOutputPins(map);
+			int getNrOfInputPins = MapInfo.GetNrOfInputPins(map);
 			int InputId = MapInfo.GetFPGAInputPinId(map);
 			int OutputId = MapInfo.GetFPGAOutputPinId(map);
-			int NrOfPins = MapInfo.GetNrOfPins(map);
+
 			boolean Invert = MapInfo.RequiresToplevelInversion(
 					ComponentIdentifier, map);
-			for (int PinId = 0; PinId < NrOfPins; PinId++) {
-				Temp.setLength(0);
-				Temp.append("   " + Preamble);
-				if (InputId >= 0
-						&& ((BubbleInfo.GetInputStartIndex() + BubbleOffset) <= BubbleInfo
-								.GetInputEndIndex())) {
-					Temp.append("s_"
-							+ HDLGeneratorFactory.LocalInputBubbleBusname
-							+ OpenBracket);
-					Temp.append(BubbleInfo.GetInputStartIndex() + BubbleOffset);
-					BubbleOffset++;
-					Temp.append(CloseBracket + AssignOperator);
-					if (Invert) {
-						Temp.append(Inversion);
+			int inputStartIndex = BubbleInfo.GetInputStartIndex();
+			int inputEndIndex = BubbleInfo.GetInputEndIndex();
+			if (InputId >= 0) {
+				
+				for (int pinId = 0; pinId < getNrOfInputPins; pinId++) {
+					buf.setLength(0);
+					buf.append("   " + Preamble);
+					if (((inputStartIndex + BubbleOffset) <= inputEndIndex)) {
+						buf.append("s_"
+								+ HDLGeneratorFactory.LocalInputBubbleBusname
+								+ OpenBracket);
+						buf.append(inputStartIndex + BubbleOffset);
+						BubbleOffset++;
+						buf.append(CloseBracket + AssignOperator);
+						if (Invert) {
+							buf.append(Inversion);
+						}
+						buf.append(HDLGeneratorFactory.FPGAInputPinName);
+						buf.append("_" + (InputId + pinId) + ";");
+						Contents.add(""+buf);
+					} else {
+						System.out.println("Skipped input "+HDLGeneratorFactory.FPGAInputPinName+(InputId + pinId));
 					}
-					Temp.append(HDLGeneratorFactory.FPGAInputPinName);
-					Temp.append("_" + Integer.toString(InputId + PinId) + ";");
-					Contents.add(Temp.toString());
 				}
-				Temp.setLength(0);
-				Temp.append("   " + Preamble);
-				if (OutputId >= 0
-						&& ((BubbleInfo.GetOutputStartIndex() + BubbleOffset) <= BubbleInfo
-								.GetOutputEndIndex())) {
-					Temp.append(HDLGeneratorFactory.FPGAOutputPinName);
-					Temp.append("_" + Integer.toString(OutputId + PinId)
-							+ AssignOperator);
-					if (Invert) {
-						Temp.append(Inversion);
+			}
+			if (OutputId >= 0) {
+				int outputStartIndex = BubbleInfo.GetOutputStartIndex();
+				int outputEndIndex = BubbleInfo.GetOutputEndIndex();
+				BubbleOffset=0;
+				for (int pinId = 0; pinId < getNrOfOutputPins; pinId++) {
+					buf.setLength(0);
+					buf.append("   " + Preamble);
+					if (((outputStartIndex + BubbleOffset) <= outputEndIndex)) {
+						buf.append(HDLGeneratorFactory.FPGAOutputPinName);
+						buf.append("_" + (OutputId + pinId)+ AssignOperator);
+						if (Invert) {
+							buf.append(Inversion);
+						}
+						buf.append("s_"
+								+ HDLGeneratorFactory.LocalOutputBubbleBusname
+								+ OpenBracket);
+						buf.append(outputStartIndex + BubbleOffset);
+						BubbleOffset++;
+						buf.append(CloseBracket + ";");
+						Contents.add(buf.toString());
+					} else {
+						System.out.println("Skipped output "+HDLGeneratorFactory.FPGAOutputPinName+(OutputId + pinId));
 					}
-					Temp.append("s_"
-							+ HDLGeneratorFactory.LocalOutputBubbleBusname
-							+ OpenBracket);
-					Temp.append(BubbleInfo.GetOutputStartIndex() + BubbleOffset);
-					BubbleOffset++;
-					Temp.append(CloseBracket + ";");
-					Contents.add(Temp.toString());
 				}
 			}
 		}

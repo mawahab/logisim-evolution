@@ -40,6 +40,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
+import javax.help.UnsupportedOperationException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -47,6 +48,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import org.antlr.grammar.v3.ANTLRv3Parser.throwsSpec_return;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;
@@ -82,6 +84,8 @@ public class FPGAIOInformationContainer {
 			switch (comp) {
 			case PortIO:
 				return nbSwitch;
+			case KeyPad:
+				return 0;
 			case LocalBus:
 				return 16;
 			default:
@@ -93,6 +97,8 @@ public class FPGAIOInformationContainer {
 			switch (comp) {
 			case Button:
 				return 1;
+			case KeyPad:
+				return 4;
 			case DIPSwitch:
 				return nbSwitch;
 			case LocalBus:
@@ -108,6 +114,8 @@ public class FPGAIOInformationContainer {
 				return 1;
 			case SevenSegment:
 				return 8;
+			case KeyPad:
+				return 4;
 			case RGBLED:
 				return 3;
 			case LocalBus:
@@ -123,6 +131,9 @@ public class FPGAIOInformationContainer {
 			case Button:
 			case Pin:
 				return 1;
+			case KeyPad:
+				//FIXEM
+				return 8;
 			case DIPSwitch:
 			case PortIO:
 				return nbSwitch;
@@ -177,77 +188,84 @@ public class FPGAIOInformationContainer {
 	final static Logger logger = LoggerFactory
 			.getLogger(FPGAIOInformationContainer.class);
 
-	private IOComponentTypes MyType;
-	private long MyIdentifier;
-	private BoardRectangle MyRectangle;
-	private Map<Integer, String> MyPinLocations;
-	private Integer NrOfPins;
-	private char MyPullBehavior;
-	private char MyActivityLevel;
-	private char MyIOStandard;
-	private char MyDriveStrength;
+	private IOComponentTypes type;
+	private long identifier;
+	private BoardRectangle rectangle;
+	private Map<Integer, String> inputPinLocations;
+	private Map<Integer, String> outputPinLocations;
+	private Map<Integer, String> inoutPinLocations;
+	
+	private int nrOfPins;
+	private char pullBehavior;
+	private char activityLevel;
+	private char pinIOStandard;
+	private char driveStrength;
 
 	private boolean abort = false;
 
+
 	public FPGAIOInformationContainer() {
-		MyType = IOComponentTypes.Unknown;
-		MyIdentifier = -1;
-		MyRectangle = null;
-		MyPinLocations = new HashMap<Integer, String>();
-		NrOfPins = 0;
-		MyPullBehavior = PullBehaviors.Unknown;
-		MyActivityLevel = PinActivity.Unknown;
-		MyIOStandard = IoStandards.Unknown;
-		MyDriveStrength = DriveStrength.Unknown;
+		type = IOComponentTypes.Unknown;
+		identifier = -1;
+		rectangle = null;
+		inputPinLocations =new HashMap<Integer, String>();
+		outputPinLocations =new HashMap<Integer, String>();
+		inoutPinLocations =   new HashMap<Integer, String>();
+		
+		nrOfPins = 0;
+		pullBehavior = PullBehaviors.Unknown;
+		activityLevel = PinActivity.Unknown;
+		pinIOStandard = IoStandards.Unknown;
+		driveStrength = DriveStrength.Unknown;
 	}
 
 	public FPGAIOInformationContainer(IOComponentTypes Type,
 			BoardRectangle rect, BoardDialog parent) {
-		MyType = Type;
-		MyIdentifier = -1;
-		MyRectangle = rect;
-		MyPinLocations = new HashMap<Integer, String>();
-		NrOfPins = 0;
-		MyPullBehavior = PullBehaviors.Unknown;
-		MyActivityLevel = PinActivity.Unknown;
-		MyIOStandard = IoStandards.Unknown;
-		MyDriveStrength = DriveStrength.Unknown;
+		type = Type;
+		identifier = -1;
+		rectangle = rect;
+		inputPinLocations =new HashMap<Integer, String>();
+		outputPinLocations =new HashMap<Integer, String>();
+		inoutPinLocations =   new HashMap<Integer, String>();
+		nrOfPins = 0;
+		pullBehavior = PullBehaviors.Unknown;
+		activityLevel = PinActivity.Unknown;
+		pinIOStandard = IoStandards.Unknown;
+		driveStrength = DriveStrength.Unknown;
 		if (IOComponentTypes.SimpleInputSet.contains(Type)) {
-			if (MyType.equals(IOComponentTypes.DIPSwitch)
-					|| MyType.equals(IOComponentTypes.PortIO)) {
+			if (type.equals(IOComponentTypes.DIPSwitch)
+					|| type.equals(IOComponentTypes.PortIO)) {
 				GetSizeInformationDialog(parent);
 			}
 			GetSimpleInformationDialog(parent);
 			return;
 		}
 
-		MyType = IOComponentTypes.Unknown;
+		type = IOComponentTypes.Unknown;
 	}
 
-	public FPGAIOInformationContainer(IOComponentTypes Type,
-			BoardRectangle rect, String loc, String pull, String active,
-			String standard, String drive) {
-		this.Set(Type, rect, loc, pull, active, standard, drive);
-	}
 
 	public FPGAIOInformationContainer(Node DocumentInfo) {
 		/*
 		 * This constructor is used to create an element during the reading of a
 		 * board information xml file
 		 */
-		MyType = IOComponentTypes.Unknown;
-		MyIdentifier = -1;
-		MyRectangle = null;
-		MyPinLocations = new HashMap<Integer, String>();
-		NrOfPins = 0;
-		MyPullBehavior = PullBehaviors.Unknown;
-		MyActivityLevel = PinActivity.Unknown;
-		MyIOStandard = IoStandards.Unknown;
-		MyDriveStrength = DriveStrength.Unknown;
+		type = IOComponentTypes.Unknown;
+		identifier = -1;
+		rectangle = null;
+		inputPinLocations =new HashMap<Integer, String>();
+		outputPinLocations =new HashMap<Integer, String>();
+		inoutPinLocations =   new HashMap<Integer, String>();
+
+		nrOfPins = 0;
+		pullBehavior = PullBehaviors.Unknown;
+		activityLevel = PinActivity.Unknown;
+		pinIOStandard = IoStandards.Unknown;
+		driveStrength = DriveStrength.Unknown;
 		IOComponentTypes SetId = IOComponentTypes
 				.getEnumFromString(DocumentInfo.getNodeName());
 		if (IOComponentTypes.KnownComponentSet.contains(SetId)) {
-			MyType = SetId;
+			type = SetId;
 		} else {
 			return;
 		}
@@ -255,180 +273,237 @@ public class FPGAIOInformationContainer {
 		int x = -1, y = -1, width = -1, height = -1;
 		for (int i = 0; i < Attrs.getLength(); i++) {
 			Node ThisAttr = Attrs.item(i);
-			if (ThisAttr.getNodeName().equals(BoardWriterClass.LocationXString)) {
-				x = Integer.parseInt(ThisAttr.getNodeValue());
+			String nodeName = ThisAttr.getNodeName();
+			String nodeValue = ThisAttr.getNodeValue();
+			if (nodeName.equals(BoardWriterClass.LocationXString)) {
+				x = Integer.parseInt(nodeValue);
 			}
-			if (ThisAttr.getNodeName().equals(BoardWriterClass.LocationYString)) {
-				y = Integer.parseInt(ThisAttr.getNodeValue());
+			if (nodeName.equals(BoardWriterClass.LocationYString)) {
+				y = Integer.parseInt(nodeValue);
 			}
-			if (ThisAttr.getNodeName().equals(BoardWriterClass.WidthString)) {
-				width = Integer.parseInt(ThisAttr.getNodeValue());
+			if (nodeName.equals(BoardWriterClass.WidthString)) {
+				width = Integer.parseInt(nodeValue);
 			}
-			if (ThisAttr.getNodeName().equals(BoardWriterClass.HeightString)) {
-				height = Integer.parseInt(ThisAttr.getNodeValue());
+			if (nodeName.equals(BoardWriterClass.HeightString)) {
+				height = Integer.parseInt(nodeValue);
 			}
-			if (ThisAttr.getNodeName().equals(
-					BoardWriterClass.PinLocationString)) {
-				NrOfPins = 1;
-				MyPinLocations.put(0, ThisAttr.getNodeValue());
+			if (nodeName.equals(BoardWriterClass.PinLocationString)) {
+				nrOfPins = 1;
+				String nodeval = nodeValue;
+				if (nodeval.startsWith("IN:")) {
+					nodeval=nodeval.substring(3);
+					inputPinLocations.put(0,nodeval);
+				} else if (nodeval.startsWith("OUT:")) {
+					nodeval=nodeval.substring(4);
+					outputPinLocations.put(0,nodeval);
+				} else if (nodeval.startsWith("INOUT:")) {
+					nodeval=nodeval.substring(6);
+					inoutPinLocations.put(0,nodeval);
+				} else {
+					throw new UnsupportedOperationException("NYI");
+				}
+		
 			}
-			if (ThisAttr.getNodeName().equals(
+			if (nodeName.equals(
 					BoardWriterClass.MultiPinInformationString)) {
-				NrOfPins = Integer.parseInt(ThisAttr.getNodeValue());
+				nrOfPins = Integer.parseInt(nodeValue);
 			}
-			if (ThisAttr.getNodeName().startsWith(
+			if (nodeName.startsWith(
 					BoardWriterClass.MultiPinPrefixString)) {
-				String Id = ThisAttr.getNodeName().substring(
+				String Id = nodeName.substring(
 						BoardWriterClass.MultiPinPrefixString.length());
-				MyPinLocations.put(Integer.parseInt(Id),
-						ThisAttr.getNodeValue());
+				String nodeval = nodeValue;
+				int id = Integer.parseInt(Id);
+				if (nodeval.startsWith("IN:")) {
+					nodeval=nodeval.substring(3);
+					inputPinLocations.put(id,nodeval);
+				} else if (nodeval.startsWith("OUT:")) {
+					nodeval=nodeval.substring(4);
+					outputPinLocations.put(id,nodeval);
+				} else if (nodeval.startsWith("INOUT:")) {
+					nodeval=nodeval.substring(6);
+					inoutPinLocations.put(id,nodeval);
+				} else {
+					throw new UnsupportedOperationException("NYI");
+				}
 			}
-			if (ThisAttr.getNodeName().equals(
+			if (nodeName.equals(
 					DriveStrength.DriveAttributeString)) {
-				MyDriveStrength = DriveStrength.getId(ThisAttr.getNodeValue());
+				driveStrength = DriveStrength.getId(nodeValue);
 			}
-			if (ThisAttr.getNodeName()
-					.equals(PullBehaviors.PullAttributeString)) {
-				MyPullBehavior = PullBehaviors.getId(ThisAttr.getNodeValue());
+			if (nodeName.equals(PullBehaviors.PullAttributeString)) {
+				pullBehavior = PullBehaviors.getId(nodeValue);
 			}
-			if (ThisAttr.getNodeName().equals(IoStandards.IOAttributeString)) {
-				MyIOStandard = IoStandards.getId(ThisAttr.getNodeValue());
+			if (nodeName.equals(IoStandards.IOAttributeString)) {
+				pinIOStandard = IoStandards.getId(nodeValue);
 			}
-			if (ThisAttr.getNodeName().equals(
-					PinActivity.ActivityAttributeString)) {
-				MyActivityLevel = PinActivity.getId(ThisAttr.getNodeValue());
+			if (nodeName.equals(PinActivity.ActivityAttributeString)) {
+				activityLevel = PinActivity.getId(nodeValue);
 			}
 		}
 		if ((x < 0) || (y < 0) || (width < 1) || (height < 1)) {
-			MyType = IOComponentTypes.Unknown;
+			type = IOComponentTypes.Unknown;
 			return;
 		}
 		boolean PinsComplete = true;
-		for (int i = 0; i < NrOfPins; i++) {
-			if (!MyPinLocations.containsKey(i)) {
+		for (int i = 0; i < nrOfPins; i++) {
+			boolean outDefined = outputPinLocations.containsKey(i);
+			boolean inoutDefined = inoutPinLocations.containsKey(i);
+			boolean inputDefined = inputPinLocations.containsKey(i);
+			if (!outDefined && !inoutDefined && !inputDefined ) {
 				logger.warn("Bizar missing pin {} of component!", i);
 				PinsComplete = false;
 			}
 		}
 		if (!PinsComplete) {
-			MyType = IOComponentTypes.Unknown;
+			type = IOComponentTypes.Unknown;
 			return;
 		}
-		if (MyType.equals(IOComponentTypes.DIPSwitch)
-				|| MyType.equals(IOComponentTypes.PortIO)) {
-			MyType.setNbSwitch(NrOfPins);
+		if (type.equals(IOComponentTypes.DIPSwitch)
+				|| type.equals(IOComponentTypes.PortIO)) {
+			type.setNbSwitch(nrOfPins);
 		}
-		if (MyType.equals(IOComponentTypes.Pin))
-			MyActivityLevel = PinActivity.ActiveHigh;
-		MyRectangle = new BoardRectangle(x, y, width, height);
+		if (type.equals(IOComponentTypes.Pin))
+			activityLevel = PinActivity.ActiveHigh;
+		rectangle = new BoardRectangle(x, y, width, height);
 	}
 	
 	public void edit(BoardDialog parent) {
 		if (!defined())
 			return;
-		if (MyType.equals(IOComponentTypes.DIPSwitch)
-				|| MyType.equals(IOComponentTypes.PortIO)) {
+		if (type.equals(IOComponentTypes.DIPSwitch)
+				|| type.equals(IOComponentTypes.PortIO)) {
 			GetSizeInformationDialog(parent);
 		}
 		GetSimpleInformationDialog(parent);
 	}
 
 	public Boolean defined() {
-		return MyIdentifier != -1;
+		return identifier != -1;
 	}
 
 	public char GetActivityLevel() {
-		return MyActivityLevel;
+		return activityLevel;
 	}
 
+	private String getPinLocation(int i) {
+		if (inputPinLocations.containsKey(i)) {
+			return inputPinLocations.get(i);
+		}
+		if (inoutPinLocations.containsKey(i)) {
+			return inoutPinLocations.get(i);
+		}
+		if (outputPinLocations.containsKey(i)) {
+			return outputPinLocations.get(i);
+		}
+		return null;
+	}
+	
 	private ArrayList<String> GetAlteraPinStrings(String direction, int StartId) {
 		/*
 		 * for the time being we ignore the InputPins variable. It has to be
 		 * implemented for more complex components
 		 */
+		String baseNetName =  "";
 		ArrayList<String> Contents = new ArrayList<String>();
-		for (int i = 0; i < NrOfPins; i++) {
-			String NetName = "";
-			if (direction == "in") {
-				NetName = HDLGeneratorFactory.FPGAInputPinName + "_"
-						+ Integer.toString(StartId + i);
-			} else if (direction == "inout") {
-				NetName = HDLGeneratorFactory.FPGAInOutPinName + "_"
-						+ Integer.toString(StartId + i);
-			} else {
-				NetName = HDLGeneratorFactory.FPGAOutputPinName + "_"
-						+ Integer.toString(StartId + i);
-			}
-			// String NetName = (InputPins) ?
-			// HDLGeneratorFactory.FPGAInputPinName + "_" +
-			// Integer.toString(StartId + i)
-			// : HDLGeneratorFactory.FPGAOutputPinName + "_" +
-			// Integer.toString(StartId + i);
-			Contents.add("    set_location_assignment " + MyPinLocations.get(i)
-					+ " -to " + NetName);
-			if (MyPullBehavior == PullBehaviors.PullUp) {
-				Contents.add("    set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to " + NetName);
+		int nbInputs = inputPinLocations.size();
+		int nbOutputs = outputPinLocations.size();
+		int nbInoutputs = inoutPinLocations.size();
+		int offset = 0;
+		Map<Integer, String> pinLocMap =null;
+		if (direction == "in") {
+			baseNetName = HDLGeneratorFactory.FPGAInputPinName + "_";
+			pinLocMap = inputPinLocations;
+		} else if (direction == "inout") {
+			baseNetName = HDLGeneratorFactory.FPGAInOutPinName + "_";
+			pinLocMap = inoutPinLocations;
+			offset = nbInputs;
+		} else if (direction == "out") {
+			baseNetName = HDLGeneratorFactory.FPGAOutputPinName + "_";
+			pinLocMap = outputPinLocations;
+			offset = nbInputs+nbInoutputs;
+		}
+		
+		for (int i : pinLocMap.keySet()) {
+			String netName = baseNetName + Integer.toString(StartId + i-offset);
+			String pinloc = pinLocMap.get(i);
+			Contents.add("    set_location_assignment " + pinloc + " -to " + netName);
+			System.out.println("Warning : "+direction+" pin "+pinloc+" found for index "+i+ " and mapped to "+netName);
+	
+			if (pullBehavior == PullBehaviors.PullUp) {
+				Contents.add("    set_instance_assignment -name WEAK_PULL_UP_RESISTOR ON -to " + netName);
 			}
 		}
 		return Contents;
 	}
 
 	public Element GetDocumentElement(Document doc) {
-		if (MyType.equals(IOComponentTypes.Unknown)) {
+		if (type.equals(IOComponentTypes.Unknown)) {
 			return null;
 		}
 		try {
-			Element result = doc.createElement(MyType.toString());
+			Element result = doc.createElement(type.toString());
 			result.setAttribute(BoardWriterClass.LocationXString,
-					Integer.toString(MyRectangle.getXpos()));
+					Integer.toString(rectangle.getXpos()));
 			Attr ypos = doc.createAttribute(BoardWriterClass.LocationYString);
-			ypos.setValue(Integer.toString(MyRectangle.getYpos()));
+			ypos.setValue(Integer.toString(rectangle.getYpos()));
 			result.setAttributeNode(ypos);
 			Attr width = doc.createAttribute(BoardWriterClass.WidthString);
-			width.setValue(Integer.toString(MyRectangle.getWidth()));
+			width.setValue(Integer.toString(rectangle.getWidth()));
 			result.setAttributeNode(width);
 			Attr height = doc.createAttribute(BoardWriterClass.HeightString);
-			height.setValue(Integer.toString(MyRectangle.getHeight()));
+			height.setValue(Integer.toString(rectangle.getHeight()));
 			result.setAttributeNode(height);
-			if (NrOfPins == 1) {
-				Attr loc = doc
-						.createAttribute(BoardWriterClass.PinLocationString);
-				loc.setValue(MyPinLocations.get(0));
+			if (nrOfPins == 1) {
+				Attr loc = doc.createAttribute(BoardWriterClass.PinLocationString);
+				//throw new UnsupportedOperationException("FIXME ");
+				if (inoutPinLocations.containsKey(0)) {
+					loc.setValue(inputPinLocations.get(0));
+				} else if (outputPinLocations.containsKey(0)) {
+					loc.setValue(outputPinLocations.get(0));
+				} else if (inoutPinLocations.containsKey(0)) {
+					loc.setValue(inputPinLocations.get(0));
+				}
 				result.setAttributeNode(loc);
 			} else {
 				Attr NrPins = doc
 						.createAttribute(BoardWriterClass.MultiPinInformationString);
-				NrPins.setValue(NrOfPins.toString());
+				NrPins.setValue(""+nrOfPins);
 				result.setAttributeNode(NrPins);
-				for (int i = 0; i < NrOfPins; i++) {
-					String PinName = BoardWriterClass.MultiPinPrefixString
-							+ Integer.toString(i);
+				for (int i = 0; i < nrOfPins; i++) {
+					String PinName = BoardWriterClass.MultiPinPrefixString+ Integer.toString(i);
 					Attr PinX = doc.createAttribute(PinName);
-					PinX.setValue(MyPinLocations.get(i));
+					if (inoutPinLocations.containsKey(0)) {
+						PinX.setValue(inputPinLocations.get(0));
+					} else if (outputPinLocations.containsKey(0)) {
+						PinX.setValue(outputPinLocations.get(0));
+					} else if (inoutPinLocations.containsKey(0)) {
+						PinX.setValue(inputPinLocations.get(0));
+					}
 					result.setAttributeNode(PinX);
 				}
 			}
-			if (MyDriveStrength != DriveStrength.Unknown) {
+			if (driveStrength != DriveStrength.Unknown) {
 				Attr drive = doc
 						.createAttribute(DriveStrength.DriveAttributeString);
-				drive.setValue(DriveStrength.Behavior_strings[MyDriveStrength]);
+				drive.setValue(DriveStrength.Behavior_strings[driveStrength]);
 				result.setAttributeNode(drive);
 			}
-			if (MyPullBehavior != PullBehaviors.Unknown) {
+			if (pullBehavior != PullBehaviors.Unknown) {
 				Attr pull = doc
 						.createAttribute(PullBehaviors.PullAttributeString);
-				pull.setValue(PullBehaviors.Behavior_strings[MyPullBehavior]);
+				pull.setValue(PullBehaviors.Behavior_strings[pullBehavior]);
 				result.setAttributeNode(pull);
 			}
-			if (MyIOStandard != IoStandards.Unknown) {
+			if (pinIOStandard != IoStandards.Unknown) {
 				Attr stand = doc.createAttribute(IoStandards.IOAttributeString);
-				stand.setValue(IoStandards.Behavior_strings[MyIOStandard]);
+				stand.setValue(IoStandards.Behavior_strings[pinIOStandard]);
 				result.setAttributeNode(stand);
 			}
-			if (MyActivityLevel != PinActivity.Unknown) {
+			if (activityLevel != PinActivity.Unknown) {
 				Attr act = doc
 						.createAttribute(PinActivity.ActivityAttributeString);
-				act.setValue(PinActivity.Behavior_strings[MyActivityLevel]);
+				act.setValue(PinActivity.Behavior_strings[activityLevel]);
 				result.setAttributeNode(act);
 			}
 			return result;
@@ -442,19 +517,19 @@ public class FPGAIOInformationContainer {
 	}
 
 	public char GetDrive() {
-		return MyDriveStrength;
+		return driveStrength;
 	}
 
 	public long GetId() {
-		return MyIdentifier;
+		return identifier;
 	}
 
 	public char GetIOStandard() {
-		return MyIOStandard;
+		return pinIOStandard;
 	}
 
 	public int getNrOfPins() {
-		return NrOfPins;
+		return nrOfPins;
 	}
 
 	public ArrayList<String> GetPinlocStrings(int Vendor, String direction,
@@ -472,16 +547,16 @@ public class FPGAIOInformationContainer {
 	}
 
 	public char GetPullBehavior() {
-		return MyPullBehavior;
+		return pullBehavior;
 	}
 
 	public BoardRectangle GetRectangle() {
-		return MyRectangle;
+		return rectangle;
 	}
 
 	private void GetSimpleInformationDialog(BoardDialog parent) {
-		int NrOfDevicePins = IOComponentTypes.GetNrOfFPGAPins(MyType);
-		final JDialog selWindow = new JDialog(parent.GetPanel(), MyType
+		int NrOfDevicePins = IOComponentTypes.GetNrOfFPGAPins(type);
+		final JDialog selWindow = new JDialog(parent.GetPanel(), type
 				+ " properties");
 		JComboBox<String> DriveInput = new JComboBox<>(
 				DriveStrength.Behavior_strings);
@@ -492,7 +567,7 @@ public class FPGAIOInformationContainer {
 		ActionListener actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("cancel")) {
-					MyType = IOComponentTypes.Unknown;
+					type = IOComponentTypes.Unknown;
 					abort = true;
 				}
 				selWindow.setVisible(false);
@@ -505,7 +580,7 @@ public class FPGAIOInformationContainer {
 		c.gridy = -1;
 		ArrayList<JTextField> LocInputs = new ArrayList<JTextField>();
 		ArrayList<String> PinLabels;
-		switch (MyType) {
+		switch (type) {
 		case SevenSegment:
 			PinLabels = SevenSegment.GetLabels();
 			break;
@@ -513,6 +588,9 @@ public class FPGAIOInformationContainer {
 			PinLabels = RGBLed.GetLabels();
 			break;
 		case DIPSwitch:
+			PinLabels = DipSwitch.GetLabels(NrOfDevicePins);
+			break;
+		case KeyPad:
 			PinLabels = DipSwitch.GetLabels(NrOfDevicePins);
 			break;
 		case PortIO:
@@ -546,7 +624,8 @@ public class FPGAIOInformationContainer {
 			selWindow.add(LocText, c);
 			JTextField txt = new JTextField(6);
 			if (defined()) {
-				txt.setText(MyPinLocations.get(i));
+				throw new UnsupportedOperationException("NYI");
+				//txt.setText(pinLocations.get(i));
 			}
 			LocInputs.add(txt);
 			c.gridx = 1 + offset;
@@ -562,45 +641,45 @@ public class FPGAIOInformationContainer {
 		JComboBox<String> StandardInput = new JComboBox<>(
 				IoStandards.Behavior_strings);
 		if (defined())
-			StandardInput.setSelectedIndex(MyIOStandard);
+			StandardInput.setSelectedIndex(pinIOStandard);
 		else
 			StandardInput.setSelectedIndex(parent.GetDefaultStandard());
 		c.gridx = 1;
 		selWindow.add(StandardInput, c);
 
-		if (IOComponentTypes.OutputComponentSet.contains(MyType)) {
+		if (IOComponentTypes.OutputComponentSet.contains(type)) {
 			JLabel DriveText = new JLabel("Specify FPGA pin drive strength:");
 			c.gridy++;
 			c.gridx = 0;
 			selWindow.add(DriveText, c);
 			if (defined())
-				DriveInput.setSelectedIndex(MyDriveStrength);
+				DriveInput.setSelectedIndex(driveStrength);
 			else
 				DriveInput.setSelectedIndex(parent.GetDefaultDriveStrength());
 			c.gridx = 1;
 			selWindow.add(DriveInput, c);
 		}
 
-		if (IOComponentTypes.InputComponentSet.contains(MyType)) {
+		if (IOComponentTypes.InputComponentSet.contains(type)) {
 			JLabel PullText = new JLabel("Specify FPGA pin pull behavior:");
 			c.gridy++;
 			c.gridx = 0;
 			selWindow.add(PullText, c);
 			if (defined())
-				PullInput.setSelectedIndex(MyPullBehavior);
+				PullInput.setSelectedIndex(pullBehavior);
 			else
 				PullInput.setSelectedIndex(parent.GetDefaultPullSelection());
 			c.gridx = 1;
 			selWindow.add(PullInput, c);
 		}
 
-		if (!IOComponentTypes.InOutComponentSet.contains(MyType)) {
-			JLabel ActiveText = new JLabel("Specify " + MyType + " activity:");
+		if (!IOComponentTypes.InOutComponentSet.contains(type)) {
+			JLabel ActiveText = new JLabel("Specify " + type + " activity:");
 			c.gridy++;
 			c.gridx = 0;
 			selWindow.add(ActiveText, c);
 			if (defined())
-				ActiveInput.setSelectedIndex(MyActivityLevel);
+				ActiveInput.setSelectedIndex(activityLevel);
 			else
 				ActiveInput.setSelectedIndex(parent.GetDefaultActivity());
 			c.gridx = 1;
@@ -645,28 +724,29 @@ public class FPGAIOInformationContainer {
 				}
 				if (correct) {
 					parent.SetDefaultStandard(StandardInput.getSelectedIndex());
-					NrOfPins = NrOfDevicePins;
+					nrOfPins = NrOfDevicePins;
 					for (int i = 0; i < NrOfDevicePins; i++) {
-						MyPinLocations.put(i, LocInputs.get(i).getText());
+						throw new UnsupportedOperationException("NYI");
+						//pinLocations.put(i, LocInputs.get(i).getText());
 					}
-					MyIOStandard = IoStandards.getId(StandardInput
+					pinIOStandard = IoStandards.getId(StandardInput
 							.getSelectedItem().toString());
-					if (IOComponentTypes.OutputComponentSet.contains(MyType)) {
+					if (IOComponentTypes.OutputComponentSet.contains(type)) {
 						parent.SetDefaultDriveStrength(DriveInput
 								.getSelectedIndex());
-						MyDriveStrength = DriveStrength.getId(DriveInput
+						driveStrength = DriveStrength.getId(DriveInput
 								.getSelectedItem().toString());
 					}
-					if (IOComponentTypes.InputComponentSet.contains(MyType)) {
+					if (IOComponentTypes.InputComponentSet.contains(type)) {
 						parent.SetDefaultPullSelection(PullInput
 								.getSelectedIndex());
-						MyPullBehavior = PullBehaviors.getId(PullInput
+						pullBehavior = PullBehaviors.getId(PullInput
 								.getSelectedItem().toString());
 					}
-					if (!IOComponentTypes.InOutComponentSet.contains(MyType)) {
+					if (!IOComponentTypes.InOutComponentSet.contains(type)) {
 						parent.SetDefaultActivity(ActiveInput
 								.getSelectedIndex());
-						MyActivityLevel = PinActivity.getId(ActiveInput
+						activityLevel = PinActivity.getId(ActiveInput
 								.getSelectedItem().toString());
 					}
 					abort = true;
@@ -678,12 +758,12 @@ public class FPGAIOInformationContainer {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private void GetSizeInformationDialog(BoardDialog parent) {
-		int NrOfDevicePins = IOComponentTypes.GetNrOfFPGAPins(MyType);
+		int NrOfDevicePins = IOComponentTypes.GetNrOfFPGAPins(type);
 		int min = 1;
 		int max = 1;
 		String text = "null";
 
-		switch (MyType) {
+		switch (type) {
 		case DIPSwitch:
 			min = DipSwitch.MIN_SWITCH;
 			max = DipSwitch.MAX_SWITCH;
@@ -698,12 +778,12 @@ public class FPGAIOInformationContainer {
 			break;
 		}
 
-		final JDialog selWindow = new JDialog(parent.GetPanel(), MyType
+		final JDialog selWindow = new JDialog(parent.GetPanel(), type
 				+ " number of " + text);
 		ActionListener actionListener = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (e.getActionCommand().equals("next")) {
-					MyType.setNbSwitch(Integer.valueOf(((JComboBox) (selWindow
+					type.setNbSwitch(Integer.valueOf(((JComboBox) (selWindow
 							.getContentPane().getComponents()[1]))
 							.getSelectedItem().toString()));
 					// setNrOfPins(Integer.valueOf(((JComboBox)(selWindow.getContentPane().getComponents()[1])).getSelectedItem().toString()));
@@ -750,21 +830,21 @@ public class FPGAIOInformationContainer {
 	}
 
 	public IOComponentTypes GetType() {
-		return MyType;
+		return type;
 	}
 
 	private ArrayList<String> GetXilinxUCFStrings(String direction, int StartId) {
 		ArrayList<String> Contents = new ArrayList<String>();
 		StringBuffer Temp = new StringBuffer();
 		Integer start = 0;
-		Integer end = NrOfPins;
+		Integer end = nrOfPins;
 		ArrayList<String> labels = null;
-		if (MyType.equals(IOComponentTypes.PortIO)) {
-			labels = PortIO.GetLabels(IOComponentTypes.GetNrOfFPGAPins(MyType));
-		} else if (MyType.equals(IOComponentTypes.LocalBus)) {
+		if (type.equals(IOComponentTypes.PortIO)) {
+			labels = PortIO.GetLabels(IOComponentTypes.GetNrOfFPGAPins(type));
+		} else if (type.equals(IOComponentTypes.LocalBus)) {
 			labels = ReptarLocalBus.GetLabels();
 			if (direction.equals("in")) {
-				end = IOComponentTypes.GetFPGAInputRequirement(MyType);
+				end = IOComponentTypes.GetFPGAInputRequirement(type);
 			} else if (direction.equals("out")) {
 				// TODO: YSY
 				Contents.add("NET \"FPGA_LB_OUT_0\" LOC = \"R24\" | IOSTANDARD = LVCMOS18 ; # SP6_LB_WAIT3_o");
@@ -774,38 +854,40 @@ public class FPGAIOInformationContainer {
 				// end = start +
 				// IOComponentTypes.GetFPGAOutputRequirement(MyType);
 			} else if (direction.equals("inout")) {
-				start = IOComponentTypes.GetFPGAInputRequirement(MyType)
-						+ IOComponentTypes.GetFPGAOutputRequirement(MyType);
-				end = start + IOComponentTypes.GetFPGAInOutRequirement(MyType);
+				start = IOComponentTypes.GetFPGAInputRequirement(type)
+						+ IOComponentTypes.GetFPGAOutputRequirement(type);
+				end = start + IOComponentTypes.GetFPGAInOutRequirement(type);
 			}
-		} else if (MyType.equals(IOComponentTypes.DIPSwitch)) {
+		} else if (type.equals(IOComponentTypes.DIPSwitch)) {
 			labels = DipSwitch.GetLabels(IOComponentTypes
-					.GetNrOfFPGAPins(MyType));
-		} else if (MyType.equals(IOComponentTypes.SevenSegment)) {
+					.GetNrOfFPGAPins(type));
+		} else if (type.equals(IOComponentTypes.SevenSegment)) {
 			labels = SevenSegment.GetLabels();
-		} else if (MyType.equals(IOComponentTypes.RGBLED)) {
+		} else if (type.equals(IOComponentTypes.RGBLED)) {
 			labels = RGBLed.GetLabels();
 		}
 		for (int i = start; i < end; i++) {
 			Temp.setLength(0);
-			Temp.append("LOC = \"" + MyPinLocations.get(i) + "\" ");
-			if (MyPullBehavior != PullBehaviors.Unknown
-					&& MyPullBehavior != PullBehaviors.Float) {
+			
+			Temp.append("LOC = \"" + getPinLocation(i) + "\" ");
+			
+			if (pullBehavior != PullBehaviors.Unknown
+					&& pullBehavior != PullBehaviors.Float) {
 				Temp.append("| "
 						+ PullBehaviors
-								.getContraintedPullString(MyPullBehavior) + " ");
+								.getContraintedPullString(pullBehavior) + " ");
 			}
-			if (MyDriveStrength != DriveStrength.Unknown
-					&& MyDriveStrength != DriveStrength.DefaulStength) {
+			if (driveStrength != DriveStrength.Unknown
+					&& driveStrength != DriveStrength.DefaulStength) {
 				Temp.append("| DRIVE = "
 						+ DriveStrength
-								.GetContraintedDriveStrength(MyDriveStrength)
+								.GetContraintedDriveStrength(driveStrength)
 						+ " ");
 			}
-			if (MyIOStandard != IoStandards.Unknown
-					&& MyIOStandard != IoStandards.DefaulStandard) {
+			if (pinIOStandard != IoStandards.Unknown
+					&& pinIOStandard != IoStandards.DefaulStandard) {
 				Temp.append("| IOSTANDARD = "
-						+ IoStandards.GetConstraintedIoStandard(MyIOStandard)
+						+ IoStandards.GetConstraintedIoStandard(pinIOStandard)
 						+ " ");
 			}
 			Temp.append(";");
@@ -835,7 +917,7 @@ public class FPGAIOInformationContainer {
 
 	private ArrayList<String> GetVivadoXDCStrings(String direction, int StartId) {
 		ArrayList<String> contents = new ArrayList<String>();
-		for (int i = 0; i < NrOfPins; i++) {
+		for (int i = 0; i < nrOfPins; i++) {
 			String netName = "";
 			if (direction.equals("in")) {
 				netName = HDLGeneratorFactory.FPGAInputPinName + "_"
@@ -847,7 +929,7 @@ public class FPGAIOInformationContainer {
 				netName = HDLGeneratorFactory.FPGAOutputPinName + "_"
 						+ Integer.toString(StartId + i);
 			}
-			contents.add("set_property PACKAGE_PIN " + MyPinLocations.get(i) +
+			contents.add("set_property PACKAGE_PIN " + getPinLocation(i) +
 					" [get_ports {" + netName + "}]");
 			contents.add("    set_property IOSTANDARD LVCMOS33 [get_ports {" + netName + "}]");
 		}
@@ -855,44 +937,29 @@ public class FPGAIOInformationContainer {
 	}
 
 	public boolean IsInput() {
-		return IOComponentTypes.InputComponentSet.contains(MyType);
+		return IOComponentTypes.InputComponentSet.contains(type);
 	}
 
 	public boolean IsInputOutput() {
-		return IOComponentTypes.InOutComponentSet.contains(MyType);
+		return IOComponentTypes.InOutComponentSet.contains(type);
 	}
 
 	public boolean IsKnownComponent() {
-		return IOComponentTypes.KnownComponentSet.contains(MyType);
+		return IOComponentTypes.KnownComponentSet.contains(type);
 	}
 
 	public boolean IsOutput() {
-		return IOComponentTypes.OutputComponentSet.contains(MyType);
-	}
-
-	public void Set(IOComponentTypes Type, BoardRectangle rect, String loc,
-			String pull, String active, String standard, String drive) {
-		MyType = Type;
-		MyRectangle = rect;
-		rect.SetActiveOnHigh(active
-				.equals(PinActivity.Behavior_strings[PinActivity.ActiveHigh]));
-		NrOfPins = 1;
-		MyPinLocations.put(0, loc);
-		MyPullBehavior = PullBehaviors.getId(pull);
-		MyActivityLevel = PinActivity.getId(active);
-		MyIOStandard = IoStandards.getId(standard);
-		MyIdentifier = 0;
-		MyDriveStrength = DriveStrength.getId(drive);
+		return IOComponentTypes.OutputComponentSet.contains(type);
 	}
 
 	public void SetId(long id) {
-		MyIdentifier = id;
+		identifier = id;
 	}
 
 	public void setNrOfPins(int count) {
 		if (GetType().equals(IOComponentTypes.DIPSwitch)
 				|| GetType().equals(IOComponentTypes.PortIO)) {
-			NrOfPins = count;
+			nrOfPins = count;
 		}
 	}
 

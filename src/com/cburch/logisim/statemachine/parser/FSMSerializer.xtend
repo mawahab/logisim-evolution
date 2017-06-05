@@ -30,9 +30,7 @@ import java.io.OutputStream
 import javax.swing.JOptionPane
 
 /** 
- * GecosScilabFrontend is a sample module. When the script evaluator encounters
- * the 'GecosScilabFrontend' function, it calls the compute method.
- */ 
+  */ 
 class FSMSerializer {
 	
 	def static String saveAsString(FSM fsm) {
@@ -101,7 +99,7 @@ class FSMSerializer {
 		return fsm
 	}
 
-	def static EObject parse(InputStream in) throws IOException {
+	def public static EObject parse(InputStream in) throws IOException {
 		var FSMDSLStandaloneSetup instance = new FSMDSLStandaloneSetup()
 		var Injector injector = instance.createInjectorAndDoEMFRegistration()
 		FSMDSLStandaloneSetup.doSetup()

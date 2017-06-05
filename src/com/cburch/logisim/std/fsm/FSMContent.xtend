@@ -216,6 +216,7 @@ default @[ 392 , 398 , 50 , 21 ] ; S2 -> S1 when A [ 2 : 1 ] == "11" @[ 557 ,
 			ctrl.get(CLK).setToolTip(Strings::getter("registerClkTip"))
 			ctrl.get(CLR).setToolTip(Strings::getter("registerClrTip"))
 			ctrl.get(EN).setToolTip(Strings::getter("registerEnableTip"))
+			inMap.clear
 			
 			for (var int i = 0; i < inputsDesc.size(); i++) {
 				var InputPort desc = inputsDesc.get(i)
@@ -224,16 +225,11 @@ default @[ 392 , 398 , 50 , 21 ] ; S2 -> S1 when A [ 2 : 1 ] == "11" @[ 557 ,
 						new Port(0, ((i + ctrl.length) * FSMEntity::PORT_GAP) + FSMEntity::HEIGHT, Port::INPUT,
 							desc.getWidth()))
 				
-				{
-					val _rdIndx_inputs = i
-					inputs.get(_rdIndx_inputs)
-				}.setToolTip(Strings::getter(desc.getName()))
-				inMap.put({
-					val _rdIndx_inputs = i
-					inputs.get(_rdIndx_inputs)
-				}, desc)
+				inputs.get(i).setToolTip(Strings::getter(desc.getName()))
+				inMap.put(inputs.get(i), desc)
 			}
 
+			outMap.clear
 			for (var int i = 0; i < outputsDesc.size(); i++) {
 				var OutputPort desc = outputsDesc.get(i)
 				{

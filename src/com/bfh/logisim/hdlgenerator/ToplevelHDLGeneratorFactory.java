@@ -42,6 +42,7 @@ import com.bfh.logisim.fpgagui.MappableResourcesContainer;
 import com.bfh.logisim.settings.Settings;
 import com.cburch.logisim.circuit.Circuit;
 import com.cburch.logisim.comp.Component;
+import com.cburch.logisim.comp.ComponentFactory;
 import com.cburch.logisim.data.AttributeSet;
 import com.cburch.logisim.instance.StdAttr;
 import com.cburch.logisim.std.io.PortIO;
@@ -54,7 +55,7 @@ public class ToplevelHDLGeneratorFactory extends AbstractHDLGeneratorFactory {
 	private long FpgaClockFrequency;
 	private double TickFrequency;
 	private Circuit MyCircuit;
-	private MappableResourcesContainer MyIOComponents;
+	private MappableResourcesContainer myIOComponents;
 
 	// private boolean useFPGAClock;
 
@@ -63,7 +64,7 @@ public class ToplevelHDLGeneratorFactory extends AbstractHDLGeneratorFactory {
 		FpgaClockFrequency = FPGAClock;
 		TickFrequency = TickClock;
 		MyCircuit = TopLevel;
-		MyIOComponents = IOComponents;
+		myIOComponents = IOComponents;
 		// this.useFPGAClock = useFPGAClock;
 	}
 
@@ -124,7 +125,7 @@ public class ToplevelHDLGeneratorFactory extends AbstractHDLGeneratorFactory {
 	public SortedMap<String, Integer> GetInOutList(Netlist TheNetlist,
 			AttributeSet attrs) {
 		SortedMap<String, Integer> InOut = new TreeMap<String, Integer>();
-		for (int NrOfInOut = 0; NrOfInOut < MyIOComponents
+		for (int NrOfInOut = 0; NrOfInOut < myIOComponents
 				.GetNrOfToplevelInOutPins(); NrOfInOut++) {
 			InOut.put(
 					HDLGeneratorFactory.FPGAInOutPinName + "_"
@@ -142,7 +143,7 @@ public class ToplevelHDLGeneratorFactory extends AbstractHDLGeneratorFactory {
 		if (NrOfClockTrees > 0 || TheNetlist.RequiresGlobalClockConnection()) {
 			Inputs.put(TickComponentHDLGeneratorFactory.FPGAClock, 1);
 		}
-		for (int NrOfInputs = 0; NrOfInputs < MyIOComponents
+		for (int NrOfInputs = 0; NrOfInputs < myIOComponents
 				.GetNrOfToplevelInputPins(); NrOfInputs++) {
 			Inputs.put(
 					HDLGeneratorFactory.FPGAInputPinName + "_"
@@ -162,15 +163,16 @@ public class ToplevelHDLGeneratorFactory extends AbstractHDLGeneratorFactory {
 		String AssignOperator = (HDLType.equals(Settings.VHDL)) ? " <= "
 				: " = ";
 		String NotOperator = (HDLType.equals(Settings.VHDL)) ? "NOT " : "~";
-		StringBuffer Temp = new StringBuffer();
+		StringBuffer buf= new StringBuffer();
 		/* First we process all pins */
 		Contents.addAll(MakeRemarkBlock(
 				"Here all signal adaptations are performed", 3, HDLType));
-		for (ArrayList<String> CompId : MyIOComponents.GetComponents()) {
-			if (MyIOComponents.GetComponent(CompId).GetComponent().getFactory() instanceof Pin) {
-				Component ThisPin = MyIOComponents.GetComponent(CompId)
-						.GetComponent();
-				ArrayList<String> MyMaps = MyIOComponents
+		for (ArrayList<String> CompId : myIOComponents.getComponents()) {
+			NetlistComponent currentComponent = myIOComponents.GetComponent(CompId);
+			ComponentFactory factory = currentComponent.GetComponent().getFactory();
+			if (factory instanceof Pin) {
+				Component pinComp = currentComponent.GetComponent();
+				ArrayList<String> MyMaps = myIOComponents
 						.GetMapNamesList(CompId);
 				if (MyMaps == null) {
 					Reporter.AddFatalError("Component has no map information, bizar! "
@@ -178,93 +180,80 @@ public class ToplevelHDLGeneratorFactory extends AbstractHDLGeneratorFactory {
 					return Contents;
 				}
 				int PinPinId = 0;
-				for (int MapOffset = 0; MapOffset < MyMaps.size(); MapOffset++) {
-					String map = MyMaps.get(MapOffset);
-					int InputId = MyIOComponents.GetFPGAInputPinId(map);
-					int OutputId = MyIOComponents.GetFPGAOutputPinId(map);
-					int NrOfPins = MyIOComponents.GetNrOfPins(map);
-					boolean Invert = MyIOComponents.RequiresToplevelInversion(
+				
+				
+				for (int mapOffset = 0; mapOffset < MyMaps.size(); mapOffset++) {
+					String map = MyMaps.get(mapOffset);
+					int InputId = myIOComponents.GetFPGAInputPinId(map);
+					int OutputId = myIOComponents.GetFPGAOutputPinId(map);
+					int NrOfPins = myIOComponents.GetNrOfPins(map);
+					boolean Invert = myIOComponents.RequiresToplevelInversion(
 							CompId, map);
 					for (int PinId = 0; PinId < NrOfPins; PinId++) {
-						Temp.setLength(0);
-						Temp.append("   " + Preamble);
+						buf.setLength(0);
+						buf.append("   " + Preamble);
 						if (InputId >= 0) {
-							Temp.append("s_"
-									+ CorrectLabel.getCorrectLabel(ThisPin
+							buf.append("s_"
+									+ CorrectLabel.getCorrectLabel(pinComp
 											.getAttributeSet().getValue(
 													StdAttr.LABEL)));
-							if (ThisPin.getEnd(0).getWidth().getWidth() > 1) {
-								Temp.append(BracketOpen + PinPinId
+							if (pinComp.getEnd(0).getWidth().getWidth() > 1) {
+								buf.append(BracketOpen + PinPinId
 										+ BracketClose);
 							}
 							PinPinId++;
-							Temp.append(AssignOperator);
+							buf.append(AssignOperator);
 							if (Invert) {
-								Temp.append(NotOperator);
+								buf.append(NotOperator);
 							}
-							Temp.append(HDLGeneratorFactory.FPGAInputPinName);
-							Temp.append("_" + Integer.toString(InputId + PinId));
-							Temp.append(";");
-							Contents.add(Temp.toString());
+							buf.append(HDLGeneratorFactory.FPGAInputPinName);
+							buf.append("_" + Integer.toString(InputId + PinId));
+							buf.append(";");
+							Contents.add(buf.toString());
 						}
 						if (OutputId >= 0) {
-							Temp.append(HDLGeneratorFactory.FPGAOutputPinName);
-							Temp.append("_"
-									+ Integer.toString(OutputId + PinId));
-							Temp.append(AssignOperator);
+							buf.append(HDLGeneratorFactory.FPGAOutputPinName);
+							buf.append("_"+ Integer.toString(OutputId + PinId));
+							buf.append(AssignOperator);
 							if (Invert) {
-								Temp.append(NotOperator);
+								buf.append(NotOperator);
 							}
-							Temp.append("s_"
-									+ CorrectLabel.getCorrectLabel(ThisPin
+							buf.append("s_"
+									+ CorrectLabel.getCorrectLabel(pinComp
 											.getAttributeSet().getValue(
 													StdAttr.LABEL)));
-							if (ThisPin.getEnd(0).getWidth().getWidth() > 1) {
-								Temp.append(BracketOpen + PinPinId
+							if (pinComp.getEnd(0).getWidth().getWidth() > 1) {
+								buf.append(BracketOpen + PinPinId
 										+ BracketClose);
 							}
 							PinPinId++;
-							Temp.append(";");
-							Contents.add(Temp.toString());
+							buf.append(";");
+							Contents.add(buf.toString());
 						}
 					}
 				}
 			}
 		}
 		/* Now we process the bubbles */
-		Contents.addAll(MakeRemarkBlock(
-				"Here all inlined adaptations are performed", 3, HDLType));
-		for (ArrayList<String> CompId : MyIOComponents.GetComponents()) {
-			if (!(MyIOComponents.GetComponent(CompId).GetComponent()
-					.getFactory() instanceof Pin)
-					&& !(MyIOComponents.GetComponent(CompId).GetComponent()
-							.getFactory() instanceof PortIO)
-					&& !(MyIOComponents.GetComponent(CompId).GetComponent()
-							.getFactory() instanceof ReptarLocalBus)) {
-				HDLGeneratorFactory Generator = MyIOComponents
-						.GetComponent(CompId)
-						.GetComponent()
-						.getFactory()
-						.getHDLGenerator(
-								HDLType,
-								MyIOComponents.GetComponent(CompId)
-										.GetComponent().getAttributeSet());
+		Contents.addAll(MakeRemarkBlock("Here all inlined adaptations are performed", 3, HDLType));
+		for (ArrayList<String> compId : myIOComponents.getComponents()) {
+			NetlistComponent comp = myIOComponents.GetComponent(compId);
+			ComponentFactory factory = comp.GetComponent().getFactory();
+			if (!(factory instanceof Pin)
+					&& !(factory instanceof PortIO)
+					&& !(factory instanceof ReptarLocalBus)) {
+				AttributeSet attributeSet = comp.GetComponent().getAttributeSet();
+				HDLGeneratorFactory Generator = factory.getHDLGenerator(HDLType,attributeSet);
 				if (Generator == null) {
-					Reporter.AddError("No generator for component "
-							+ CompId.toString());
+					Reporter.AddError("No generator for component "+ compId.toString());
 				} else {
-					Contents.addAll(Generator.GetInlinedCode(HDLType, CompId,
-							Reporter, MyIOComponents));
+					Contents.addAll(Generator.GetInlinedCode(HDLType, compId,
+							Reporter, myIOComponents));
 				}
-			} else if (MyIOComponents.GetComponent(CompId).GetComponent()
-					.getFactory() instanceof ReptarLocalBus) {
-				((ReptarLocalBus) MyIOComponents.GetComponent(CompId)
-						.GetComponent().getFactory())
-						.setMapInfo(MyIOComponents);
-			} else if (MyIOComponents.GetComponent(CompId).GetComponent()
-					.getFactory() instanceof PortIO) {
-				((PortIO) MyIOComponents.GetComponent(CompId).GetComponent()
-						.getFactory()).setMapInfo(MyIOComponents);
+			} else if (factory instanceof ReptarLocalBus) {
+				((ReptarLocalBus) factory).setMapInfo(myIOComponents);
+			} else if (factory instanceof PortIO) {
+				((PortIO) factory).setMapInfo(myIOComponents);
 			}
 		}
 		if (NrOfClockTrees > 0) {
@@ -302,15 +291,15 @@ public class ToplevelHDLGeneratorFactory extends AbstractHDLGeneratorFactory {
 			AttributeSet attrs) {
 		SortedMap<String, Integer> Outputs = new TreeMap<String, Integer>();
 		int k = 0;
-		for (int NrOfOutputs = 0; NrOfOutputs < MyIOComponents
+		for (int NrOfOutputs = 0; NrOfOutputs < myIOComponents
 				.GetNrOfToplevelOutputPins(); NrOfOutputs++) {
-			if (MyIOComponents
-					.GetFPGAOutputPinId(MyIOComponents.currentBoardName
+			if (myIOComponents
+					.GetFPGAOutputPinId(myIOComponents.currentBoardName
 							+ ":/LocalBus") > -1
-					&& (NrOfOutputs == MyIOComponents
-							.GetFPGAOutputPinId(MyIOComponents.currentBoardName
-									+ ":/LocalBus") || NrOfOutputs == MyIOComponents
-							.GetFPGAOutputPinId(MyIOComponents.currentBoardName
+					&& (NrOfOutputs == myIOComponents
+							.GetFPGAOutputPinId(myIOComponents.currentBoardName
+									+ ":/LocalBus") || NrOfOutputs == myIOComponents
+							.GetFPGAOutputPinId(myIOComponents.currentBoardName
 									+ ":/LocalBus") + 1)) {
 				Outputs.put("FPGA_LB_OUT_" + Integer.toString(k), 1);
 				k++;

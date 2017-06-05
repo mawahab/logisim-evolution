@@ -155,4 +155,8 @@ public class IOComponentInformationContainer {
 		NrOfInputBubbles = nb;
 		InputBubbleLabels = labels;
 	}
+	public void setNrOfOutports(int nb, ArrayList<String> labels) {
+		NrOfOutputBubbles = nb;
+		OutputBubbleLabels = labels;
+	}
 }

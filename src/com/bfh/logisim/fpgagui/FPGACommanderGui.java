@@ -918,9 +918,9 @@ public class FPGACommanderGui implements ActionListener,LibraryListener,ProjectL
 				return;
 			}
 		}
-		if (!MySettings.GetHDLOnly() || skipHDL.isSelected()) {
+		//if (!MySettings.GetHDLOnly() || skipHDL.isSelected()) {
 			DownLoadDesign(MySettings.GetHDLOnly(), skipHDL.isSelected());
-		}
+		//}
 	}
 
 	private void DownLoadDesign(boolean generateOnly, boolean downloadOnly) {

@@ -295,6 +295,7 @@ public class FSMContent implements Cloneable {
       Port _get_2 = this.ctrl[FSMContent.EN];
       StringGetter _ter_2 = Strings.getter("registerEnableTip");
       _get_2.setToolTip(_ter_2);
+      this.inMap.clear();
       for (int i = 0; (i < inputsDesc.size()); i++) {
         {
           InputPort desc = inputsDesc.get(i);
@@ -305,22 +306,15 @@ public class FSMContent implements Cloneable {
           int _width = desc.getWidth();
           Port _port_3 = new Port(0, _plus_1, Port.INPUT, _width);
           this.inputs[i] = _port_3;
-          Port _xblockexpression = null;
-          {
-            final int _rdIndx_inputs = i;
-            _xblockexpression = this.inputs[_rdIndx_inputs];
-          }
+          Port _get_3 = this.inputs[i];
           String _name_1 = desc.getName();
           StringGetter _ter_3 = Strings.getter(_name_1);
-          _xblockexpression.setToolTip(_ter_3);
-          Port _xblockexpression_1 = null;
-          {
-            final int _rdIndx_inputs = i;
-            _xblockexpression_1 = this.inputs[_rdIndx_inputs];
-          }
-          this.inMap.put(_xblockexpression_1, desc);
+          _get_3.setToolTip(_ter_3);
+          Port _get_4 = this.inputs[i];
+          this.inMap.put(_get_4, desc);
         }
       }
+      this.outMap.clear();
       for (int i = 0; (i < outputsDesc.size()); i++) {
         {
           OutputPort desc = outputsDesc.get(i);

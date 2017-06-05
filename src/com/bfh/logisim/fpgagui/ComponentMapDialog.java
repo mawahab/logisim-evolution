@@ -198,7 +198,7 @@ public class ComponentMapDialog implements ActionListener,
 						.GetMappedRectangles()) {
 					if (ThisItem.PointInside(e.getX()/scale, e.getY()/scale)) {
 						NewItem = ThisItem;
-						newKey = MappableComponents.GetDisplayName(ThisItem);
+						newKey = MappableComponents.getDisplayName(ThisItem);
 						break;
 					}
 				}

@@ -68,6 +68,8 @@ import com.cburch.logisim.util.GraphicsUtil;
 import com.cburch.logisim.util.StringUtil;
 import com.sun.java_cup.internal.runtime.virtual_parse_stack;
 
+import jdk.internal.org.xml.sax.InputSource;
+
 public class FSMEntity extends InstanceFactory {
 
 	static class ContentAttribute extends Attribute<FSMContent> {
@@ -346,10 +348,23 @@ public class FSMEntity extends InstanceFactory {
 		FSMContent content = istate.getAttributeValue(CONTENT_ATTR);
 		updatePorts(istate.getInstance());
 		FSM fsm = content.getFsm();
-		System.out.println("Propagate event for FSM "+fsm.getName());
-		if (fsmSim == null) {
+		System.out.println("Propagate event for FSM "+fsm.getName()+":"+fsm.hashCode());
+
+		if (fsmSim == null ) { 
 			fsmSim = new FSMSimulator(fsm);
 			istate.setData(fsmSim);
+		} else if (fsmSim.getFSM()!=fsm) {
+			System.out.println("FSM changed, refreshing model");
+			State oldState = fsmSim.getCurrentState();
+			fsmSim = new FSMSimulator(fsm);
+			istate.setData(fsmSim);
+			for(State s : fsm.getStates()) {
+				if (s.getName().equals(oldState.getName())) {
+					fsmSim.setCurrentState(s);
+				}
+			}
+			fsmSim.refreshInputPorts();
+			fsmSim.refreshOutputPorts();
 		}
 
 		Value clk = istate.getPortValue(CLK);
@@ -361,16 +376,23 @@ public class FSMEntity extends InstanceFactory {
 		if (clear == Value.TRUE) {
 			fsmSim.reset();
 		} else {
+			fsmSim.refreshInputPorts();
 			if (triggered && enable != Value.FALSE && fsmSim.getCurrentState()!=null) {
 				boolean error= false;
+				if(content.getInputsNumber()!= content.getFsm().getIn().size()) {
+					throw new RuntimeException("Inconsistent state for input port mapping in "+this.getClass().getSimpleName());
+				}
+				if(content.getOutputsNumber()!= content.getFsm().getOut().size()) {
+					throw new RuntimeException("Inconsistent state for Output port mapping in "+this.getClass().getSimpleName());
+				}
 				for (int i =0; i< content.getInputsNumber();i++) {
 					Value in = istate.getPortValue(i+offsetInput);
 					InputPort ip = content.inMap.get(content.inputs[i]);
 					if (in.isFullyDefined()) {
-						fsmSim.setInput(ip, "\""+in.toBinaryString()+"\"");
+						fsmSim.updateInput(ip, "\""+in.toBinaryString()+"\"");
 					} else {
 						System.err.println("Warning : undefined input value for "+ip.getName()+ "="+in.toBinaryString());
-						fsmSim.setInput(ip, "\""+Value.createUnknown(in.getBitWidth()).toBinaryString()+"\"");
+						fsmSim.updateInput(ip, "\""+Value.createUnknown(in.getBitWidth()).toBinaryString()+"\"");
 						error=true;// FIXME : propagate 
 					}
 				}
