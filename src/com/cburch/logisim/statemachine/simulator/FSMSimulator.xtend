@@ -71,12 +71,34 @@ class FSMSimulator extends ClockState implements InstanceData {
 	}
 	
 	def public refreshInputPorts() {
-		inputs.clear;
-		//this.fsm.in.forEach[ip | inputs.put(ip,zeros(ip.width))]
+		var HashMap<Port,String> newInputs = new HashMap<Port,String>();
+		for (newIp : fsm.in) {
+			newInputs.put(newIp,zeros(newIp.width))
+			for (oldIp : inputs.keySet) {
+				val boolean nameEqu= newIp.name.equals(oldIp.name)
+				val boolean witdhEqu = (newIp.width == oldIp.width)
+				if (nameEqu && witdhEqu) {
+					newInputs.put(newIp,inputs.get(oldIp))
+				}
+			}
+			println('''«newIp.name»:«newIp.hashCode» -> «newInputs.get(newIp)»''')
+		}
+		inputs=newInputs;
 	}
 	def public refreshOutputPorts() {
-		outputs.clear;
-		this.fsm.out.forEach[op | outputs.put(op,zeros(op.width))]
+		var HashMap<Port,String> newOutputs = new HashMap<Port,String>();
+		for (newOp : fsm.out) {
+			newOutputs.put(newOp,zeros(newOp.width))
+			for (oldIp : outputs.keySet) {
+				val boolean nameEqu= newOp.name.equals(oldIp.name)
+				val boolean witdhEqu = (newOp.width == oldIp.width)
+				if (nameEqu && witdhEqu) {
+					newOutputs.put(newOp,outputs.get(oldIp))
+				}
+			}
+			println('''«newOp.name»:«newOp.hashCode» -> «newOutputs.get(newOp)»''')
+		}
+		outputs=newOutputs;
 	}
 	
 	def getFSM() {
@@ -91,8 +113,10 @@ class FSMSimulator extends ClockState implements InstanceData {
 	def getOutput(int i) {
 		try {
 			val op = fsm.out.get(i)
+			printIOMap
 			if(!outputs.containsKey(op)) {
-				throw new RuntimeException("output number "+i+" is not a known output in fsm "+fsm.name+ " "+fsm.out.map[p| "Port["+fsm.out.indexOf(p)+"]="+p.name+":"+p.hashCode])
+				
+				throw new RuntimeException("output  "+op.name+":"+op.hashCode +" at "+i+" is not a known output in fsm "+fsm.name+ " "+fsm.out.map[p| "Port["+fsm.out.indexOf(p)+"]="+p.name+":"+p.hashCode])
 			}
 			return outputs.get(op);
 		} catch (Exception e) {
@@ -102,7 +126,12 @@ class FSMSimulator extends ClockState implements InstanceData {
 
 	def updateInput(InputPort ip,String b) {
 		println("-> setting "+ip.name+":"+ip.hashCode+" to "+b)
-		inputs.put(ip,b)
+		printIOMap
+		if (inputs.containsKey(ip)) {
+			inputs.put(ip,b)
+		} else {
+			throw new RuntimeException("Unregistered input port "+ip.name+":"+ip.hashCode +"  in "+fsm.name)
+		}
 	}
 	
 	def updateState() { 
@@ -116,10 +145,10 @@ class FSMSimulator extends ClockState implements InstanceData {
 			throw new RuntimeException("inconsistent state for output port mapping ")
 		}
 		for (Port e : inputs.keySet) {
-			println("\tIn "+e.name+":"+e.hashCode+"=>"+inputs.get(e))
+			println("\t- In "+e.name+":"+e.hashCode+"=>"+inputs.get(e))
 		}  
 		for (Port e : outputs.keySet) {
-			println("\tOut "+e.name+":"+e.hashCode+"=>"+outputs.get(e))
+			println("\t- Out "+e.name+":"+e.hashCode+"=>"+outputs.get(e))
 		}  
 		
 		var State defaultDst =null;
@@ -130,11 +159,12 @@ class FSMSimulator extends ClockState implements InstanceData {
 				defaultDst = t.dst
 			} else {
 				val res = (eval(t.predicate))
+				print("\t\t"+PrettyPrinter.pp(t.predicate)+"="+res+"" );
 				if (isTrue(res)) {
 					nextDst= t.dst
-					println("\t\tTransition fired : next state is "+nextDst.name)
+					println("=> transition fired : next state is "+nextDst.name)
 				} else {
-					println("\t\tTransition not actived")
+					println("=> transition not fired")
 				}
 			}
 		}
@@ -244,7 +274,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 		 		val opB = r.charAt(i);
 		 		val and1 = or(opA,opB)
 		 		andRes= andRes.setCharAt(and1,i)
-				println('''\nres[«i»]=«and1»=«andRes.charAt(i)» ''')
+				//println('''\nres[«i»]=«and1»=«andRes.charAt(i)» ''')
 		 	}
 		}
 		val res  = quote(andRes)
@@ -274,7 +304,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 		 		val opB = r.charAt(i);
 		 		val and1 = and(opA,opB)
 		 		andRes= andRes.setCharAt(and1,i)
-				println('''\nres[«i»]=«and1»=«andRes.charAt(i)» ''')
+				//println('''\nres[«i»]=«and1»=«andRes.charAt(i)» ''')
 		 	}
 		}
 		val res  = quote(andRes)
@@ -353,6 +383,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 			// reverse to account for LSB on the rightmost digit 
 			res = new StringBuilder(res).reverse().toString()
 		} else {
+			printIOMap()
 			throw new RuntimeException("Port  "+b.port.name+":"+ b.port.hashCode+ " has no value");
 		}
 		
@@ -367,8 +398,17 @@ class FSMSimulator extends ClockState implements InstanceData {
 			}
 		} else {
 		}
-		println("eval("+PrettyPrinter.pp(b)+")="+res)
+		//println("eval("+PrettyPrinter.pp(b)+")="+res)
 		res
+	}
+	
+	def printIOMap() {
+//		for (ip : inputs.keySet) {
+//			println('''in «ip.name»:«ip.hashCode» -> «inputs.get(ip)»''');
+//		}
+//		for (op : outputs.keySet) {
+//			println('''out «op.name»:«op.hashCode» -> «outputs.get(op)»''');
+//		}
 	}
 		
 	

@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Exceptions;
@@ -110,57 +109,151 @@ public class FSMSimulator extends ClockState implements InstanceData {
     return s.equals(FSMSimulator.ONE);
   }
   
-  public void refreshInputPorts() {
-    this.inputs.clear();
+  public HashMap<Port, String> refreshInputPorts() {
+    HashMap<Port, String> _xblockexpression = null;
+    {
+      HashMap<Port, String> newInputs = new HashMap<Port, String>();
+      EList<Port> _in = this.fsm.getIn();
+      for (final Port newIp : _in) {
+        {
+          int _width = newIp.getWidth();
+          String _zeros = this.zeros(_width);
+          newInputs.put(newIp, _zeros);
+          Set<Port> _keySet = this.inputs.keySet();
+          for (final Port oldIp : _keySet) {
+            {
+              String _name = newIp.getName();
+              String _name_1 = oldIp.getName();
+              final boolean nameEqu = _name.equals(_name_1);
+              int _width_1 = newIp.getWidth();
+              int _width_2 = oldIp.getWidth();
+              final boolean witdhEqu = (_width_1 == _width_2);
+              boolean _and = false;
+              if (!nameEqu) {
+                _and = false;
+              } else {
+                _and = witdhEqu;
+              }
+              if (_and) {
+                String _get = this.inputs.get(oldIp);
+                newInputs.put(newIp, _get);
+              }
+            }
+          }
+          StringConcatenation _builder = new StringConcatenation();
+          String _name = newIp.getName();
+          _builder.append(_name, "");
+          _builder.append(":");
+          int _hashCode = newIp.hashCode();
+          _builder.append(_hashCode, "");
+          _builder.append(" -> ");
+          String _get = newInputs.get(newIp);
+          _builder.append(_get, "");
+          InputOutput.<String>println(_builder.toString());
+        }
+      }
+      _xblockexpression = this.inputs = newInputs;
+    }
+    return _xblockexpression;
   }
   
-  public void refreshOutputPorts() {
-    this.outputs.clear();
-    EList<Port> _out = this.fsm.getOut();
-    final Consumer<Port> _function = (Port op) -> {
-      int _width = op.getWidth();
-      String _zeros = this.zeros(_width);
-      this.outputs.put(op, _zeros);
-    };
-    _out.forEach(_function);
+  public HashMap<Port, String> refreshOutputPorts() {
+    HashMap<Port, String> _xblockexpression = null;
+    {
+      HashMap<Port, String> newOutputs = new HashMap<Port, String>();
+      EList<Port> _out = this.fsm.getOut();
+      for (final Port newOp : _out) {
+        {
+          int _width = newOp.getWidth();
+          String _zeros = this.zeros(_width);
+          newOutputs.put(newOp, _zeros);
+          Set<Port> _keySet = this.outputs.keySet();
+          for (final Port oldIp : _keySet) {
+            {
+              String _name = newOp.getName();
+              String _name_1 = oldIp.getName();
+              final boolean nameEqu = _name.equals(_name_1);
+              int _width_1 = newOp.getWidth();
+              int _width_2 = oldIp.getWidth();
+              final boolean witdhEqu = (_width_1 == _width_2);
+              boolean _and = false;
+              if (!nameEqu) {
+                _and = false;
+              } else {
+                _and = witdhEqu;
+              }
+              if (_and) {
+                String _get = this.outputs.get(oldIp);
+                newOutputs.put(newOp, _get);
+              }
+            }
+          }
+          StringConcatenation _builder = new StringConcatenation();
+          String _name = newOp.getName();
+          _builder.append(_name, "");
+          _builder.append(":");
+          int _hashCode = newOp.hashCode();
+          _builder.append(_hashCode, "");
+          _builder.append(" -> ");
+          String _get = newOutputs.get(newOp);
+          _builder.append(_get, "");
+          InputOutput.<String>println(_builder.toString());
+        }
+      }
+      _xblockexpression = this.outputs = newOutputs;
+    }
+    return _xblockexpression;
   }
   
   public FSM getFSM() {
     return this.fsm;
   }
   
-  public void reset() {
-    State _start = this.fsm.getStart();
-    this.current = _start;
-    this.refreshInputPorts();
-    this.refreshOutputPorts();
+  public HashMap<Port, String> reset() {
+    HashMap<Port, String> _xblockexpression = null;
+    {
+      State _start = this.fsm.getStart();
+      this.current = _start;
+      this.refreshInputPorts();
+      _xblockexpression = this.refreshOutputPorts();
+    }
+    return _xblockexpression;
   }
   
   public String getOutput(final int i) {
     try {
       EList<Port> _out = this.fsm.getOut();
       final Port op = _out.get(i);
+      this.printIOMap();
       boolean _containsKey = this.outputs.containsKey(op);
       boolean _not = (!_containsKey);
       if (_not) {
-        String _name = this.fsm.getName();
-        String _plus = ((("output number " + Integer.valueOf(i)) + " is not a known output in fsm ") + _name);
-        String _plus_1 = (_plus + " ");
+        String _name = op.getName();
+        String _plus = ("output  " + _name);
+        String _plus_1 = (_plus + ":");
+        int _hashCode = op.hashCode();
+        String _plus_2 = (_plus_1 + Integer.valueOf(_hashCode));
+        String _plus_3 = (_plus_2 + " at ");
+        String _plus_4 = (_plus_3 + Integer.valueOf(i));
+        String _plus_5 = (_plus_4 + " is not a known output in fsm ");
+        String _name_1 = this.fsm.getName();
+        String _plus_6 = (_plus_5 + _name_1);
+        String _plus_7 = (_plus_6 + " ");
         EList<Port> _out_1 = this.fsm.getOut();
         final Function1<Port, String> _function = (Port p) -> {
           EList<Port> _out_2 = this.fsm.getOut();
           int _indexOf = _out_2.indexOf(p);
-          String _plus_2 = ("Port[" + Integer.valueOf(_indexOf));
-          String _plus_3 = (_plus_2 + "]=");
-          String _name_1 = p.getName();
-          String _plus_4 = (_plus_3 + _name_1);
-          String _plus_5 = (_plus_4 + ":");
-          int _hashCode = p.hashCode();
-          return (_plus_5 + Integer.valueOf(_hashCode));
+          String _plus_8 = ("Port[" + Integer.valueOf(_indexOf));
+          String _plus_9 = (_plus_8 + "]=");
+          String _name_2 = p.getName();
+          String _plus_10 = (_plus_9 + _name_2);
+          String _plus_11 = (_plus_10 + ":");
+          int _hashCode_1 = p.hashCode();
+          return (_plus_11 + Integer.valueOf(_hashCode_1));
         };
         List<String> _map = ListExtensions.<Port, String>map(_out_1, _function);
-        String _plus_2 = (_plus_1 + _map);
-        throw new RuntimeException(_plus_2);
+        String _plus_8 = (_plus_7 + _map);
+        throw new RuntimeException(_plus_8);
       }
       return this.outputs.get(op);
     } catch (final Throwable _t) {
@@ -185,7 +278,23 @@ public class FSMSimulator extends ClockState implements InstanceData {
       String _plus_3 = (_plus_2 + " to ");
       String _plus_4 = (_plus_3 + b);
       InputOutput.<String>println(_plus_4);
-      _xblockexpression = this.inputs.put(ip, b);
+      this.printIOMap();
+      String _xifexpression = null;
+      boolean _containsKey = this.inputs.containsKey(ip);
+      if (_containsKey) {
+        _xifexpression = this.inputs.put(ip, b);
+      } else {
+        String _name_1 = ip.getName();
+        String _plus_5 = ("Unregistered input port " + _name_1);
+        String _plus_6 = (_plus_5 + ":");
+        int _hashCode_1 = ip.hashCode();
+        String _plus_7 = (_plus_6 + Integer.valueOf(_hashCode_1));
+        String _plus_8 = (_plus_7 + "  in ");
+        String _name_2 = this.fsm.getName();
+        String _plus_9 = (_plus_8 + _name_2);
+        throw new RuntimeException(_plus_9);
+      }
+      _xblockexpression = _xifexpression;
     }
     return _xblockexpression;
   }
@@ -216,7 +325,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
     Set<Port> _keySet_2 = this.inputs.keySet();
     for (final Port e : _keySet_2) {
       String _name_2 = e.getName();
-      String _plus_3 = ("\tIn " + _name_2);
+      String _plus_3 = ("\t- In " + _name_2);
       String _plus_4 = (_plus_3 + ":");
       int _hashCode = e.hashCode();
       String _plus_5 = (_plus_4 + Integer.valueOf(_hashCode));
@@ -228,7 +337,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
     Set<Port> _keySet_3 = this.outputs.keySet();
     for (final Port e_1 : _keySet_3) {
       String _name_3 = e_1.getName();
-      String _plus_8 = ("\tOut " + _name_3);
+      String _plus_8 = ("\t- Out " + _name_3);
       String _plus_9 = (_plus_8 + ":");
       int _hashCode_1 = e_1.hashCode();
       String _plus_10 = (_plus_9 + Integer.valueOf(_hashCode_1));
@@ -252,15 +361,22 @@ public class FSMSimulator extends ClockState implements InstanceData {
         } else {
           BoolExpr _predicate_1 = t.getPredicate();
           final String res = this.eval(_predicate_1);
+          BoolExpr _predicate_2 = t.getPredicate();
+          String _pp_1 = PrettyPrinter.pp(_predicate_2);
+          String _plus_14 = ("\t\t" + _pp_1);
+          String _plus_15 = (_plus_14 + "=");
+          String _plus_16 = (_plus_15 + res);
+          String _plus_17 = (_plus_16 + "");
+          InputOutput.<String>print(_plus_17);
           boolean _isTrue = this.isTrue(res);
           if (_isTrue) {
             State _dst_1 = t.getDst();
             nextDst = _dst_1;
             String _name_4 = nextDst.getName();
-            String _plus_14 = ("\t\tTransition fired : next state is " + _name_4);
-            InputOutput.<String>println(_plus_14);
+            String _plus_18 = ("=> transition fired : next state is " + _name_4);
+            InputOutput.<String>println(_plus_18);
           } else {
-            InputOutput.<String>println("\t\tTransition not actived");
+            InputOutput.<String>println("=> transition not fired");
           }
         }
       }
@@ -444,16 +560,6 @@ public class FSMSimulator extends ClockState implements InstanceData {
               final char and1 = this.or(opA, opB);
               String _setCharAt = this.setCharAt(andRes, and1, (i).intValue());
               andRes = _setCharAt;
-              StringConcatenation _builder_1 = new StringConcatenation();
-              _builder_1.append("\\nres[");
-              _builder_1.append(i, "");
-              _builder_1.append("]=");
-              _builder_1.append(and1, "");
-              _builder_1.append("=");
-              char _charAt = andRes.charAt((i).intValue());
-              _builder_1.append(_charAt, "");
-              _builder_1.append(" ");
-              InputOutput.<String>println(_builder_1.toString());
             }
           }
         }
@@ -507,16 +613,6 @@ public class FSMSimulator extends ClockState implements InstanceData {
               final char and1 = this.and(opA, opB);
               String _setCharAt = this.setCharAt(andRes, and1, (i).intValue());
               andRes = _setCharAt;
-              StringConcatenation _builder_1 = new StringConcatenation();
-              _builder_1.append("\\nres[");
-              _builder_1.append(i, "");
-              _builder_1.append("]=");
-              _builder_1.append(and1, "");
-              _builder_1.append("=");
-              char _charAt = andRes.charAt((i).intValue());
-              _builder_1.append(_charAt, "");
-              _builder_1.append(" ");
-              InputOutput.<String>println(_builder_1.toString());
             }
           }
         }
@@ -655,6 +751,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
         String _string = _reverse.toString();
         res = _string;
       } else {
+        this.printIOMap();
         Port _port_3 = b.getPort();
         String _name = _port_3.getName();
         String _plus_2 = ("Port  " + _name);
@@ -693,14 +790,13 @@ public class FSMSimulator extends ClockState implements InstanceData {
         }
       } else {
       }
-      String _pp_1 = PrettyPrinter.pp(b);
-      String _plus_6 = ("eval(" + _pp_1);
-      String _plus_7 = (_plus_6 + ")=");
-      String _plus_8 = (_plus_7 + res);
-      InputOutput.<String>println(_plus_8);
       _xblockexpression = res;
     }
     return _xblockexpression;
+  }
+  
+  public Object printIOMap() {
+    return null;
   }
   
   public String eval(final BoolExpr b) {

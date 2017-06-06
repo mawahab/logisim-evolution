@@ -376,7 +376,6 @@ public class FSMEntity extends InstanceFactory {
 		if (clear == Value.TRUE) {
 			fsmSim.reset();
 		} else {
-			fsmSim.refreshInputPorts();
 			if (triggered && enable != Value.FALSE && fsmSim.getCurrentState()!=null) {
 				boolean error= false;
 				if(content.getInputsNumber()!= content.getFsm().getIn().size()) {
