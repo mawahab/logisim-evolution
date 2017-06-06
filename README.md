@@ -35,7 +35,7 @@ In addition to syntactic analysis, the editor also checks that transitions from 
 
 ## How to install this version of logisim-evolution
 
-You can find the latest version of the tool [here](http://www.irisa.fr/cosi/HOMEPAGE/Derrien/logisim/logisim-evolution.jar). [updated on may 31st, 2017]
+You can find the latest version of the tool [here](http://www.irisa.fr/cosi/HOMEPAGE/Derrien/logisim/logisim-evolution.jar). [updated on June 6th, 2017]
 
 To execute it, click on the downloaded file or type in a console
 ```bash
