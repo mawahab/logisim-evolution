@@ -105,6 +105,8 @@ public class FSMSimulator extends ClockState implements InstanceData {
   
   private final static String ONE = "\"1\"";
   
+  private final boolean VERBOSE = false;
+  
   public boolean isTrue(final String s) {
     return s.equals(FSMSimulator.ONE);
   }
@@ -149,7 +151,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
           _builder.append(" -> ");
           String _get = newInputs.get(newIp);
           _builder.append(_get, "");
-          InputOutput.<String>println(_builder.toString());
+          this.debug(_builder.toString());
         }
       }
       _xblockexpression = this.inputs = newInputs;
@@ -197,7 +199,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
           _builder.append(" -> ");
           String _get = newOutputs.get(newOp);
           _builder.append(_get, "");
-          InputOutput.<String>println(_builder.toString());
+          this.debug(_builder.toString());
         }
       }
       _xblockexpression = this.outputs = newOutputs;
@@ -277,7 +279,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
       String _plus_2 = (_plus_1 + Integer.valueOf(_hashCode));
       String _plus_3 = (_plus_2 + " to ");
       String _plus_4 = (_plus_3 + b);
-      InputOutput.<String>println(_plus_4);
+      this.debug(_plus_4);
       this.printIOMap();
       String _xifexpression = null;
       boolean _containsKey = this.inputs.containsKey(ip);
@@ -326,25 +328,19 @@ public class FSMSimulator extends ClockState implements InstanceData {
     for (final Port e : _keySet_2) {
       String _name_2 = e.getName();
       String _plus_3 = ("\t- In " + _name_2);
-      String _plus_4 = (_plus_3 + ":");
-      int _hashCode = e.hashCode();
-      String _plus_5 = (_plus_4 + Integer.valueOf(_hashCode));
-      String _plus_6 = (_plus_5 + "=>");
+      String _plus_4 = (_plus_3 + "=>");
       String _get = this.inputs.get(e);
-      String _plus_7 = (_plus_6 + _get);
-      InputOutput.<String>println(_plus_7);
+      String _plus_5 = (_plus_4 + _get);
+      InputOutput.<String>println(_plus_5);
     }
     Set<Port> _keySet_3 = this.outputs.keySet();
     for (final Port e_1 : _keySet_3) {
       String _name_3 = e_1.getName();
-      String _plus_8 = ("\t- Out " + _name_3);
-      String _plus_9 = (_plus_8 + ":");
-      int _hashCode_1 = e_1.hashCode();
-      String _plus_10 = (_plus_9 + Integer.valueOf(_hashCode_1));
-      String _plus_11 = (_plus_10 + "=>");
+      String _plus_6 = ("\t- Out " + _name_3);
+      String _plus_7 = (_plus_6 + "=>");
       String _get_1 = this.outputs.get(e_1);
-      String _plus_12 = (_plus_11 + _get_1);
-      InputOutput.<String>println(_plus_12);
+      String _plus_8 = (_plus_7 + _get_1);
+      InputOutput.<String>println(_plus_8);
     }
     State defaultDst = null;
     State nextDst = null;
@@ -352,8 +348,8 @@ public class FSMSimulator extends ClockState implements InstanceData {
     for (final Transition t : _transition) {
       {
         String _pp = PrettyPrinter.pp(t);
-        String _plus_13 = ("\tTransition= " + _pp);
-        InputOutput.<String>println(_plus_13);
+        String _plus_9 = ("\tTransition= " + _pp);
+        InputOutput.<String>println(_plus_9);
         BoolExpr _predicate = t.getPredicate();
         if ((_predicate instanceof DefaultPredicate)) {
           State _dst = t.getDst();
@@ -363,18 +359,18 @@ public class FSMSimulator extends ClockState implements InstanceData {
           final String res = this.eval(_predicate_1);
           BoolExpr _predicate_2 = t.getPredicate();
           String _pp_1 = PrettyPrinter.pp(_predicate_2);
-          String _plus_14 = ("\t\t" + _pp_1);
-          String _plus_15 = (_plus_14 + "=");
-          String _plus_16 = (_plus_15 + res);
-          String _plus_17 = (_plus_16 + "");
-          InputOutput.<String>print(_plus_17);
+          String _plus_10 = ("\t\t" + _pp_1);
+          String _plus_11 = (_plus_10 + "=");
+          String _plus_12 = (_plus_11 + res);
+          String _plus_13 = (_plus_12 + "");
+          InputOutput.<String>print(_plus_13);
           boolean _isTrue = this.isTrue(res);
           if (_isTrue) {
             State _dst_1 = t.getDst();
             nextDst = _dst_1;
             String _name_4 = nextDst.getName();
-            String _plus_18 = ("=> transition fired : next state is " + _name_4);
-            InputOutput.<String>println(_plus_18);
+            String _plus_14 = ("=> transition fired : next state is " + _name_4);
+            InputOutput.<String>println(_plus_14);
           } else {
             InputOutput.<String>println("=> transition not fired");
           }
@@ -389,8 +385,8 @@ public class FSMSimulator extends ClockState implements InstanceData {
       if (_notEquals_3) {
         this.current = defaultDst;
         String _name_4 = defaultDst.getName();
-        String _plus_13 = ("\t\tDefault transition fired " + _name_4);
-        InputOutput.<String>println(_plus_13);
+        String _plus_9 = ("\t\tDefault transition fired " + _name_4);
+        InputOutput.<String>println(_plus_9);
       }
     }
     return this.current;
@@ -498,9 +494,24 @@ public class FSMSimulator extends ClockState implements InstanceData {
           String _plus_3 = (_plus_2 + _pp_1);
           throw new RuntimeException(_plus_3);
       }
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("eval(");
+      String _pp_1 = PrettyPrinter.pp(b);
+      _builder.append(_pp_1, "");
+      _builder.append(")=");
+      _builder.append(res, "");
+      this.debug(_builder.toString());
       _xblockexpression = res;
     }
     return _xblockexpression;
+  }
+  
+  public String debug(final String string) {
+    String _xifexpression = null;
+    if (this.VERBOSE) {
+      _xifexpression = InputOutput.<String>println(string);
+    }
+    return _xifexpression;
   }
   
   protected String _eval(final Constant exp) {
@@ -540,11 +551,6 @@ public class FSMSimulator extends ClockState implements InstanceData {
       andRes = _unquote;
       for (final String r : l) {
         {
-          StringConcatenation _builder = new StringConcatenation();
-          _builder.append("\t\t");
-          _builder.append("arg : ");
-          _builder.append(r, "\t\t");
-          InputOutput.<String>println(_builder.toString());
           int _length = r.length();
           boolean _notEquals = (width != _length);
           if (_notEquals) {
@@ -593,11 +599,6 @@ public class FSMSimulator extends ClockState implements InstanceData {
       andRes = _unquote;
       for (final String r : l) {
         {
-          StringConcatenation _builder = new StringConcatenation();
-          _builder.append("\t\t");
-          _builder.append("arg : ");
-          _builder.append(r, "\t\t");
-          InputOutput.<String>println(_builder.toString());
           int _length = r.length();
           boolean _notEquals = (width != _length);
           if (_notEquals) {
@@ -646,6 +647,11 @@ public class FSMSimulator extends ClockState implements InstanceData {
       res = _replace_1;
       String _replace_2 = res.replace("@", "1");
       res = _replace_2;
+      String _pp_1 = PrettyPrinter.pp(b);
+      String _plus_1 = ("eval(" + _pp_1);
+      String _plus_2 = (_plus_1 + ")=");
+      String _plus_3 = (_plus_2 + res);
+      this.debug(_plus_3);
       _xblockexpression = res;
     }
     return _xblockexpression;
@@ -672,6 +678,14 @@ public class FSMSimulator extends ClockState implements InstanceData {
         default:
           throw new RuntimeException((((("Unsupported value \"" + in) + "\",") + Character.valueOf(b)) + " only \'0\' or \'1\' supported"));
       }
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("eval(or(");
+      _builder.append(b, "");
+      _builder.append(",");
+      _builder.append(c, "");
+      _builder.append("))=");
+      _builder.append(res, "");
+      this.debug(_builder.toString());
       _xblockexpression = res;
     }
     return _xblockexpression;
@@ -698,6 +712,14 @@ public class FSMSimulator extends ClockState implements InstanceData {
         default:
           throw new RuntimeException((((("Unsupported value " + Character.valueOf(c)) + ",") + Character.valueOf(b)) + " only \'0\' or \'1\' supported"));
       }
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("eval(and(");
+      _builder.append(b, "");
+      _builder.append(",");
+      _builder.append(c, "");
+      _builder.append("))=");
+      _builder.append(res, "");
+      this.debug(_builder.toString());
       _xblockexpression = res;
     }
     return _xblockexpression;
@@ -723,6 +745,12 @@ public class FSMSimulator extends ClockState implements InstanceData {
       if (!_matched) {
         throw new RuntimeException((("Unsupported value " + Character.valueOf(c)) + ", only \'0\' or \'1\' supported"));
       }
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("eval(not(");
+      _builder.append(c, "");
+      _builder.append("))=");
+      _builder.append(res, "");
+      this.debug(_builder.toString());
       _xblockexpression = res;
     }
     return _xblockexpression;
@@ -746,10 +774,6 @@ public class FSMSimulator extends ClockState implements InstanceData {
         Port _port_2 = b.getPort();
         String _get = this.inputs.get(_port_2);
         res = _get;
-        StringBuilder _stringBuilder = new StringBuilder(res);
-        StringBuilder _reverse = _stringBuilder.reverse();
-        String _string = _reverse.toString();
-        res = _string;
       } else {
         this.printIOMap();
         Port _port_3 = b.getPort();
@@ -765,6 +789,10 @@ public class FSMSimulator extends ClockState implements InstanceData {
       Range _range = b.getRange();
       boolean _notEquals = (!Objects.equal(_range, null));
       if (_notEquals) {
+        StringBuilder _stringBuilder = new StringBuilder(res);
+        StringBuilder _reverse = _stringBuilder.reverse();
+        String _string = _reverse.toString();
+        res = _string;
         Range _range_1 = b.getRange();
         int _ub = _range_1.getUb();
         boolean _equals_1 = (_ub == (-1));
@@ -790,6 +818,11 @@ public class FSMSimulator extends ClockState implements InstanceData {
         }
       } else {
       }
+      String _pp_1 = PrettyPrinter.pp(b);
+      String _plus_6 = ("eval(" + _pp_1);
+      String _plus_7 = (_plus_6 + ")=");
+      String _plus_8 = (_plus_7 + res);
+      this.debug(_plus_8);
       _xblockexpression = res;
     }
     return _xblockexpression;

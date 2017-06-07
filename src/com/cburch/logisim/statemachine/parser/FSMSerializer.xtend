@@ -86,7 +86,7 @@ class FSMSerializer {
 		return parse(fis)
 	}
 
-	def static FSM load(String in) throws IOException {
+	def public static FSM load(String in) throws IOException {
 		var InputStream fis = new ByteArrayInputStream(in.getBytes(StandardCharsets.UTF_8))
 		var FSM fsm = parse(fis) as FSM
 		

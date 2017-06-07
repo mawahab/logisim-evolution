@@ -66,6 +66,8 @@ class FSMSimulator extends ClockState implements InstanceData {
 	static final String ZERO = "\"0\"";
 	static final String ONE = "\"1\"";
 	
+	final boolean VERBOSE = false
+	
 	def isTrue(String s) {
 		s.equals(ONE);
 	}
@@ -81,7 +83,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 					newInputs.put(newIp,inputs.get(oldIp))
 				}
 			}
-			println('''«newIp.name»:«newIp.hashCode» -> «newInputs.get(newIp)»''')
+			debug('''«newIp.name»:«newIp.hashCode» -> «newInputs.get(newIp)»''')
 		}
 		inputs=newInputs;
 	}
@@ -96,7 +98,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 					newOutputs.put(newOp,outputs.get(oldIp))
 				}
 			}
-			println('''«newOp.name»:«newOp.hashCode» -> «newOutputs.get(newOp)»''')
+			debug('''«newOp.name»:«newOp.hashCode» -> «newOutputs.get(newOp)»''')
 		}
 		outputs=newOutputs;
 	}
@@ -125,7 +127,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 	}
 
 	def updateInput(InputPort ip,String b) {
-		println("-> setting "+ip.name+":"+ip.hashCode+" to "+b)
+		debug("-> setting "+ip.name+":"+ip.hashCode+" to "+b)
 		printIOMap
 		if (inputs.containsKey(ip)) {
 			inputs.put(ip,b)
@@ -145,10 +147,10 @@ class FSMSimulator extends ClockState implements InstanceData {
 			throw new RuntimeException("inconsistent state for output port mapping ")
 		}
 		for (Port e : inputs.keySet) {
-			println("\t- In "+e.name+":"+e.hashCode+"=>"+inputs.get(e))
+			println("\t- In "+e.name+"=>"+inputs.get(e))
 		}  
 		for (Port e : outputs.keySet) {
-			println("\t- Out "+e.name+":"+e.hashCode+"=>"+outputs.get(e))
+			println("\t- Out "+e.name+"=>"+outputs.get(e))
 		}  
 		
 		var State defaultDst =null;
@@ -234,8 +236,12 @@ class FSMSimulator extends ClockState implements InstanceData {
 				throw new RuntimeException("Inconsistent operator "+b.op+" for expression "+PrettyPrinter.pp(b));
 			}
 		}
-		//println('''eval(«PrettyPrinter.pp(b)»)=«res»''')
+		debug('''eval(«PrettyPrinter.pp(b)»)=«res»''')
 		res
+	}
+	
+	def debug(String string) {
+		if (VERBOSE) println(string);
 	}
 
 
@@ -265,7 +271,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 		andRes = unquote(zeros(width));
 		
 		for(r : l) {
-			println('''		arg : «r»''')
+			
 		 	 if (width!=r.length) {
 		 		throw new RuntimeException("Inconsistent width in expression "+PrettyPrinter.pp(b));
 		 	}
@@ -295,7 +301,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 		andRes = unquote(ones(width));
 		
 		for(r : l) {
-			println('''		arg : «r»''')
+			
 		 	 if (width!=r.length) {
 		 		throw new RuntimeException("Inconsistent width in expression "+PrettyPrinter.pp(b));
 		 	}
@@ -324,7 +330,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 		res= res.replace('1', '0');
 		res= res.replace('@', '1');
 
-		//println("eval("+PrettyPrinter.pp(b)+")="+res)
+		debug("eval("+PrettyPrinter.pp(b)+")="+res)
 		res
 	}
 
@@ -340,7 +346,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 				throw new RuntimeException("Unsupported value \""+in+"\","+b+" only '0' or '1' supported");
 			}
 		}
-		//print("eval(or(«b»,«c»))=«res»''');
+		debug('''eval(or(«b»,«c»))=«res»''');
 		res
 	}
 	
@@ -356,7 +362,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 				throw new RuntimeException("Unsupported value "+c+","+b+" only '0' or '1' supported");
 			}
 		}
-		//print("eval(and(«b»,«c»))=«res»''');
+		debug('''eval(and(«b»,«c»))=«res»''');
 		res
 	}
 
@@ -369,9 +375,9 @@ class FSMSimulator extends ClockState implements InstanceData {
 				throw new RuntimeException("Unsupported value "+c+", only '0' or '1' supported");
 			}
 		}
-		//print("eval(not(«c»))=«res»''');
+		debug('''eval(not(«c»))=«res»''');
 		res
-		
+	
 	}
 
 	def dispatch String eval(PortRef b) {
@@ -380,14 +386,14 @@ class FSMSimulator extends ClockState implements InstanceData {
 		var res = ""
 		if (inputs.containsKey(b.port)) {
 			res = inputs.get(b.port)
-			// reverse to account for LSB on the rightmost digit 
-			res = new StringBuilder(res).reverse().toString()
 		} else {
 			printIOMap()
 			throw new RuntimeException("Port  "+b.port.name+":"+ b.port.hashCode+ " has no value");
 		}
 		
 		if(b.range!=null) {
+			// reverse to account for LSB on the rightmost digit 
+			res = new StringBuilder(res).reverse().toString()
 			if(b.range.ub==-1) {
 				val lb = b.range.lb+1 
 				res= quote(res.substring(lb,lb+1))
@@ -396,9 +402,11 @@ class FSMSimulator extends ClockState implements InstanceData {
 				val ub = b.range.ub+1 
 				res= quote(inputs.get(b.port).substring(lb,ub))
 			}
+			
+			
 		} else {
 		}
-		//println("eval("+PrettyPrinter.pp(b)+")="+res)
+		debug("eval("+PrettyPrinter.pp(b)+")="+res)
 		res
 	}
 	

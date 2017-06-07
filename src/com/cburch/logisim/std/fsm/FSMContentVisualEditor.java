@@ -53,7 +53,7 @@ import javax.swing.JPanel;
 import com.cburch.logisim.proj.Project;
 import com.cburch.logisim.statemachine.codegen.FSMVHDLCodeGen;
 import com.cburch.logisim.statemachine.editor.FSMEditorWindow;
-import com.cburch.logisim.statemachine.editor.view.FSMValidation;
+import com.cburch.logisim.statemachine.validation.FSMValidation;
 import com.cburch.logisim.util.FileUtil;
 import com.cburch.logisim.util.JFileChoosers;
 import com.cburch.logisim.util.JInputDialog;

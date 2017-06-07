@@ -1,4 +1,4 @@
-package com.cburch.logisim.statemachine.editor.view
+package com.cburch.logisim.statemachine.validation
 
 import java.awt.Point
 import org.eclipse.emf.ecore.EObject
@@ -21,6 +21,7 @@ import javax.management.RuntimeErrorException
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr
 import org.eclipse.emf.common.util.EList
 import com.cburch.logisim.statemachine.bdd.BitWidthAnalyzer
+import com.cburch.logisim.statemachine.editor.view.FSMCustomFactory
 
 class FSMValidation{
 
@@ -53,6 +54,9 @@ class FSMValidation{
 		}
 		for(s : e.states) {
 			validate(s)
+			for(t: s.transition) {
+				targets.add(t.dst);
+			}
 		}  
 		for(s : e.states) {
 			if (s!=fsm.start && !targets.contains(s)) {
@@ -133,7 +137,6 @@ class FSMValidation{
 		}
 		for (a: nonDefaultTransitions) {
 			validate(a)
-			targets.add(a.dst)
 			j=0;
 			for (b: nonDefaultTransitions) {
 				if(i<j) {
