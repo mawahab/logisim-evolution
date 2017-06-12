@@ -45,6 +45,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -67,6 +68,9 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import com.bfh.logisim.designrulecheck.CorrectLabel;
 import com.bfh.logisim.designrulecheck.Netlist;
@@ -449,10 +453,22 @@ public class FPGACommanderGui implements ActionListener,LibraryListener,ProjectL
 		panel.add(annotationList, c);
 
 		/* Read the selected board information to retrieve board picture */
-		MyBoardInformation = new BoardReaderClass(
-				MySettings.GetSelectedBoardFileName()).GetBoardInformation();
+		try {
+			MyBoardInformation = new BoardReaderClass(
+					MySettings.GetSelectedBoardFileName()).GetBoardInformation();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Object boardName = boardsList.getSelectedItem();
 		MyBoardInformation
-				.setBoardName(boardsList.getSelectedItem().toString());
+				.setBoardName(boardName.toString());
 		boardIcon = new BoardIcon(MyBoardInformation.GetImage());
 		// set board image on panel creation
 		boardPic.setIcon(boardIcon);
@@ -643,49 +659,74 @@ public class FPGACommanderGui implements ActionListener,LibraryListener,ProjectL
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getActionCommand().equals("annotate")) {
+		String actionCommand = e.getActionCommand();
+		if (actionCommand.equals("annotate")) {
 			Annotate(annotationList.getSelectedIndex() == 0);
-		} else if (e.getActionCommand().equals("Workspace")) {
+		} else if (actionCommand.equals("Workspace")) {
 			selectWorkSpace();
-		} else if (e.getActionCommand().equals("HDLType")) {
+		} else if (actionCommand.equals("HDLType")) {
 			handleHDLType();
-		} else if (e.getActionCommand().equals("ToolPath")) {
+		} else if (actionCommand.equals("ToolPath")) {
 			selectToolPath();
-		} else if (e.getActionCommand().equals("HDLOnly")) {
+		} else if (actionCommand.equals("HDLOnly")) {
 			handleHDLOnly();
-		} else if (e.getActionCommand().equals("Download")) {
+		} else if (actionCommand.equals("Download")) {
 			DownLoad();
-		} else if (e.getActionCommand().equals("targetBoard")) {
-			if (!boardsList.getSelectedItem().equals("Other")) {
-				MySettings.SetSelectedBoard(boardsList.getSelectedItem()
-						.toString());
-				MySettings.UpdateSettingsFile();
-				MyBoardInformation = new BoardReaderClass(
-						MySettings.GetSelectedBoardFileName())
-						.GetBoardInformation();
-				MyBoardInformation.setBoardName(boardsList.getSelectedItem()
-						.toString());
-				MapPannel.SetBoardInformation(MyBoardInformation);
-				boardIcon = new BoardIcon(MyBoardInformation.GetImage());
-				boardPic.setIcon(boardIcon);
-				boardPic.repaint();
-				if (Settings.vendors.get(MyBoardInformation.fpga.getVendor()).getToolPath().equals(Settings.Unknown)) {
-					if (!MySettings.GetHDLOnly()) {
-						MySettings.SetHdlOnly(true);
+		} else if (actionCommand.equals("targetBoard")) {
+			if (!boardsList.getSelectedItem().equals("Other"))
+				try {
+					{
+						MySettings.SetSelectedBoard(boardsList.getSelectedItem()
+								.toString());
 						MySettings.UpdateSettingsFile();
+						MyBoardInformation = new BoardReaderClass(
+								MySettings.GetSelectedBoardFileName())
+								.GetBoardInformation();
+						MyBoardInformation.setBoardName(boardsList.getSelectedItem()
+								.toString());
+						MapPannel.SetBoardInformation(MyBoardInformation);
+						boardIcon = new BoardIcon(MyBoardInformation.GetImage());
+						boardPic.setIcon(boardIcon);
+						boardPic.repaint();
+						if (Settings.vendors.get(MyBoardInformation.fpga.getVendor()).getToolPath().equals(Settings.Unknown)) {
+							if (!MySettings.GetHDLOnly()) {
+								MySettings.SetHdlOnly(true);
+								MySettings.UpdateSettingsFile();
+							}
+							HDLOnly.setText(OnlyHDLMessage);
+							HDLOnly.setEnabled(false);
+						} else if (MySettings.GetHDLOnly()) {
+							HDLOnly.setText(OnlyHDLMessage);
+						} else {
+							HDLOnly.setText(HDLandDownloadMessage);
+						}
+						writeToFlash.setSelected(false);
+						writeToFlash.setVisible(MyBoardInformation.fpga.isFlashDefined());
 					}
-					HDLOnly.setText(OnlyHDLMessage);
-					HDLOnly.setEnabled(false);
-				} else if (MySettings.GetHDLOnly()) {
-					HDLOnly.setText(OnlyHDLMessage);
-				} else {
-					HDLOnly.setText(HDLandDownloadMessage);
+				} catch (ParserConfigurationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SAXException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-				writeToFlash.setSelected(false);
-				writeToFlash.setVisible(MyBoardInformation.fpga.isFlashDefined());
-			} else {
+			else {
 				String NewBoardFileName = GetBoardFile();
-				MyBoardInformation = new BoardReaderClass(NewBoardFileName).GetBoardInformation();
+				try {
+					MyBoardInformation = new BoardReaderClass(NewBoardFileName).GetBoardInformation();
+				} catch (ParserConfigurationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SAXException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				if (MyBoardInformation == null) {
 					for (int index = 0 ; index < boardsList.getItemCount() ; index ++)
 						if (boardsList.getItemAt(index).equals(MySettings.GetSelectedBoard()))

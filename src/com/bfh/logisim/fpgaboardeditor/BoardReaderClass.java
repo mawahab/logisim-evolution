@@ -36,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.swing.ImageIcon;
@@ -44,6 +45,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +53,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.cburch.logisim.proj.Projects;
 
@@ -79,8 +82,8 @@ public class BoardReaderClass {
 		return result;
 	}
 
-	public BoardInformation GetBoardInformation() {
-		try {
+	public BoardInformation GetBoardInformation() throws ParserConfigurationException, SAXException, IOException {
+//		try {
 			// Create instance of DocumentBuilderFactory
 			factory = DocumentBuilderFactory.newInstance();
 			// Get the DocumentBuilder
@@ -187,13 +190,14 @@ public class BoardReaderClass {
 																						// format
 			ProcessComponentList(CompList, result);
 			return result;
-		} catch (Exception e) {
-			logger.error(
-					"Exceptions not handled yet in GetBoardInformation(), but got an exception: {}",
-					e.getMessage());
-			/* TODO: handle exceptions */
-			return null;
-		}
+//		} catch (Exception e) {
+//			
+//			logger.error(
+//					"Exceptions not handled yet in GetBoardInformation(), but got an exception: {}",
+//					e.getMessage());
+//			/* TODO: handle exceptions */
+//			return null;
+//		}
 	}
 
 	private FPGAClass GetFPGAInfo() {

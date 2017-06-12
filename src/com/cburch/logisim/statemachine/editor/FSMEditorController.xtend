@@ -59,7 +59,7 @@ class FSMEditorController {
 
 	public CtrlState state = CtrlState.IDLE
 	
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 	
 	Point copyStart
 	

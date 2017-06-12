@@ -37,6 +37,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 
@@ -51,6 +52,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileFilter;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import com.bfh.logisim.fpgaboardeditor.FPGAIOInformationContainer.IOComponentTypes;
 import com.cburch.logisim.proj.Projects;
@@ -216,7 +220,18 @@ public class BoardDialog implements ActionListener, ComponentListener {
 				SetBoardName(file.getName());
 				String FileName = file.getPath();
 				BoardReaderClass reader = new BoardReaderClass(FileName);
-				TheBoard = reader.GetBoardInformation();
+				try {
+					TheBoard = reader.GetBoardInformation();
+				} catch (ParserConfigurationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (SAXException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				picturepanel.SetImage(TheBoard.GetImage());
 				for (FPGAIOInformationContainer comp : TheBoard
 						.GetAllComponents())
