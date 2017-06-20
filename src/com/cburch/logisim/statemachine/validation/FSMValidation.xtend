@@ -22,6 +22,7 @@ import com.cburch.logisim.statemachine.fSMDSL.BoolExpr
 import org.eclipse.emf.common.util.EList
 import com.cburch.logisim.statemachine.bdd.BitWidthAnalyzer
 import com.cburch.logisim.statemachine.editor.view.FSMCustomFactory
+import com.cburch.logisim.statemachine.fSMDSL.Transition
 
 class FSMValidation{
 
@@ -142,8 +143,8 @@ class FSMValidation{
 				if(i<j) {
 					val pa= a.predicate
 					val pb= b.predicate
-					val or = FSMCustomFactory.or(EcoreUtil.copy(pa),EcoreUtil.copy(pb)) 
-					val optimizer = new BDDOptimizer(or);
+					val and = FSMCustomFactory.and(EcoreUtil.copy(pa),EcoreUtil.copy(pb)) 
+					val optimizer = new BDDOptimizer(and);
 					if (!optimizer.isAlwaysFalse()) {
 						error("Transitions predicates "+PrettyPrinter.pp(pa)+" and "+PrettyPrinter.pp(pb)+" are not mutually exclusive");
 					}
