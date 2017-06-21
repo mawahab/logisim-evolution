@@ -37,6 +37,7 @@ import org.eclipse.xpand2.XpandExecutionContextImpl.DefinitionOperationAdapter;
 
 import com.bfh.logisim.designrulecheck.CorrectLabel;
 import com.cburch.logisim.data.Attribute;
+import com.cburch.logisim.data.AttributeOption;
 import com.cburch.logisim.data.AttributeSet;
 import com.cburch.logisim.data.Attributes;
 import com.cburch.logisim.data.BitWidth;
@@ -178,12 +179,6 @@ public class RegisterFile extends InstanceFactory {
 		StringBuffer CompleteName = new StringBuffer();
 		CompleteName.append(CorrectLabel.getCorrectLabel(this.getName())
 				.toUpperCase());
-		if ((attrs.getValue(StdAttr.TRIGGER) == StdAttr.TRIG_FALLING)
-				|| (attrs.getValue(StdAttr.TRIGGER) == StdAttr.TRIG_RISING)) {
-			CompleteName.append("_FLIP_FLOP");
-		} else {
-			CompleteName.append("_LATCH");
-		}
 		return CompleteName.toString();
 	}
 
@@ -191,7 +186,7 @@ public class RegisterFile extends InstanceFactory {
 	public boolean HDLSupportedComponent(String HDLIdentifier,
 			AttributeSet attrs) {
 		if (MyHDLGenerator == null) {
-			MyHDLGenerator = new RegisterHDLGeneratorFactory();
+			MyHDLGenerator = new RegisterFileHDLGeneratorFactory();
 		}
 		return MyHDLGenerator.HDLTargetSupported(HDLIdentifier, attrs);
 	}

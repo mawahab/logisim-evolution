@@ -300,7 +300,8 @@ public class FPGAIOInformationContainer {
 					nodeval=nodeval.substring(6);
 					inoutPinLocations.put(0,nodeval);
 				} else {
-					throw new UnsupportedOperationException("NYI");
+					inoutPinLocations.put(0,nodeval);
+					System.err.println("[WARNING] no I/O direction for "+nodeval);
 				}
 		
 			}
@@ -324,7 +325,8 @@ public class FPGAIOInformationContainer {
 					nodeval=nodeval.substring(6);
 					inoutPinLocations.put(id,nodeval);
 				} else {
-					throw new UnsupportedOperationException("NYI");
+					inoutPinLocations.put(id,nodeval);
+					System.err.println("[WARNING] no I/O direction for "+nodeval);
 				}
 			}
 			if (nodeName.equals(

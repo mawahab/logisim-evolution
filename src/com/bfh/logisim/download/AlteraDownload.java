@@ -203,6 +203,8 @@ public class AlteraDownload {
 				command.add("--flow");
 				command.add("compile");
 				command.add(ToplevelHDLGeneratorFactory.FPGAToplevelName);
+				System.out.println("Command : "+command);
+				
 				ProcessBuilder Altera1 = new ProcessBuilder(command);
 				Altera1.directory(new File(SandboxPath));
 				final Process CreateProject = Altera1.start();
@@ -213,6 +215,7 @@ public class AlteraDownload {
 				MyReporter.ClsScr();
 				while ((line = br.readLine()) != null) {
 					MyReporter.print(line);
+					System.out.println(line);
 				}
 				CreateProject.waitFor();
 				if (CreateProject.exitValue() != 0) {

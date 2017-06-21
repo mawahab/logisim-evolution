@@ -582,7 +582,8 @@ public class AbstractHDLGeneratorFactory implements HDLGeneratorFactory {
 		StringBuffer OneLine = new StringBuffer();
 		int TabLength;
 		boolean first;
-		if (HDLType.equals(Settings.VHDL)) {
+		boolean isVHDL = HDLType.equals(Settings.VHDL);
+		if (isVHDL) {
 			Contents.add("   " + ThisInstanceIdentifier + " : " + CompName);
 			if (!ParameterMap.isEmpty()) {
 				OneLine.append("      GENERIC MAP ( ");

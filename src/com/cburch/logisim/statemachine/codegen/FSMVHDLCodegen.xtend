@@ -60,7 +60,7 @@ class FSMVHDLCodeGen{
 «««		);
 «««		end entity;
 		
-		architecture RTL of «e.name» is
+		architecture RTL of «e.name»«e.hashCode» is
 			
 			function BOOL_TO_SL(X : boolean)
               return std_logic is

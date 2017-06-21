@@ -62,6 +62,8 @@ public class FSMVHDLCodeGen {
       _builder.append("architecture RTL of ");
       String _name = e.getName();
       _builder.append(_name, "");
+      int _hashCode = e.hashCode();
+      _builder.append(_hashCode, "");
       _builder.append(" is");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");

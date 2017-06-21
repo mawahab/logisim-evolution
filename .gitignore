@@ -56,8 +56,6 @@ bin/
 # IDE files
 .metadata/
 .settings/
-.project
-.classpath
 
 
 # Simulation files and folders

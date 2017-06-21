@@ -1302,129 +1302,123 @@ public class FPGACommanderGui implements ActionListener,LibraryListener,ProjectL
 
 	private boolean writeHDL() {
 		String CircuitName = circuitsList.getSelectedItem().toString();
-		if (!GenDirectory(MySettings.GetWorkspacePath() + File.separator
-				+ MyProject.getLogisimFile().getName())) {
-			MyReporter.AddFatalError("Unable to create directory: \""
-					+ MySettings.GetWorkspacePath() + File.separator
-					+ MyProject.getLogisimFile().getName() + "\"");
+		Settings settings = MySettings;
+		Project project = MyProject;
+		FPGAReport log = MyReporter;
+		LogisimFile myfile = project.getLogisimFile();
+		
+		String dirName = settings.GetWorkspacePath() + File.separator+ myfile.getName();
+		if (!GenDirectory(dirName)) {
+			log.AddFatalError("Unable to create directory: \""+ dirName + "\"");
 			return false;
 		}
-		String ProjectDir = MySettings.GetWorkspacePath() + File.separator
-				+ MyProject.getLogisimFile().getName();
-		if (!ProjectDir.endsWith(File.separator)) {
-			ProjectDir += File.separator;
+		
+		
+		
+		if (!dirName.endsWith(File.separator)) {
+			dirName += File.separator;
 		}
-		LogisimFile myfile = MyProject.getLogisimFile();
 		Circuit RootSheet = myfile.getCircuit(CircuitName);
-		ProjectDir += CorrectLabel.getCorrectLabel(RootSheet.getName())
+		dirName += CorrectLabel.getCorrectLabel(RootSheet.getName())
 				+ File.separator;
-		if (!CleanDirectory(ProjectDir)) {
-			MyReporter
-					.AddFatalError("Unable to cleanup old project files in directory: \""
-							+ ProjectDir + "\"");
+		if (!CleanDirectory(dirName)) {
+			log.AddFatalError("Unable to cleanup old project files in directory: \""+ dirName + "\"");
 			return false;
 		}
-		if (!GenDirectory(ProjectDir)) {
-			MyReporter.AddFatalError("Unable to create directory: \""
-					+ ProjectDir + "\"");
+		if (!GenDirectory(dirName)) {
+			log.AddFatalError("Unable to create directory: \""+ dirName + "\"");
 			return false;
 		}
 		for (int i = 0; i < HDLPaths.length; i++) {
-			if (!GenDirectory(ProjectDir + HDLPaths[i])) {
-				MyReporter.AddFatalError("Unable to create directory: \""
-						+ ProjectDir + HDLPaths[i] + "\"");
+			if (!GenDirectory(dirName + HDLPaths[i])) {
+				log.AddFatalError("Unable to create directory: \""
+						+ dirName + HDLPaths[i] + "\"");
 				return false;
 			}
 		}
 		Set<String> GeneratedHDLComponents = new HashSet<String>();
-		HDLGeneratorFactory Worker = RootSheet.getSubcircuitFactory()
-				.getHDLGenerator(MySettings.GetHDLType(),
-						RootSheet.getStaticAttributes());
-		if (Worker == null) {
-			MyReporter
-					.AddFatalError("Internal error on HDL generation, null pointer exception");
+		String hDLType = settings.GetHDLType();
+		HDLGeneratorFactory hdlGenerator = RootSheet.getSubcircuitFactory()
+				.getHDLGenerator(hDLType,RootSheet.getStaticAttributes());
+		if (hdlGenerator == null) {
+			log.AddFatalError("Internal error on HDL generation, null pointer exception");
 			return false;
 		}
-		if (!Worker.GenerateAllHDLDescriptions(GeneratedHDLComponents,
-				ProjectDir, null, MyReporter, MySettings.GetHDLType())) {
+		if (!hdlGenerator.GenerateAllHDLDescriptions(GeneratedHDLComponents,
+				dirName, null, log, hDLType)) {
 			return false;
 		}
 		/* Here we generate the top-level shell */
-		if (RootSheet.getNetList().NumberOfClockTrees() > 0) {
+		Netlist netlist = RootSheet.getNetList();
+		if (netlist.NumberOfClockTrees() > 0) {
 			TickComponentHDLGeneratorFactory Ticker = new TickComponentHDLGeneratorFactory(
 					MyBoardInformation.fpga.getClockFrequency(),
 					MenuSimulate.SupportedTickFrequencies[frequenciesList
 							.getSelectedIndex()]/* , boardFreq.isSelected() */);
+			String targetDirectory = dirName+ Ticker.GetRelativeDirectory(hDLType);
+			String identifier = Ticker.getComponentStringIdentifier();
+			ArrayList<String> entity = Ticker.GetEntity(
+					netlist, null,
+					identifier, log,
+					hDLType);
 			if (!AbstractHDLGeneratorFactory.WriteEntity(
-					ProjectDir
-							+ Ticker.GetRelativeDirectory(MySettings
-									.GetHDLType()), Ticker.GetEntity(
-							RootSheet.getNetList(), null,
-							Ticker.getComponentStringIdentifier(), MyReporter,
-							MySettings.GetHDLType()), Ticker
-							.getComponentStringIdentifier(), MyReporter,
-					MySettings.GetHDLType())) {
+					targetDirectory, entity, identifier, log,
+					hDLType)) {
 				return false;
 			}
-			if (!AbstractHDLGeneratorFactory.WriteArchitecture(ProjectDir
-					+ Ticker.GetRelativeDirectory(MySettings.GetHDLType()),
-					Ticker.GetArchitecture(RootSheet.getNetList(), null,
-							Ticker.getComponentStringIdentifier(), MyReporter,
-							MySettings.GetHDLType()), Ticker
-							.getComponentStringIdentifier(), MyReporter,
-					MySettings.GetHDLType())) {
+			if (!AbstractHDLGeneratorFactory.WriteArchitecture(targetDirectory,
+					Ticker.GetArchitecture(netlist, null,
+							identifier, log,
+							hDLType), identifier, log,
+					hDLType)) {
 				return false;
 			}
-			HDLGeneratorFactory ClockGen = RootSheet
-					.getNetList()
+			HDLGeneratorFactory ClockGen = netlist
 					.GetAllClockSources()
 					.get(0)
 					.getFactory()
 					.getHDLGenerator(
-							MySettings.GetHDLType(),
-							RootSheet.getNetList().GetAllClockSources().get(0)
+							hDLType,
+							netlist.GetAllClockSources().get(0)
 									.getAttributeSet());
-			String CompName = RootSheet.getNetList().GetAllClockSources()
+			String CompName = netlist.GetAllClockSources()
 					.get(0).getFactory().getHDLName(null);
 			if (!AbstractHDLGeneratorFactory.WriteEntity(
-					ProjectDir
-							+ ClockGen.GetRelativeDirectory(MySettings
-									.GetHDLType()), ClockGen.GetEntity(
-							RootSheet.getNetList(), null, CompName, MyReporter,
-							MySettings.GetHDLType()), CompName, MyReporter,
-					MySettings.GetHDLType())) {
+					dirName
+							+ ClockGen.GetRelativeDirectory(hDLType), ClockGen.GetEntity(
+							netlist, null, CompName, log,
+							hDLType), CompName, log,
+					hDLType)) {
 				return false;
 			}
-			if (!AbstractHDLGeneratorFactory.WriteArchitecture(ProjectDir
-					+ ClockGen.GetRelativeDirectory(MySettings.GetHDLType()),
-					ClockGen.GetArchitecture(RootSheet.getNetList(), null,
-							CompName, MyReporter, MySettings.GetHDLType()),
-					CompName, MyReporter, MySettings.GetHDLType())) {
+			if (!AbstractHDLGeneratorFactory.WriteArchitecture(dirName
+					+ ClockGen.GetRelativeDirectory(hDLType),
+					ClockGen.GetArchitecture(netlist, null,
+							CompName, log, hDLType),
+					CompName, log, hDLType)) {
 				return false;
 			}
 		}
-		Worker = new ToplevelHDLGeneratorFactory(
+		hdlGenerator = new ToplevelHDLGeneratorFactory(
 				MyBoardInformation.fpga.getClockFrequency(),
 				MenuSimulate.SupportedTickFrequencies[frequenciesList
 						.getSelectedIndex()], RootSheet, MyMappableResources);
+		
+		
+		String path = dirName+ hdlGenerator.GetRelativeDirectory(hDLType);
+		String compIdent = hdlGenerator.getComponentStringIdentifier();
+		String topLevel = ToplevelHDLGeneratorFactory.FPGAToplevelName;
+		
 		if (!AbstractHDLGeneratorFactory.WriteEntity(
-				ProjectDir
-						+ Worker.GetRelativeDirectory(MySettings.GetHDLType()),
-				Worker.GetEntity(RootSheet.getNetList(), null,
-						ToplevelHDLGeneratorFactory.FPGAToplevelName,
-						MyReporter, MySettings.GetHDLType()), Worker
-						.getComponentStringIdentifier(), MyReporter, MySettings
-						.GetHDLType())) {
+				path,
+				hdlGenerator.GetEntity(netlist, null,topLevel,
+						log, hDLType), compIdent, log, hDLType)) {
 			return false;
 		}
 		if (!AbstractHDLGeneratorFactory.WriteArchitecture(
-				ProjectDir
-						+ Worker.GetRelativeDirectory(MySettings.GetHDLType()),
-				Worker.GetArchitecture(RootSheet.getNetList(), null,
-						ToplevelHDLGeneratorFactory.FPGAToplevelName,
-						MyReporter, MySettings.GetHDLType()), Worker
-						.getComponentStringIdentifier(), MyReporter, MySettings
-						.GetHDLType())) {
+				path,
+				hdlGenerator.GetArchitecture(netlist, null,topLevel,
+						log, hDLType), compIdent, log, hDLType)) {
 			return false;
 		}
 

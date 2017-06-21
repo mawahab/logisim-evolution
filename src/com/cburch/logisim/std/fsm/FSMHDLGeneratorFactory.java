@@ -55,8 +55,7 @@ public class FSMHDLGeneratorFactory extends AbstractHDLGeneratorFactory {
 		contents.addAll(FileWriter.getGenerateRemark(ComponentName, HDLType,
 				TheNetlist.projName()));
 
-		FSMContent content = (FSMContent) attrs
-				.getValue(FSMEntity.CONTENT_ATTR);
+		FSMContent content = (FSMContent) attrs.getValue(FSMEntity.CONTENT_ATTR);
 		FSMVHDLCodeGen codegen = new FSMVHDLCodeGen();
 		arrayList.add(codegen.generate(content.getFsm()).toString());
 		

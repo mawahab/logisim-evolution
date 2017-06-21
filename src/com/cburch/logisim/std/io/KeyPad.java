@@ -275,19 +275,22 @@ public class KeyPad extends InstanceFactory {
 		}
 		
 		//g.drawString(magrux, bds.getX(), bds.getY());
+		int labels[] = new int[]{1,2,3,0xF,4,5,6,0xE,7,8,9,0xD,0xA,0,0xB,0xC};
+		
 		for (int i=0;i<4; i++) {
 			for (int j=0;j<4; j++) {
 				int locX = bds.getX()+i*KEY_WIDTH+BORDER;
 				int locY = bds.getY()+j*KEY_HEIGHT+BORDER;
+				String keyLabel = Integer.toHexString(labels[4*j+i]).toUpperCase();
 				if (state.isActive(i, j)) {
 					g.setColor(Color.darkGray);
 					g.fillRect(locX, locY, KEY_WIDTH-4, KEY_HEIGHT-4);
 					g.setColor(Color.WHITE);
-					GraphicsUtil.drawCenteredText(g, Integer.toHexString(4*i+j).toUpperCase(), locX+KEY_WIDTH/2, locY+KEY_HEIGHT/2);
+					GraphicsUtil.drawCenteredText(g, keyLabel, locX+KEY_WIDTH/2, locY+KEY_HEIGHT/2);
 					g.setColor(Color.BLACK);
 				} else {
 					g.drawRect(locX, locY, KEY_WIDTH-4, KEY_HEIGHT-4);
-					GraphicsUtil.drawCenteredText(g, Integer.toHexString(4*i+j).toUpperCase(), locX+KEY_WIDTH/2, locY+KEY_HEIGHT/2);
+					GraphicsUtil.drawCenteredText(g, keyLabel, locX+KEY_WIDTH/2, locY+KEY_HEIGHT/2);
 				}
 			}
 		}

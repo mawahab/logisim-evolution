@@ -35,50 +35,29 @@ class RegisterFileVHDLCodeGen{
 	new() {
 	}
 
-	def export(FSM fsm, File f) throws FileNotFoundException{
-		val ps  = new PrintStream(f);
-		ps.append(generate(fsm));
-		ps.close
-	}
-
-	def dispatch generate(FSM e) {
-		var ios = new ArrayList<Port>();
-		ios.addAll(e.in)
-		ios.addAll(e.out)
+	
+	def  generate() {
 		'''
 		library IEEE;
 		use IEEE.STD_LOGIC_1164.ALL;
 		use IEEE.NUMERIC_STD.ALL;
 		
-		entity REGFILE is port (
-			clk : in std_logic;
-			rst : in std_logic;
-			WE  : in std_logic;
-			WAD  : in std_logic_vector(4 downto 0);
-			DI  : in std_logic_vector(31 downto 0);
-			RA0 : in std_logic_vector(4 downto 0);
-			RA1 : in std_logic_vector(4 downto 0);
-			DO0 : out std_logic_vector(31 downto 0);
-			DO1 : out std_logic_vector(31 downto 0)
-		);
-		end entity;
-		
-		architecture RTL of REGFILE is
+		architecture RTL of REGISTER_FILE is
 
- 			type RAM_type is ARRAY(0 to 31) of STD_LOGIC_VECTOR(31 downto 0);
-    		signal RAM : RAM_type := (others => (others => '0'));
-    		
+		type RAM_type is ARRAY(0 to 31) of STD_LOGIC_VECTOR(31 downto 0);
+		signal RAM : RAM_type := (others => (others => '0'));
+
 		begin
 		
-		    DO0 <= RAM(to_integer(unsigned(RA0)));
-		    DO1 <= RAM(to_integer(unsigned(RA1)));
+		    DO0 <= RAM(to_integer(unsigned(RAD0)));
+		    DO1 <= RAM(to_integer(unsigned(RAD1)));
 
 		    process(CLK, RST) is
 		    begin
 		        if rising_edge(CLK)  THEN
 		            if (RST = '1') THEN
 		               	RAM <= (others => (others => '0'));
-		            ELSIF (WE = '1') THEN
+		            ELSIF (WE = '1' and Tick='1') THEN
 		               	RAM(to_integer(unsigned(WAD))) <= DI;
 		            end if;
 		        end if;
