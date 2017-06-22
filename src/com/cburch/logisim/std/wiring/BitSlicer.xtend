@@ -135,8 +135,6 @@ class BitSlicer extends InstanceFactory {
 		var Value in = state.getPortValue(1)
 		var BitWidth wout = state.getAttributeValue(ATTR_OUT_WIDTH)
 		var int offset = state.getAttributeValue(ATTR_OFFSET_WIDTH)
-		var Value extend = state.getPortValue(2)
-		if(extend.getWidth() !== 1) extend = Value.ERROR
 		var Value out = in.range(wout.getWidth() + offset - 1, offset)
 		state.setPort(0, out, 1)
 	}
