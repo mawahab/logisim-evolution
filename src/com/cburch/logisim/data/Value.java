@@ -337,6 +337,10 @@ public class Value {
 		}
 	}
 
+	public Value range(int msb, int lsb) {
+		int maskInverse = (value & ((1<<(msb-1))-1)>> lsb );
+		return Value.create(msb-lsb+1, error | maskInverse, unknown, value);
+	}
 	public Value get(int which) {
 		if (which < 0 || which >= width)
 			return ERROR;
