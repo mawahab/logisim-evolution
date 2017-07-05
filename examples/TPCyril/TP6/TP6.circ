@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project source="2.13.22" version="1.0">
+This file is intended to be loaded by Logisim-evolution (https://github.com/reds-heig/logisim-evolution).
+<lib desc="#Wiring" name="0">
+    <tool name="Splitter">
+      <a name="facing" val="north"/>
+    </tool>
+    <tool name="Tunnel">
+      <a name="facing" val="east"/>
+    </tool>
+  </lib>
+  <lib desc="#Gates" name="1"/>
+  <lib desc="#Plexers" name="2">
+    <tool name="Multiplexer">
+      <a name="enable" val="false"/>
+    </tool>
+    <tool name="Demultiplexer">
+      <a name="enable" val="false"/>
+    </tool>
+  </lib>
+  <lib desc="#Arithmetic" name="3"/>
+  <lib desc="#Memory" name="4">
+    <tool name="ROM">
+      <a name="contents">addr/data: 8 8
+0
+</a>
+    </tool>
+  </lib>
+  <lib desc="#I/O" name="5"/>
+  <lib desc="#HDL-IP" name="6">
+    <tool name="VHDL Entity">
+      <a name="content">--------------------------------------------------------------------------------
+-- HEIG-VD, institute REDS, 1400 Yverdon-les-Bains
+-- Project :
+-- File    :
+-- Autor   :
+-- Date    :
+--
+--------------------------------------------------------------------------------
+-- Description :
+--
+--------------------------------------------------------------------------------
+
+library ieee;
+  use ieee.std_logic_1164.all;
+  --use ieee.numeric_std.all;
+
+entity VHDL_Component is
+  port(
+  ------------------------------------------------------------------------------
+  --Insert input ports below
+    horloge_i  : in  std_logic;                    -- input bit example
+    val_i      : in  std_logic_vector(3 downto 0); -- input vector example
+  ------------------------------------------------------------------------------
+  --Insert output ports below
+    max_o      : out std_logic;                    -- output bit example
+    cpt_o      : out std_logic_Vector(3 downto 0)  -- output vector example
+    );
+end VHDL_Component;
+
+--------------------------------------------------------------------------------
+--Complete your VHDL description below
+architecture type_architecture of VHDL_Component is
+
+
+begin
+
+
+end type_architecture;
+</a>
+    </tool>
+  </lib>
+  <lib desc="#TCL" name="7">
+    <tool name="TclGeneric">
+      <a name="content">library ieee;
+use ieee.std_logic_1164.all;
+
+entity TCL_Generic is
+  port(
+    --Insert input ports below
+    horloge_i  : in  std_logic;                    -- input bit example
+    val_i      : in  std_logic_vector(3 downto 0); -- input vector example
+
+	  --Insert output ports below
+    max_o      : out std_logic;                    -- output bit example
+    cpt_o      : out std_logic_Vector(3 downto 0)  -- output vector example
+  );
+end TCL_Generic;
+</a>
+    </tool>
+  </lib>
+  <lib desc="#Base" name="8">
+    <tool name="Text Tool">
+      <a name="text" val=""/>
+      <a name="font" val="SansSerif plain 12"/>
+      <a name="halign" val="center"/>
+      <a name="valign" val="base"/>
+    </tool>
+  </lib>
+  <lib desc="#BFH-Praktika" name="9"/>
+  <lib desc="#FSM" name="10">
+    <tool name="FSM Entity">
+      <a name="content">fsm example @[ 50 , 50 , 800 , 500 ] { in A [ 3 ] @[ 50 , 100 , 44 , 15 ] ; out
+X [ 4 ] @[ 807 , 140 , 43 , 15 ] ; codeWidth = 2 ; reset = S0 ; state S0 = "01"
+@[ 297 , 181 , 30 , 30 ] { commands @[ 246 , 173 , 50 , 40 ] { X = "0001" ; }
+transitions { S0 -&gt; S1 when default @[ 432 , 151 , 50 , 21 ] ; S0 -&gt; S3 when A
+== "000" @[ 346 , 269 , 68 , 21 ] ; } } state S1 = "10" @[ 470 , 186 , 30 , 30
+] { commands @[ 522 , 190 , 40 , 40 ] { X = "0010" ; } transitions { S1 -&gt; S2
+when default @[ 533 , 276 , 50 , 21 ] ; S1 -&gt; S0 when A == "000" @[ 399 , 230 ,
+68 , 21 ] ; } } state S2 = "00" @[ 471 , 339 , 30 , 30 ] { commands @[ 524 ,
+353 , 60 , 40 ] { X = { "00" , A [ 1 ] , "1" } ; } transitions { S2 -&gt; S3 when
+default @[ 392 , 398 , 50 , 21 ] ; S2 -&gt; S1 when A [ 2 : 1 ] == "11" @[ 557 ,
+250 , 90 , 21 ] ; } } state S3 = "11" @[ 287 , 325 , 30 , 30 ] { commands @[
+244 , 341 , 60 , 40 ] { X = "1000" ; } transitions { S3 -&gt; S0 when default @[
+248 , 278 , 50 , 21 ] ; S3 -&gt; S2 when A == "000" @[ 388 , 313 , 68 , 21 ] ; } }
+}</a>
+      <a name="label" val=""/>
+    </tool>
+  </lib>
+  <main name="main"/>
+  <options>
+    <a name="gateUndefined" val="ignore"/>
+    <a name="simlimit" val="1000"/>
+    <a name="simrand" val="0"/>
+    <a name="tickmain" val="half_period"/>
+  </options>
+  <mappings>
+    <tool lib="8" map="Button2" name="Menu Tool"/>
+    <tool lib="8" map="Button3" name="Menu Tool"/>
+    <tool lib="8" map="Ctrl Button1" name="Menu Tool"/>
+  </mappings>
+  <toolbar>
+    <tool lib="8" name="Poke Tool"/>
+    <tool lib="8" name="Edit Tool"/>
+    <tool lib="8" name="Text Tool">
+      <a name="text" val=""/>
+      <a name="font" val="SansSerif plain 12"/>
+      <a name="halign" val="center"/>
+      <a name="valign" val="base"/>
+    </tool>
+    <sep/>
+    <tool lib="0" name="Pin"/>
+    <tool lib="0" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="labelloc" val="east"/>
+    </tool>
+    <tool lib="1" name="NOT Gate"/>
+    <tool lib="1" name="AND Gate"/>
+    <tool lib="1" name="OR Gate"/>
+  </toolbar>
+  <circuit name="main">
+    <a name="circuit" val="main"/>
+    <a name="clabel" val=""/>
+    <a name="clabelup" val="east"/>
+    <a name="clabelfont" val="SansSerif bold 16"/>
+    <a name="circuitnamedbox" val="true"/>
+    <a name="circuitvhdlpath" val=""/>
+    <wire from="(260,160)" to="(320,160)"/>
+    <wire from="(260,180)" to="(320,180)"/>
+    <wire from="(60,120)" to="(120,120)"/>
+    <wire from="(60,100)" to="(120,100)"/>
+    <wire from="(60,160)" to="(120,160)"/>
+    <wire from="(60,180)" to="(120,180)"/>
+    <wire from="(60,140)" to="(120,140)"/>
+    <wire from="(70,540)" to="(130,540)"/>
+    <wire from="(70,560)" to="(130,560)"/>
+    <wire from="(70,580)" to="(130,580)"/>
+    <wire from="(70,600)" to="(130,600)"/>
+    <wire from="(270,380)" to="(320,380)"/>
+    <wire from="(270,400)" to="(320,400)"/>
+    <wire from="(120,90)" to="(120,100)"/>
+    <wire from="(60,320)" to="(130,320)"/>
+    <wire from="(60,340)" to="(130,340)"/>
+    <wire from="(60,360)" to="(130,360)"/>
+    <wire from="(60,380)" to="(130,380)"/>
+    <wire from="(60,400)" to="(130,400)"/>
+    <comp lib="0" loc="(60,100)" name="Clock"/>
+    <comp lib="0" loc="(60,340)" name="Pin"/>
+    <comp lib="0" loc="(70,600)" name="Pin"/>
+    <comp lib="0" loc="(320,180)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="labelloc" val="east"/>
+    </comp>
+    <comp lib="10" loc="(120,60)" name="FSM Entity">
+      <a name="content">fsm Machinejeton @[ 50 , 50 , 800 , 500 ] { in req [ 1 ] @[ 50 , 123 , 27 , 15 ]
+; in end [ 1 ] @[ 50 , 161 , 30 , 15 ] ; out Start [ 1 ] @[ 813 , 140 , 37 , 15
+] ; out Ack [ 1 ] @[ 822 , 174 , 28 , 15 ] ; codeWidth = 4 ; reset = A ; state
+A = "1000" @[ 234 , 135 , 30 , 30 ] { commands @[ 219 , 125 , 67 , 36 ] { Start
+= "0" ; Ack = "0" ; } transitions { A -&gt; B when req @[ 437 , 112 , 27 , 21 ] ;
+} } state B = "0100" @[ 605 , 132 , 30 , 30 ] { commands @[ 645 , 111 , 67 , 36
+] { Start = "1" ; Ack = "0" ; } transitions { B -&gt; C when / req @[ 692 , 262 ,
+41 , 21 ] ; } } state C = "0010" @[ 602 , 382 , 30 , 30 ] { commands @[ 645 ,
+425 , 67 , 36 ] { Start = "0" ; Ack = "0" ; } transitions { C -&gt; D when end @[
+411 , 457 , 30 , 21 ] ; } } state D = "0001" @[ 243 , 381 , 30 , 30 ] {
+commands @[ 210 , 435 , 67 , 36 ] { Start = "0" ; Ack = "1" ; } transitions { D
+-&gt; A when / req @[ 210 , 277 , 41 , 21 ] ; } } }</a>
+      <a name="label" val=""/>
+    </comp>
+    <comp lib="0" loc="(60,380)" name="Pin"/>
+    <comp lib="0" loc="(320,400)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="labelloc" val="east"/>
+    </comp>
+    <comp lib="10" loc="(130,500)" name="FSM Entity">
+      <a name="content">fsm Genclock @[ 50 , 50 , 800 , 500 ] { in attente [ 1 ] @[ 50 , 100 , 53 , 15 ]
+; codeWidth = 2 ; reset = t1 ; state t1 = "01" @[ 300 , 188 , 30 , 30 ] {
+commands @[ 345 , 203 , 30 , 20 ] { } transitions { t1 -&gt; t2 when / attente @[
+432 , 151 , 67 , 21 ] ; } } state t2 = "10" @[ 624 , 175 , 30 , 30 ] { commands
+@[ 669 , 190 , 30 , 20 ] { } transitions { t2 -&gt; t3 when / attente @[ 606 , 341
+, 67 , 21 ] ; } } state t3 = "00" @[ 452 , 361 , 30 , 30 ] { commands @[ 497 ,
+376 , 30 , 20 ] { } transitions { t3 -&gt; t1 when / attente @[ 326 , 349 , 67 ,
+21 ] ; } } }</a>
+      <a name="label" val=""/>
+    </comp>
+    <comp lib="0" loc="(60,160)" name="Pin"/>
+    <comp lib="0" loc="(60,320)" name="Clock"/>
+    <comp lib="0" loc="(60,120)" name="Pin">
+      <a name="label" val="RAZ"/>
+    </comp>
+    <comp lib="0" loc="(70,560)" name="Pin"/>
+    <comp lib="0" loc="(60,360)" name="Pin"/>
+    <comp lib="0" loc="(70,540)" name="Clock"/>
+    <comp lib="0" loc="(60,400)" name="Pin"/>
+    <comp lib="10" loc="(130,280)" name="FSM Entity">
+      <a name="content">fsm Codagedense @[ 50 , 50 , 800 , 500 ] { in req [ 1 ] @[ 50 , 137 , 27 , 15 ]
+; in end [ 1 ] @[ 50 , 174 , 30 , 15 ] ; out Start [ 1 ] @[ 813 , 140 , 37 , 15
+] ; out Ack [ 1 ] @[ 822 , 176 , 28 , 15 ] ; codeWidth = 2 ; reset = A ; state
+A = "00" @[ 258 , 137 , 30 , 30 ] { commands @[ 211 , 123 , 67 , 36 ] { Start =
+"0" ; Ack = "0" ; } transitions { A -&gt; B when req @[ 393 , 118 , 27 , 21 ] ; }
+} state B = "01" @[ 498 , 145 , 30 , 30 ] { commands @[ 528 , 119 , 67 , 36 ] {
+Start = "1" ; Ack = "0" ; } transitions { B -&gt; C when / req @[ 621 , 254 , 41 ,
+21 ] ; } } state C = "10" @[ 526 , 369 , 30 , 30 ] { commands @[ 571 , 384 , 67
+, 36 ] { Start = "0" ; Ack = "0" ; } transitions { C -&gt; D when end @[ 381 , 433
+, 30 , 21 ] ; } } state D = "11" @[ 233 , 378 , 30 , 30 ] { commands @[ 212 ,
+430 , 67 , 36 ] { Start = "0" ; Ack = "1" ; } transitions { D -&gt; A when / end
+@[ 158 , 269 , 44 , 21 ] ; } } }</a>
+      <a name="label" val=""/>
+    </comp>
+    <comp lib="0" loc="(60,140)" name="Pin"/>
+    <comp lib="0" loc="(320,160)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="labelloc" val="east"/>
+    </comp>
+    <comp lib="0" loc="(70,580)" name="Pin"/>
+    <comp lib="8" loc="(85,22)" name="Text">
+      <a name="text" val="Machine à jetons"/>
+      <a name="font" val="SansSerif plain 12"/>
+    </comp>
+    <comp lib="0" loc="(60,180)" name="Pin"/>
+    <comp lib="0" loc="(320,380)" name="Pin">
+      <a name="facing" val="west"/>
+      <a name="output" val="true"/>
+      <a name="labelloc" val="east"/>
+    </comp>
+  </circuit>
+</project>
