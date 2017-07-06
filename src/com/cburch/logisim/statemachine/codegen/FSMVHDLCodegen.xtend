@@ -116,7 +116,7 @@ class FSMVHDLCodeGen{
 		val value= if(port.width==1) {
 			"'0'"
 		} else {
-			'''"«Integer.toBinaryString((1<<port.width)-1)»"'''
+			'''"«Integer.toBinaryString((1<<port.width)-1).replace('1','0')»"'''
 		}
 		'''«port.name» <= «value»;'''
 	}
