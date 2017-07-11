@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <LogisimGoesFPGABoardMapInformation>
 <GlobalMapInformation BoardName="TERASIC_DE0_CV" ToplevelCircuitName="Montre"/>
-<MAPPEDCOMPONENT_1 Height="21" Key="BUS: /affich#Pin0" LocationX="233" LocationY="331" Width="9"/>
-<MAPPEDCOMPONENT_2 Height="21" Key="BUS: /affich#Pin1" LocationX="211" LocationY="331" Width="9"/>
-<MAPPEDCOMPONENT_3 Height="21" Key="BUS: /confi#Pin0" LocationX="365" LocationY="331" Width="9"/>
-<MAPPEDCOMPONENT_4 Height="21" Key="BUS: /confi#Pin1" LocationX="343" LocationY="331" Width="9"/>
-<MAPPEDCOMPONENT_5 Height="29" Key="PIN: /RAZ#Button0" LocationX="365" LocationY="363" Width="14"/>
-<MAPPEDCOMPONENT_6 Height="19" Key="PIN: /affichage#Button0" LocationX="484" LocationY="370" Width="18"/>
-<MAPPEDCOMPONENT_7 Height="19" Key="PIN: /bouton_unit#Button0" LocationX="80" LocationY="370" Width="18"/>
-<MAPPEDCOMPONENT_8 Height="19" Key="PIN: /conf#Button0" LocationX="120" LocationY="370" Width="18"/>
-<MAPPEDCOMPONENT_9 Height="19" Key="PIN: /load#Button0" LocationX="40" LocationY="370" Width="18"/>
-<MAPPEDCOMPONENT_a Height="29" Key="PIN: /switch_stop#Button0" LocationX="343" LocationY="363" Width="14"/>
-<MAPPEDCOMPONENT_b Height="48" Key="SEVENSEGMENT: /Hex1" LocationX="255" LocationY="306" Width="27"/>
-<MAPPEDCOMPONENT_c Height="48" Key="SEVENSEGMENT: /Hex2" LocationX="227" LocationY="306" Width="27"/>
-<MAPPEDCOMPONENT_d Height="48" Key="SEVENSEGMENT: /Hex3" LocationX="198" LocationY="306" Width="27"/>
-<MAPPEDCOMPONENT_e Height="48" Key="SEVENSEGMENT: /Hex4" LocationX="168" LocationY="306" Width="27"/>
-<MAPPEDCOMPONENT_f Height="48" Key="SEVENSEGMENT: /Hex5" LocationX="138" LocationY="306" Width="27"/>
-<MAPPEDCOMPONENT_10 Height="48" Key="SEVENSEGMENT: /Hex6" LocationX="108" LocationY="306" Width="27"/>
+<MAPPEDCOMPONENT_1 Height="11" Key="BUS: /confi#Pin0" LocationX="344" LocationY="333" Width="9"/>
+<MAPPEDCOMPONENT_2 Height="11" Key="BUS: /confi#Pin1" LocationX="324" LocationY="333" Width="9"/>
+<MAPPEDCOMPONENT_3 Height="29" Key="PIN: /RAZ#Button0" LocationX="340" LocationY="355" Width="14"/>
+<MAPPEDCOMPONENT_4 Height="24" Key="PIN: /affichage#Button0" LocationX="469" LocationY="362" Width="24"/>
+<MAPPEDCOMPONENT_5 Height="24" Key="PIN: /bouton_unit#Button0" LocationX="438" LocationY="362" Width="24"/>
+<MAPPEDCOMPONENT_6 Height="24" Key="PIN: /conf#Button0" LocationX="406" LocationY="362" Width="24"/>
+<MAPPEDCOMPONENT_7 Height="24" Key="PIN: /load#Button0" LocationX="375" LocationY="362" Width="24"/>
+<MAPPEDCOMPONENT_8 Height="29" Key="PIN: /switch_stop#Button0" LocationX="320" LocationY="355" Width="14"/>
+<MAPPEDCOMPONENT_9 Height="49" Key="SEVENSEGMENT: /Hex1" LocationX="322" LocationY="274" Width="28"/>
+<MAPPEDCOMPONENT_a Height="49" Key="SEVENSEGMENT: /Hex2" LocationX="292" LocationY="274" Width="28"/>
+<MAPPEDCOMPONENT_b Height="49" Key="SEVENSEGMENT: /Hex3" LocationX="258" LocationY="274" Width="28"/>
+<MAPPEDCOMPONENT_c Height="49" Key="SEVENSEGMENT: /Hex4" LocationX="227" LocationY="274" Width="28"/>
+<MAPPEDCOMPONENT_d Height="49" Key="SEVENSEGMENT: /Hex5" LocationX="192" LocationY="274" Width="28"/>
+<MAPPEDCOMPONENT_e Height="48" Key="SEVENSEGMENT: /Hex6" LocationX="162" LocationY="274" Width="28"/>
 </LogisimGoesFPGABoardMapInformation>
