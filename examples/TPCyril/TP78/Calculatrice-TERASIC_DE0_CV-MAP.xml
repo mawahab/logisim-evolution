@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<LogisimGoesFPGABoardMapInformation>
+<GlobalMapInformation BoardName="TERASIC_DE0_CV" ToplevelCircuitName="Calculatrice"/>
+<MAPPEDCOMPONENT_1 Height="48" Key="KEYPAD: /clav" LocationX="500" LocationY="50" Width="40"/>
+<MAPPEDCOMPONENT_2 Height="48" Key="SEVENSEGMENT: /Hex1" LocationX="255" LocationY="306" Width="27"/>
+<MAPPEDCOMPONENT_3 Height="48" Key="SEVENSEGMENT: /Hex2" LocationX="227" LocationY="306" Width="27"/>
+<MAPPEDCOMPONENT_4 Height="48" Key="SEVENSEGMENT: /Hex3" LocationX="198" LocationY="306" Width="27"/>
+<MAPPEDCOMPONENT_5 Height="48" Key="SEVENSEGMENT: /Hex4" LocationX="168" LocationY="306" Width="27"/>
+</LogisimGoesFPGABoardMapInformation>
