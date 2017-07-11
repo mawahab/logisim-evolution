@@ -162,6 +162,7 @@ class FSMVHDLCodeGen{
 		switch(b.op) {
 			case "==" : {'''BOOL_TO_SL(«genPred(b.args.get(0))»=«genPred(b.args.get(1))»)'''}
 			case "!=" : {'''BOOL_TO_SL(«genPred(b.args.get(0))»/=«genPred(b.args.get(1))»)'''}
+			case "/=" : {'''BOOL_TO_SL(«genPred(b.args.get(0))»/=«genPred(b.args.get(1))»)'''}
 			default : throw new UnsupportedOperationException("Not implemented")			
 		}
 	}
