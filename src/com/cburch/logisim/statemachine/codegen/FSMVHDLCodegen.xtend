@@ -175,7 +175,7 @@ class FSMVHDLCodeGen{
 		'''(«FOR i:b.args SEPARATOR " and "»«genPred(i)»«ENDFOR»)'''.toString
 	}
 	def static dispatch genPred(NotExpr b) {
-		"(/"+genPred(b.args.get(0))+")";
+		"(not("+genPred(b.args.get(0))+"))";
 		
 	}
 	def static dispatch genPred(PortRef b) {

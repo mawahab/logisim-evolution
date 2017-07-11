@@ -364,7 +364,7 @@ public class FSMEntity extends InstanceFactory {
 				}
 			}
 			fsmSim.refreshInputPorts();
-			fsmSim.refreshOutputPorts();
+			fsmSim.restoreOutputPorts();
 		}
 
 		Value clk = istate.getPortValue(CLK);
@@ -396,6 +396,7 @@ public class FSMEntity extends InstanceFactory {
 					}
 				}
 				if(!error) {
+					System.out.println("Update state");
 					State nextState = fsmSim.updateState();
 					if(nextState==null) throw new RuntimeException("Error : no next state ");
 				}
@@ -403,6 +404,7 @@ public class FSMEntity extends InstanceFactory {
 			}
 		}
 		if (fsmSim.getCurrentState()!=null) {
+			fsmSim.restoreOutputPorts();
 			fsmSim.updateCommands();
 			for (int i =0; i< content.getOutputsNumber();i++) {
 				String res = fsmSim.getOutput(i);

@@ -62,9 +62,9 @@ public class FSMVHDLCodeGen {
       _builder.append("architecture RTL of ");
       String _name = e.getName();
       _builder.append(_name, "");
+      _builder.append(" is --");
       int _hashCode = e.hashCode();
       _builder.append(_hashCode, "");
-      _builder.append(" is");
       _builder.newLineIfNotEmpty();
       _builder.append("\t");
       _builder.newLine();
@@ -288,7 +288,8 @@ public class FSMVHDLCodeGen {
         int _doubleLessThan = (1 << _width_1);
         int _minus = (_doubleLessThan - 1);
         String _binaryString = Integer.toBinaryString(_minus);
-        _builder.append(_binaryString, "");
+        String _replace = _binaryString.replace("1", "0");
+        _builder.append(_replace, "");
         _builder.append("\"");
         _xifexpression = _builder.toString();
       }
@@ -540,8 +541,8 @@ public class FSMVHDLCodeGen {
     EList<BoolExpr> _args = b.getArgs();
     BoolExpr _get = _args.get(0);
     Object _genPred = FSMVHDLCodeGen.genPred(_get);
-    String _plus = ("(/" + _genPred);
-    return (_plus + ")");
+    String _plus = ("(not(" + _genPred);
+    return (_plus + "))");
   }
   
   protected static CharSequence _genPred(final PortRef b) {

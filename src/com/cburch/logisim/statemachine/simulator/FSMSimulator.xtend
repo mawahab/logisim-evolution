@@ -30,7 +30,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 		outputs =  new HashMap<Port,String>();
 		current=fsm.start
 		refreshInputPorts
-		refreshOutputPorts
+		restoreOutputPorts
 	}
 	
 
@@ -66,7 +66,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 	static final String ZERO = "\"0\"";
 	static final String ONE = "\"1\"";
 	
-	final boolean VERBOSE = false
+	final boolean VERBOSE = true
 	
 	def isTrue(String s) {
 		s.equals(ONE);
@@ -87,7 +87,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 		}
 		inputs=newInputs;
 	}
-	def public refreshOutputPorts() {
+	def public restoreOutputPorts() {
 		var HashMap<Port,String> newOutputs = new HashMap<Port,String>();
 		for (newOp : fsm.out) {
 			newOutputs.put(newOp,zeros(newOp.width))
@@ -103,13 +103,22 @@ class FSMSimulator extends ClockState implements InstanceData {
 		outputs=newOutputs;
 	}
 	
+	def public resetOutputPorts() {
+		var HashMap<Port,String> newOutputs = new HashMap<Port,String>();
+		for (newOp : fsm.out) {
+			newOutputs.put(newOp,zeros(newOp.width))
+			debug('''Reset «newOp.name»:«newOp.hashCode» -> «newOutputs.get(newOp)»''')
+		}
+		outputs=newOutputs;
+	}
+	
 	def getFSM() {
 		fsm
 	}
 	def reset() {
 		current=fsm.start
 		refreshInputPorts
-		refreshOutputPorts
+		restoreOutputPorts
 	}
 
 	def getOutput(int i) {
@@ -180,6 +189,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 	}
 	
 	def updateCommands() {
+		resetOutputPorts
 		for (Command c : current.commandList.commands) {
 			val res= eval(c.value)
 			outputs.replace(c.getName(), res);

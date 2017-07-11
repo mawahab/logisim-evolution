@@ -58,7 +58,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
     State _start = fsm.getStart();
     this.current = _start;
     this.refreshInputPorts();
-    this.refreshOutputPorts();
+    this.restoreOutputPorts();
   }
   
   public State setCurrentState(final State s) {
@@ -105,7 +105,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
   
   private final static String ONE = "\"1\"";
   
-  private final boolean VERBOSE = false;
+  private final boolean VERBOSE = true;
   
   public boolean isTrue(final String s) {
     return s.equals(FSMSimulator.ONE);
@@ -159,7 +159,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
     return _xblockexpression;
   }
   
-  public HashMap<Port, String> refreshOutputPorts() {
+  public HashMap<Port, String> restoreOutputPorts() {
     HashMap<Port, String> _xblockexpression = null;
     {
       HashMap<Port, String> newOutputs = new HashMap<Port, String>();
@@ -207,6 +207,34 @@ public class FSMSimulator extends ClockState implements InstanceData {
     return _xblockexpression;
   }
   
+  public HashMap<Port, String> resetOutputPorts() {
+    HashMap<Port, String> _xblockexpression = null;
+    {
+      HashMap<Port, String> newOutputs = new HashMap<Port, String>();
+      EList<Port> _out = this.fsm.getOut();
+      for (final Port newOp : _out) {
+        {
+          int _width = newOp.getWidth();
+          String _zeros = this.zeros(_width);
+          newOutputs.put(newOp, _zeros);
+          StringConcatenation _builder = new StringConcatenation();
+          _builder.append("Reset ");
+          String _name = newOp.getName();
+          _builder.append(_name, "");
+          _builder.append(":");
+          int _hashCode = newOp.hashCode();
+          _builder.append(_hashCode, "");
+          _builder.append(" -> ");
+          String _get = newOutputs.get(newOp);
+          _builder.append(_get, "");
+          this.debug(_builder.toString());
+        }
+      }
+      _xblockexpression = this.outputs = newOutputs;
+    }
+    return _xblockexpression;
+  }
+  
   public FSM getFSM() {
     return this.fsm;
   }
@@ -217,7 +245,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
       State _start = this.fsm.getStart();
       this.current = _start;
       this.refreshInputPorts();
-      _xblockexpression = this.refreshOutputPorts();
+      _xblockexpression = this.restoreOutputPorts();
     }
     return _xblockexpression;
   }
@@ -393,6 +421,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
   }
   
   public void updateCommands() {
+    this.resetOutputPorts();
     CommandList _commandList = this.current.getCommandList();
     EList<Command> _commands = _commandList.getCommands();
     for (final Command c : _commands) {
