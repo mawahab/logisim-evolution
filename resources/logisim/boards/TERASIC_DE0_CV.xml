@@ -12,22 +12,22 @@ Vendor="ALTERA" CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION="USE AS REGULAR IO"/>
 <!--This section describes all Components present on the boards-->
  
 <!-- DE0-CV Switchs-->
-<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_U13" FPGAPinPullBehavior="Float" Height="29"  LocationX="162" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_V13" FPGAPinPullBehavior="Float" Height="29"  LocationX="182" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_T13" FPGAPinPullBehavior="Float" Height="29"  LocationX="202" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_T12" FPGAPinPullBehavior="Float" Height="29"  LocationX="222" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_AA15" FPGAPinPullBehavior="Float" Height="29" LocationX="242" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_AB15" FPGAPinPullBehavior="Float" Height="29" LocationX="261" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_AA14" FPGAPinPullBehavior="Float" Height="29" LocationX="281" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_AA13" FPGAPinPullBehavior="Float" Height="29" LocationX="301" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_AB13" FPGAPinPullBehavior="Float" Height="29" LocationX="320" LocationY="355" Width="14"/>
-<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_AB12" FPGAPinPullBehavior="Float" Height="29" LocationX="340" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_U13" FPGAPinPullBehavior="Float" Height="29"  LocationX="340" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_V13" FPGAPinPullBehavior="Float" Height="29"  LocationX="320" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_T13" FPGAPinPullBehavior="Float" Height="29"  LocationX="301" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_T12" FPGAPinPullBehavior="Float" Height="29"  LocationX="281" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_AA15" FPGAPinPullBehavior="Float" Height="29" LocationX="261" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_AB15" FPGAPinPullBehavior="Float" Height="29" LocationX="242" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_AA14" FPGAPinPullBehavior="Float" Height="29" LocationX="222" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_AA13" FPGAPinPullBehavior="Float" Height="29" LocationX="202" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_AB13" FPGAPinPullBehavior="Float" Height="29" LocationX="182" LocationY="355" Width="14"/>
+<Button ActivityLevel="Active high" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_AB12" FPGAPinPullBehavior="Float" Height="29" LocationX="162" LocationY="355" Width="14"/>
  
 <!-- Buttons DE0-CV -->
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_U7" FPGAPinPullBehavior="Float" Height="24" LocationX="375" LocationY="362" Width="24"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_W9" FPGAPinPullBehavior="Float" Height="24" LocationX="406" LocationY="362" Width="24"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_M7" FPGAPinPullBehavior="Float" Height="24" LocationX="438" LocationY="362" Width="24"/>
-<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_M6" FPGAPinPullBehavior="Float" Height="24" LocationX="469" LocationY="362" Width="24"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_U7" FPGAPinPullBehavior="Float" Height="24" LocationX="469" LocationY="362" Width="24"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_W9" FPGAPinPullBehavior="Float" Height="24" LocationX="438" LocationY="362" Width="24"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_M7" FPGAPinPullBehavior="Float" Height="24" LocationX="406" LocationY="362" Width="24"/>
+<Button ActivityLevel="Active low" FPGAPinIOStandard="Default" FPGAPinName="IN:PIN_M6" FPGAPinPullBehavior="Float" Height="24" LocationX="375" LocationY="362" Width="24"/>
 
 <!-- Leds DE0-V --> 
 <LED ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" FPGAPinName="OUT:PIN_AA2"  Height="11" LocationX="344" LocationY="333" Width="9"/>
