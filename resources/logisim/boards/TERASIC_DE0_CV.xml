@@ -42,7 +42,7 @@ Vendor="ALTERA" CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION="USE AS REGULAR IO"/>
 <LED ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" FPGAPinName="OUT:PIN_L1"  Height="11" LocationX="166" LocationY="333" Width="9"/>
 
 
-<KeyPad ActivityLevel="Active low" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
+<KeyPad ActivityLevel="Active high" FPGAPinDriveStrength="Default" FPGAPinIOStandard="Default" 
 FPGAPin_0="IN:PIN_P16" 
 FPGAPin_1="IN:PIN_L18" 
 FPGAPin_2="IN:PIN_L19"
