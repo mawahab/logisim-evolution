@@ -66,9 +66,6 @@ import com.cburch.logisim.statemachine.simulator.FSMSimulator;
 import com.cburch.logisim.tools.key.BitWidthConfigurator;
 import com.cburch.logisim.util.GraphicsUtil;
 import com.cburch.logisim.util.StringUtil;
-import com.sun.java_cup.internal.runtime.virtual_parse_stack;
-
-import jdk.internal.org.xml.sax.InputSource;
 
 public class FSMEntity extends InstanceFactory {
 
@@ -372,28 +369,30 @@ public class FSMEntity extends InstanceFactory {
 		Value enable = istate.getPortValue(EN);
 		boolean triggered = fsmSim.updateClock(clk, null);// triggerType);
 		int offsetInput = content.getControls().length;
+		boolean error= false;
+		for (int i =0; i< content.getInputsNumber();i++) {
+			Value in = istate.getPortValue(i+offsetInput);
+			InputPort ip = content.inMap.get(content.inputs[i]);
+			if (in.isFullyDefined()) {
+				fsmSim.updateInput(ip, "\""+in.toBinaryString()+"\"");
+			} else {
+				System.err.println("Warning : undefined input value for "+ip.getName()+ "="+in.toBinaryString());
+				fsmSim.updateInput(ip, "\""+Value.createUnknown(in.getBitWidth()).toBinaryString()+"\"");
+				error=true;// FIXME : propagate 
+			}
+		}
 
 		if (clear == Value.TRUE) {
 			fsmSim.reset();
 		} else {
+			
 			if (triggered && enable != Value.FALSE && fsmSim.getCurrentState()!=null) {
-				boolean error= false;
+				
 				if(content.getInputsNumber()!= content.getFsm().getIn().size()) {
 					throw new RuntimeException("Inconsistent state for input port mapping in "+this.getClass().getSimpleName());
 				}
 				if(content.getOutputsNumber()!= content.getFsm().getOut().size()) {
 					throw new RuntimeException("Inconsistent state for Output port mapping in "+this.getClass().getSimpleName());
-				}
-				for (int i =0; i< content.getInputsNumber();i++) {
-					Value in = istate.getPortValue(i+offsetInput);
-					InputPort ip = content.inMap.get(content.inputs[i]);
-					if (in.isFullyDefined()) {
-						fsmSim.updateInput(ip, "\""+in.toBinaryString()+"\"");
-					} else {
-						System.err.println("Warning : undefined input value for "+ip.getName()+ "="+in.toBinaryString());
-						fsmSim.updateInput(ip, "\""+Value.createUnknown(in.getBitWidth()).toBinaryString()+"\"");
-						error=true;// FIXME : propagate 
-					}
 				}
 				if(!error) {
 					System.out.println("Update state");
@@ -404,16 +403,23 @@ public class FSMEntity extends InstanceFactory {
 			}
 		}
 		if (fsmSim.getCurrentState()!=null) {
+			fsmSim.refreshInputPorts();
 			fsmSim.restoreOutputPorts();
 			fsmSim.updateCommands();
 			for (int i =0; i< content.getOutputsNumber();i++) {
 				String res = fsmSim.getOutput(i);
 				String substring = res.substring(1, res.length()-1);
-				int parseInt = Integer.parseInt(substring,2);
-				Value v= Value.createKnown(BitWidth.create(substring.length()), parseInt);
-				
 				int portIndex = istate.getPortIndex(content.outputs[i]);
-				istate.setPort(portIndex, v,DELAY); 
+				try {
+					int parseInt = Integer.parseInt(substring,2);
+					Value v= Value.createKnown(BitWidth.create(substring.length()), parseInt);
+					istate.setPort(portIndex, v,DELAY); 
+				} catch (Exception e) {
+					Port key = content.outputs[i];
+					Value v= Value.createUnknown(key.getFixedBitWidth());
+					istate.setPort(portIndex, v,DELAY); 
+				}
+				
 			}
 		} else {
 			for (int i =0; i< content.getOutputsNumber();i++) {

@@ -55,6 +55,9 @@ public class Memory extends Library {
 			new FactoryDescription("Register",
 					Strings.getter("registerComponent"), "register.gif",
 					"Register"),
+			new FactoryDescription("Trace Recorder",
+					Strings.getter("traceRecorderComponent"), "register.gif",
+					"TraceRecorder"),
 			new FactoryDescription("Register File",
 					Strings.getter("registerFileComponent"), "register.gif",
 					"RegisterFile"),
@@ -68,6 +71,8 @@ public class Memory extends Library {
 					"random.gif", "Random"),
 			new FactoryDescription("RAM", Strings.getter("ramComponent"),
 					"ram.gif", "Ram"),
+			new FactoryDescription("CPU memory", Strings.getter("cpuMemoryComponent"),
+					"rom.gif", "CPUCodeMemory"),
 			new FactoryDescription("ROM", Strings.getter("romComponent"),
 					"rom.gif", "Rom"), };
 

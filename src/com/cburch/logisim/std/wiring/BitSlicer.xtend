@@ -45,7 +45,6 @@ import com.cburch.logisim.tools.key.BitWidthConfigurator
 import com.cburch.logisim.tools.key.IntegerConfigurator
 import com.cburch.logisim.tools.key.JoinedConfigurator
 import com.cburch.logisim.util.GraphicsUtil
-import com.sun.media.sound.FFT
 import java.awt.Graphics2D
 import java.awt.geom.AffineTransform
 

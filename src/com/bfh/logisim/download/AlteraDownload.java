@@ -130,12 +130,14 @@ public class AlteraDownload {
 				}
 			} catch (IOException e) {
 				MyReporter
-						.AddFatalError("Internal Error during Altera download");
+						.AddFatalError("Internal Error during Altera download "+e.getLocalizedMessage());
+				e.printStackTrace();
 				panel.dispose();
 				return false;
 			} catch (InterruptedException e) {
 				MyReporter
-						.AddFatalError("Internal Error during Altera download");
+						.AddFatalError("Internal Error during Altera download "+e.getLocalizedMessage());
+				e.printStackTrace();
 				panel.dispose();
 				return false;
 			}
@@ -176,12 +178,12 @@ public class AlteraDownload {
 				}
 			} catch (IOException e) {
 				MyReporter
-						.AddFatalError("Internal Error during Altera download");
+						.AddFatalError("Internal Error during Altera RTL analysis");
 				panel.dispose();
 				return false;
 			} catch (InterruptedException e) {
 				MyReporter
-						.AddFatalError("Internal Error during Altera download");
+						.AddFatalError("Internal Error during Altera RTL analysis");
 				panel.dispose();
 				return false;
 			}

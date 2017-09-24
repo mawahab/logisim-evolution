@@ -36,20 +36,29 @@ import com.cburch.logisim.data.AbstractAttributeSet;
 import com.cburch.logisim.data.Attribute;
 import com.cburch.logisim.data.AttributeSet;
 import com.cburch.logisim.data.AttributeSets;
+import com.cburch.logisim.data.Attributes;
 import com.cburch.logisim.data.BitWidth;
 import com.cburch.logisim.instance.StdAttr;
+
 
 class CounterAttributes extends AbstractAttributeSet {
 
 	private AttributeSet base;
 
+	public static final Attribute<Boolean> ATTR_LOADABLE = Attributes.forBoolean(
+			"load", Strings.getter("counterLoadableAttr"));
+
+	public static final Attribute<Boolean> ATTR_INCDEC = Attributes.forBoolean(
+			"incdec", Strings.getter("counterIncDecAttr"));
+	
+	
 	public CounterAttributes() {
 		base = AttributeSets.fixedSet(new Attribute<?>[] { StdAttr.WIDTH,
 				Counter.ATTR_MAX, Counter.ATTR_ON_GOAL, StdAttr.EDGE_TRIGGER,
-				StdAttr.LABEL, StdAttr.LABEL_FONT },
+				StdAttr.LABEL, StdAttr.LABEL_FONT ,ATTR_LOADABLE,ATTR_INCDEC},
 				new Object[] { BitWidth.create(8), Integer.valueOf(0xFF),
 						Counter.ON_GOAL_WRAP, StdAttr.TRIG_RISING, "",
-						StdAttr.DEFAULT_LABEL_FONT });
+						StdAttr.DEFAULT_LABEL_FONT, Boolean.TRUE, Boolean.TRUE });
 	}
 
 	@Override

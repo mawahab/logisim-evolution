@@ -39,6 +39,7 @@ import java.util.Map;
 import com.cburch.logisim.analyze.model.Expression;
 import com.cburch.logisim.analyze.model.Expressions;
 import com.cburch.logisim.circuit.ExpressionComputer;
+import com.cburch.logisim.circuit.RadixOption;
 import com.cburch.logisim.data.AbstractAttributeSet;
 import com.cburch.logisim.data.Attribute;
 import com.cburch.logisim.data.AttributeSet;
@@ -63,6 +64,7 @@ public class Constant extends InstanceFactory {
 		private Direction facing = Direction.EAST;;
 		private BitWidth width = BitWidth.ONE;
 		private Value value = Value.TRUE;
+		private RadixOption radix = RadixOption.RADIX_16;
 
 		@Override
 		protected void copyInto(AbstractAttributeSet destObj) {
@@ -70,6 +72,7 @@ public class Constant extends InstanceFactory {
 			dest.facing = this.facing;
 			dest.width = this.width;
 			dest.value = this.value;
+			dest.radix= this.radix;
 		}
 
 		@Override
@@ -86,6 +89,8 @@ public class Constant extends InstanceFactory {
 				return (V) width;
 			if (attr == ATTR_VALUE)
 				return (V) Integer.valueOf(value.toIntValue());
+			if (attr == RadixOption.ATTRIBUTE)
+				return (V) radix;
 			return null;
 		}
 
@@ -100,6 +105,8 @@ public class Constant extends InstanceFactory {
 			} else if (attr == ATTR_VALUE) {
 				int val = ((Integer) value).intValue();
 				this.value = Value.createKnown(width, val);
+			} else if (attr == RadixOption.ATTRIBUTE) {
+				radix = (RadixOption) value;
 			} else {
 				throw new IllegalArgumentException("unknown attribute " + attr);
 			}
@@ -140,13 +147,14 @@ public class Constant extends InstanceFactory {
 
 	private static final List<Attribute<?>> ATTRIBUTES = Arrays
 			.asList(new Attribute<?>[] { StdAttr.FACING, StdAttr.WIDTH,
-					ATTR_VALUE });
+					ATTR_VALUE, RadixOption.ATTRIBUTE });
 
 	public Constant() {
 		super("Constant", Strings.getter("constantComponent"));
 		setFacingAttribute(StdAttr.FACING);
 		setKeyConfigurator(JoinedConfigurator.create(
-				new ConstantConfigurator(), new BitWidthConfigurator(
+				new ConstantConfigurator(), 
+				new BitWidthConfigurator(
 						StdAttr.WIDTH)));
 	}
 
@@ -172,34 +180,21 @@ public class Constant extends InstanceFactory {
 	public Bounds getOffsetBounds(AttributeSet attrs) {
 		Direction facing = attrs.getValue(StdAttr.FACING);
 		BitWidth width = attrs.getValue(StdAttr.WIDTH);
+		RadixOption radix = attrs.getValue(RadixOption.ATTRIBUTE);
 		int chars = (width.getWidth() + 3) / 4;
+		if (radix==RadixOption.RADIX_2) {
+			 chars = (width.getWidth()+1);
+		}
 
 		Bounds ret = null;
+		
 		if (facing == Direction.EAST) {
 			switch (chars) {
 			case 1:
 				ret = Bounds.create(-16, -8, 16, 16);
 				break;
-			case 2:
-				ret = Bounds.create(-16, -8, 16, 16);
-				break;
-			case 3:
-				ret = Bounds.create(-26, -8, 26, 16);
-				break;
-			case 4:
-				ret = Bounds.create(-36, -8, 36, 16);
-				break;
-			case 5:
-				ret = Bounds.create(-46, -8, 46, 16);
-				break;
-			case 6:
-				ret = Bounds.create(-56, -8, 56, 16);
-				break;
-			case 7:
-				ret = Bounds.create(-66, -8, 66, 16);
-				break;
-			case 8:
-				ret = Bounds.create(-76, -8, 76, 16);
+			default:
+				ret = Bounds.create(-(6+8*chars), -8, 6+8*chars, 16);
 				break;
 			}
 		} else if (facing == Direction.WEST) {
@@ -207,26 +202,8 @@ public class Constant extends InstanceFactory {
 			case 1:
 				ret = Bounds.create(0, -8, 16, 16);
 				break;
-			case 2:
-				ret = Bounds.create(0, -8, 16, 16);
-				break;
-			case 3:
-				ret = Bounds.create(0, -8, 26, 16);
-				break;
-			case 4:
-				ret = Bounds.create(0, -8, 36, 16);
-				break;
-			case 5:
-				ret = Bounds.create(0, -8, 46, 16);
-				break;
-			case 6:
-				ret = Bounds.create(0, -8, 56, 16);
-				break;
-			case 7:
-				ret = Bounds.create(0, -8, 66, 16);
-				break;
-			case 8:
-				ret = Bounds.create(0, -8, 76, 16);
+			default:
+				ret = Bounds.create(0, -8, 6+8*chars, 16);
 				break;
 			}
 		} else if (facing == Direction.SOUTH) {
@@ -306,6 +283,8 @@ public class Constant extends InstanceFactory {
 			updatePorts(instance);
 		} else if (attr == StdAttr.FACING) {
 			instance.recomputeBounds();
+		} else if (attr == RadixOption.ATTRIBUTE) {
+			instance.recomputeBounds();
 		} else if (attr == ATTR_VALUE) {
 			instance.fireInvalidated();
 		}
@@ -362,6 +341,7 @@ public class Constant extends InstanceFactory {
 	public void paintInstance(InstancePainter painter) {
 		Bounds bds = painter.getOffsetBounds();
 		BitWidth width = painter.getAttributeValue(StdAttr.WIDTH);
+		RadixOption radix = painter.getAttributeValue(RadixOption.ATTRIBUTE);
 		int intValue = painter.getAttributeValue(ATTR_VALUE).intValue();
 		Value v = Value.createKnown(width, intValue);
 		Location loc = painter.getLocation();
@@ -377,14 +357,21 @@ public class Constant extends InstanceFactory {
 		if (v.getWidth() == 1) {
 			if (painter.shouldDrawColor())
 				g.setColor(v.getColor());
-			GraphicsUtil.drawCenteredText(g, v.toString(),
+			GraphicsUtil.drawCenteredText(g, v.toBinaryString(),
 					x + bds.getX() + bds.getWidth() / 2,
 					y + bds.getY() + bds.getHeight() / 2 - 2);
 		} else {
 			g.setColor(Color.BLACK);
-			GraphicsUtil.drawCenteredText(g, v.toHexString(), x + bds.getX()
-					+ bds.getWidth() / 2, y + bds.getY() + bds.getHeight() / 2
-					- 2);
+			if (radix==RadixOption.RADIX_2) {
+				GraphicsUtil.drawCenteredText(g, v.toBinaryString(), x + bds.getX()
+						+ bds.getWidth() / 2, y + bds.getY() + bds.getHeight() / 2
+						- 2);
+			} else {
+				GraphicsUtil.drawCenteredText(g, v.toHexString(), x + bds.getX()
+				+ bds.getWidth() / 2, y + bds.getY() + bds.getHeight() / 2
+				- 2);
+				
+			}
 		}
 		painter.drawPorts();
 	}

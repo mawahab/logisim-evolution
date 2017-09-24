@@ -43,12 +43,12 @@ public class Arithmetic extends Library {
 			new FactoryDescription("Subtractor",
 					Strings.getter("subtractorComponent"), "subtractor.gif",
 					"Subtractor"),
-			new FactoryDescription("Multiplier",
-					Strings.getter("multiplierComponent"), "multiplier.gif",
-					"Multiplier"),
-			new FactoryDescription("Divider",
-					Strings.getter("dividerComponent"), "divider.gif",
-					"Divider"),
+//			new FactoryDescription("Multiplier",
+//					Strings.getter("multiplierComponent"), "multiplier.gif",
+//					"Multiplier"),
+//			new FactoryDescription("Divider",
+//					Strings.getter("dividerComponent"), "divider.gif",
+//					"Divider"),
 			new FactoryDescription("Negator",
 					Strings.getter("negatorComponent"), "negator.gif",
 					"Negator"),
@@ -61,9 +61,10 @@ public class Arithmetic extends Library {
 			new FactoryDescription("BitAdder",
 					Strings.getter("bitAdderComponent"), "bitadder.gif",
 					"BitAdder"),
-			new FactoryDescription("BitFinder",
-					Strings.getter("bitFinderComponent"), "bitfindr.gif",
-					"BitFinder"),};
+//			new FactoryDescription("BitFinder",
+//					Strings.getter("bitFinderComponent"), "bitfindr.gif",
+//					"BitFinder"),
+			};
 
 	private List<Tool> tools = null;
 
