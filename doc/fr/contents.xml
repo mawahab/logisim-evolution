@@ -31,6 +31,12 @@
         <tocitem target="analyze_expr" text="Créer des expressions"/>
         <tocitem target="analyze_gen" text="Générer un circuit"/>
       </tocitem>
+      <tocitem target="fsm" text="Editeur de machine à état">
+        <tocitem target="fsm_open" text="Ouvrir l'éditeur de FSM"/>
+        <tocitem target="fsm_edit" text="Modifier une machine à états"/>
+        <tocitem target="fsm_expr" text="Specifier les prédicats de transition/commandes"/>
+        <tocitem target="fsm_check" text="Vérification et détection d'erreurs"/>
+      </tocitem>
       <tocitem target="menu" text="Manuel des menus">
         <tocitem target="menu_file" text="Menu fichier"/>
         <tocitem target="menu_edit" text="Menu éditer"/>
