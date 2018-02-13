@@ -46,6 +46,7 @@ public class RamState extends MemState implements InstanceData,
 	private ClockState clockState;
 	private int CurrentData = 0;
 
+
 	RamState(Instance parent, MemContents contents, MemListener listener) {
 		super(contents);
 		this.parent = parent;
@@ -104,5 +105,7 @@ public class RamState extends MemState implements InstanceData,
 			value.getAttributeSet().addAttributeListener(this);
 		}
 	}
+	
+	
 
 }

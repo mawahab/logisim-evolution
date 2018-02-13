@@ -30,6 +30,7 @@ import com.cburch.logisim.statemachine.editor.view.FSMSelectionZone
 import com.cburch.logisim.statemachine.editor.view.FSMSelectionZone.AreaType
 import java.util.HashMap
 import java.util.Map
+import com.cburch.logisim.statemachine.PrettyPrinter
 
 class FSMEditorController {
 	
@@ -65,7 +66,7 @@ class FSMEditorController {
 	
 	Map<State,State> copyMap = new HashMap<State,State>;
 	
-	
+		FSMSelectionZone zones
 	/** 
 	 * Constructor. Initialize the color to the default color and create the
 	 * ArrayList to hold the shapes.
@@ -79,6 +80,8 @@ class FSMEditorController {
 		
 		edit = new FSMEdit()
 		remover = new FSMRemoveElement(fsm)
+		zones = new FSMSelectionZone()
+		
 	}
 
 	def int getNbState() {
@@ -93,6 +96,18 @@ class FSMEditorController {
 		return clipboard
 	}
 
+	def void showContextMenu() {
+		view.showContextMenu(zones.getAreaType(fsm,view.scaledPosition))
+	}
+
+	def List<FSMElement> getCurrentSelection() {
+		return zones.getSelectedElements(fsm,view.scaledPosition)
+	}
+
+
+	def List<FSMElement> getElementsWithin(Zone z) {
+		return zones.getElementsInZone(fsm, z)
+	}
 
     def findUnassignedStateCode() {
 		var map = new HashMap<String,State>(); 
@@ -143,16 +158,19 @@ class FSMEditorController {
 	 * @param g
 	 */
 	def void draw(Graphics2D g) {
-		drawing.drawElement(fsm,g,activeSelection)
-		g.drawString(state.toString,20,20);
-		if(selectionZone!=null) {
-			val float[] f = #[3.0 as float]
-			g.stroke = new BasicStroke(0.3 as float, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0,f, 0);
-        	val old = g.stroke
-        	val p0= selectionZone.x0 
-        	val p1= selectionZone.x1
-			g.drawRect(p0.x,p0.y,Math.abs(p1.x-p0.x),Math.abs(p1.y-p0.y))
-			g.stroke = (old);
+				
+		if (fsm!=null) {
+			drawing.drawElement(fsm,g,activeSelection)
+			g.drawString(state.toString,20,20);
+			if(selectionZone!=null) {
+				val float[] f = #[3.0 as float]
+				g.stroke = new BasicStroke(0.3 as float, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0,f, 0);
+	        	val old = g.stroke
+	        	val p0= selectionZone.x0 
+	        	val p1= selectionZone.x1
+				g.drawRect(p0.x,p0.y,Math.abs(p1.x-p0.x),Math.abs(p1.y-p0.y))
+				g.stroke = (old);
+			}
 		}
 	}
 
@@ -207,7 +225,7 @@ class FSMEditorController {
 
 	
 	def executeEdit(Point p) {
-		val List<FSMElement> selection = view.getElementsAt();
+		val List<FSMElement> selection = getCurrentSelection();
 		if (selection.size()>0) {
 			val first = selection.get(0)
 			edit.edit(first);
@@ -216,11 +234,15 @@ class FSMEditorController {
 	}
 
 	def executeDelete(Point p) {
-		val List<FSMElement> selection = view.getElementsAt();
+		if (DEBUG) println ("[Delete] command "+state+ " state");
+		val List<FSMElement> selection = currentSelection;
 		if (selection.size()>0) {
-			val first = selection.get(0)
-			remover.remove(first);
-			view.repaint
+			for (i:0..selection.size-1) {
+				val first = selection.get(i)
+				if (DEBUG) println ("[Delete] object "+PrettyPrinter.pp(first));
+				remover.remove(first);
+				view.repaint
+			}
 		}
 	}
 
@@ -303,7 +325,7 @@ class FSMEditorController {
 	def dispatch paste(OutputPort e,int dx, int dy) {
 		e.layout.y=dy+e.layout.y
 		e.name="copy_of_"+e.name
-		fsm.in.add(e);
+		fsm.out.add(e);
 	}
 
 	def dispatch paste(State e,int dx, int dy) {
@@ -369,12 +391,18 @@ class FSMEditorController {
 	def executeRightClick() {
 		switch(state) {
 			case IDLE :{
-				if (DEBUG) println ("[RightClick] state "+state+ "-> ERROR !!!!");
+				if (DEBUG) println ("[RightClick] show context menu (state="+state+")");
 				view.repaint
-				view.showContextMenu
+				showContextMenu
 			}
+			
+			/// MOVE_ZONE, SELECT_ELT, MOVE_ELT, SELECT_DST, ERROR_STATE
 			default: {
 				if (DEBUG) println ("[RightClick] going back to IDLE!!!!");
+				if (newTransition!=null) {
+					newTransition.src=null;
+					newTransition=null;
+				}
 				state=CtrlState.IDLE
 			}
 			
@@ -385,7 +413,7 @@ class FSMEditorController {
 	
 	  
 	def executePress(Point p) {
-		val localSelection  = view.getElementsAt();
+		val localSelection  = currentSelection;
 		switch(state) {
 			case IDLE :{
 				if(localSelection.size>0) {
@@ -408,9 +436,10 @@ class FSMEditorController {
 			case SELECT_DST :{
 				if (DEBUG) println ("[Press] state "+state+ "-> "+state+ "!!!!");
 			}
-			default: {
-				if (DEBUG) println ("[Press] state "+state+ "-> ERROR !!!!");
-				state=CtrlState.ERROR_STATE
+			/// MOVE_ZONE, SELECT_ELT, MOVE_ELT, SELECT_DST, ERROR_STATE
+			
+			case ERROR_STATE :{
+				state=CtrlState.IDLE
 			}
 			
 		}
@@ -418,7 +447,7 @@ class FSMEditorController {
 	}
 	
 		
-	def executeDragged(Point p) {
+	def executeDragged(Point p) {	
 		switch(state) {
 			case MOVE_ELT:{
 				move(lastPos,p,activeSelection);
@@ -443,7 +472,7 @@ class FSMEditorController {
 			case SELECT_DST: {
 				if (newTransition != null) {
 					if (DEBUG) println ("[Move] state "+state+ "-> choosing transition destination state");
-					val selection = view.getElementsAt();
+					val selection = currentSelection;
 					if (selection.size()==1) {
 						val first = selection.get(0)
 						if (first instanceof State) {
@@ -461,6 +490,9 @@ class FSMEditorController {
 							deleteElement(newTransition);
 						}
 						newTransition=null;
+					} else {
+						deleteElement(newTransition);
+						newTransition=null;
 					}
 				}
 				state=CtrlState.IDLE
@@ -475,13 +507,14 @@ class FSMEditorController {
 				if (DEBUG) println ("[Release] state "+state+ "-> IDLE (end of zone selection)");
 				zoneStart=null;
 				zoneEnd=null;
-				activeSelection=view.getElementsWithin(selectionZone)
+				activeSelection=getElementsWithin(selectionZone)
 				selectionZone= null;
 				
 				
 			}
 			default: {
 				if (DEBUG) println ("[Release] state "+state+ "-> ERROR !!!!");
+				if (newTransition!=null) deleteElement(newTransition);
 				state=CtrlState.ERROR_STATE
 			}
 			
@@ -517,30 +550,8 @@ class FSMEditorController {
 	
 	def executeLeftClick(Point scaledP) {
 		if (DEBUG) println ("[LeftClick] state "+state );
-//		val List<FSMElement> selection = view.getSelectedElements();
-//		selectionZone=null;
-//		currentSelection=selection; 	
-//		if (selection.size()==1) {
-//			val first = currentSelection.get(0)
-//			if(first instanceof State) {
-//				if(newTransition != null) {
-//					val LayoutInfo layout = newTransition.getLayout();
-//					val LayoutInfo srcLayout = newTransition.getSrc().getLayout();
-//					layout.setX((scaledP.x+srcLayout.getX())/2);
-//					layout.setY((scaledP.y+srcLayout.getY())/2);
-//					if(first!=newTransition.getSrc()) {
-//						newTransition.setDst(first);
-//					} else {
-//						deleteElement(newTransition);
-//					}
-//				}
-//			} else if(newTransition!=null) {
-//				deleteElement(newTransition);
-//			}
-//			newTransition=null;
-//		}
+		view.revalidate
 		view.repaint
-//		p0=null;
 	}
 	
 

@@ -5,13 +5,17 @@ import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
+import com.cburch.logisim.statemachine.fSMDSL.ConstRef;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
+import com.cburch.logisim.statemachine.fSMDSL.ConstantDef;
+import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OutputPort;
 import com.cburch.logisim.statemachine.fSMDSL.Port;
 import com.cburch.logisim.statemachine.fSMDSL.PortRef;
+import com.cburch.logisim.statemachine.fSMDSL.Transition;
 import com.google.common.base.Objects;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,22 +24,30 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 @SuppressWarnings("all")
-public class PortReferenceFix {
+public class UpdateCrossReferences {
   private HashMap<String, Port> portMap = new HashMap<String, Port>();
   
-  public PortReferenceFix(final FSM fsm) {
+  private HashMap<String, ConstantDef> constMap = new HashMap<String, ConstantDef>();
+  
+  public UpdateCrossReferences(final FSM fsm) {
+    EList<ConstantDef> _constants = fsm.getConstants();
+    final Consumer<ConstantDef> _function = (ConstantDef cst) -> {
+      String _name = cst.getName();
+      this.constMap.put(_name, cst);
+    };
+    _constants.forEach(_function);
     EList<Port> _in = fsm.getIn();
-    final Consumer<Port> _function = (Port ip) -> {
+    final Consumer<Port> _function_1 = (Port ip) -> {
       String _name = ip.getName();
       this.portMap.put(_name, ip);
     };
-    _in.forEach(_function);
+    _in.forEach(_function_1);
     EList<Port> _out = fsm.getOut();
-    final Consumer<Port> _function_1 = (Port op) -> {
+    final Consumer<Port> _function_2 = (Port op) -> {
       String _name = op.getName();
       this.portMap.put(_name, op);
     };
-    _out.forEach(_function_1);
+    _out.forEach(_function_2);
   }
   
   protected void _replaceRef(final Command c) {
@@ -51,12 +63,20 @@ public class PortReferenceFix {
     this.replaceRef(_value);
   }
   
+  protected void _replaceRef(final Transition t) {
+    BoolExpr _predicate = t.getPredicate();
+    this.replaceRef(_predicate);
+  }
+  
   protected void _replaceRef(final BoolExpr b) {
     Class<? extends BoolExpr> _class = b.getClass();
     String _simpleName = _class.getSimpleName();
     String _plus = ("Support for class " + _simpleName);
     String _plus_1 = (_plus + " NYI");
     throw new UnsupportedOperationException(_plus_1);
+  }
+  
+  protected void _replaceRef(final DefaultPredicate b) {
   }
   
   protected void _replaceRef(final Constant b) {
@@ -114,6 +134,26 @@ public class PortReferenceFix {
     }
   }
   
+  protected void _replaceRef(final ConstRef b) {
+    boolean _and = false;
+    ConstantDef _const = b.getConst();
+    boolean _notEquals = (!Objects.equal(_const, null));
+    if (!_notEquals) {
+      _and = false;
+    } else {
+      ConstantDef _const_1 = b.getConst();
+      String _name = _const_1.getName();
+      boolean _containsKey = this.constMap.containsKey(_name);
+      _and = _containsKey;
+    }
+    if (_and) {
+      ConstantDef _const_2 = b.getConst();
+      String _name_1 = _const_2.getName();
+      ConstantDef _get = this.constMap.get(_name_1);
+      b.setConst(_get);
+    }
+  }
+  
   public void replaceRef(final EObject b) {
     if (b instanceof AndExpr) {
       _replaceRef((AndExpr)b);
@@ -124,8 +164,14 @@ public class PortReferenceFix {
     } else if (b instanceof ConcatExpr) {
       _replaceRef((ConcatExpr)b);
       return;
+    } else if (b instanceof ConstRef) {
+      _replaceRef((ConstRef)b);
+      return;
     } else if (b instanceof Constant) {
       _replaceRef((Constant)b);
+      return;
+    } else if (b instanceof DefaultPredicate) {
+      _replaceRef((DefaultPredicate)b);
       return;
     } else if (b instanceof NotExpr) {
       _replaceRef((NotExpr)b);
@@ -135,6 +181,9 @@ public class PortReferenceFix {
       return;
     } else if (b instanceof PortRef) {
       _replaceRef((PortRef)b);
+      return;
+    } else if (b instanceof Transition) {
+      _replaceRef((Transition)b);
       return;
     } else if (b instanceof BoolExpr) {
       _replaceRef((BoolExpr)b);

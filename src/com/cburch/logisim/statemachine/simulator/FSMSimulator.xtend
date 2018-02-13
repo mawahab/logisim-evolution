@@ -139,6 +139,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 		debug("-> setting "+ip.name+":"+ip.hashCode+" to "+b)
 		printIOMap
 		if (inputs.containsKey(ip)) {
+			if((b.length-2)!=ip.width) throw new RuntimeException("port datawidth mismatch"+ip.name+"["+ip.width+"]  in "+fsm.name)
 			inputs.put(ip,b)
 		} else {
 			throw new RuntimeException("Unregistered input port "+ip.name+":"+ip.hashCode +"  in "+fsm.name)
@@ -148,7 +149,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 	def updateState() { 
 		
 		
-		println("FSM "+fsm.name+" current state "+current.name)
+		debug("FSM "+fsm.name+" current state "+current.name)
 		if(fsm.in.size!=inputs.keySet.size) {
 			throw new RuntimeException("inconsistent state for input port mapping ")
 		}
@@ -156,26 +157,26 @@ class FSMSimulator extends ClockState implements InstanceData {
 			throw new RuntimeException("inconsistent state for output port mapping ")
 		}
 		for (Port e : inputs.keySet) {
-			println("\t- In "+e.name+"=>"+inputs.get(e))
+			debug("\t- In "+e.name+"=>"+inputs.get(e))
 		}  
 		for (Port e : outputs.keySet) {
-			println("\t- Out "+e.name+"=>"+outputs.get(e))
+			debug("\t- Out "+e.name+"=>"+outputs.get(e))
 		}  
 		
 		var State defaultDst =null;
 		var State nextDst =null;
 		for (Transition t : current.transition) {
-			println("\tTransition= "+PrettyPrinter.pp(t))
+			debug("\tTransition= "+PrettyPrinter.pp(t))
 			if(t.predicate instanceof DefaultPredicate) {
 				defaultDst = t.dst
 			} else {
 				val res = (eval(t.predicate))
-				print("\t\t"+PrettyPrinter.pp(t.predicate)+"="+res+"" );
+				debug("\t\t"+PrettyPrinter.pp(t.predicate)+"="+res+"" );
 				if (isTrue(res)) {
 					nextDst= t.dst
-					println("=> transition fired : next state is "+nextDst.name)
+					debug("=> transition fired : next state is "+nextDst.name)
 				} else {
-					println("=> transition not fired")
+					debug("=> transition not fired")
 				}
 			}
 		}
@@ -183,7 +184,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 			current = nextDst
 		} else if (defaultDst!=null) {
 			current = defaultDst
-			println("\t\tDefault transition fired "+defaultDst.name)
+			debug("\t\tDefault transition fired "+defaultDst.name)
 		}		
 		return current;
 	}
@@ -193,7 +194,7 @@ class FSMSimulator extends ClockState implements InstanceData {
 		for (Command c : current.commandList.commands) {
 			val res= eval(c.value)
 			outputs.replace(c.getName(), res);
-			println("\tSet "+c.name.name+":"+ c.name.hashCode+" to "+res)
+			debug("\tSet "+c.name.name+":"+ c.name.hashCode+" to "+res)
 		}  
 	}
 
@@ -390,6 +391,9 @@ class FSMSimulator extends ClockState implements InstanceData {
 	
 	}
 
+	def dispatch String eval(ConstRef b) {
+		eval(b.const.value)
+	}	
 	def dispatch String eval(PortRef b) {
 		if (b.port==null) 
 			throw new RuntimeException("Invalid expression "+PrettyPrinter.pp(b)+" ");
@@ -403,14 +407,17 @@ class FSMSimulator extends ClockState implements InstanceData {
 		
 		if(b.range!=null) {
 			// reverse to account for LSB on the rightmost digit 
-			res = new StringBuilder(res).reverse().toString()
 			if(b.range.ub==-1) {
 				val lb = b.range.lb+1 
+				res = new StringBuilder(res).reverse().toString()
 				res= quote(res.substring(lb,lb+1))
 			} else {
+			
 				val lb = b.range.lb+1 
 				val ub = b.range.ub+1 
-				res= quote(inputs.get(b.port).substring(lb,ub))
+				res = new StringBuilder(res).reverse().toString()
+				res= quote(res.substring(lb,ub+1))
+				res = new StringBuilder(res).reverse().toString()
 			}
 			
 			

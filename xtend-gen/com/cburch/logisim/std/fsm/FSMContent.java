@@ -63,20 +63,14 @@ public class FSMContent implements Cloneable {
   
   private void init() {
     this.listeners = null;
+  }
+  
+  public FSMContent(final String text) {
     HashMap<Port, InputPort> _hashMap = new HashMap<Port, InputPort>();
     this.inMap = _hashMap;
     HashMap<Port, OutputPort> _hashMap_1 = new HashMap<Port, OutputPort>();
     this.outMap = _hashMap_1;
-  }
-  
-  public FSMContent(final String text) {
-    this.init();
-    this.parseContent(text);
-  }
-  
-  public FSMContent() {
-    this.init();
-    this.parseContent(FSMContent.TEMPLATE);
+    this.updateContent(text);
   }
   
   public void updateContent(final String txt) {
@@ -146,34 +140,112 @@ public class FSMContent implements Cloneable {
     }
   }
   
-  private final static String TEMPLATE = new Function0<String>() {
+  public final static String TEMPLATE = new Function0<String>() {
     public String apply() {
       StringConcatenation _builder = new StringConcatenation();
-      _builder.append("fsm example @[ 50 , 50 , 800 , 500 ] { in A [ 3 ] @[ 50 , 100 , 44 , 15 ] ; out");
+      _builder.append("fsm example @[ 50 , 50 , 800 , 500 ] { ");
       _builder.newLine();
-      _builder.append("X [ 4 ] @[ 807 , 140 , 43 , 15 ] ; codeWidth = 2 ; reset = S0 ; state S0 = \"01\"");
+      _builder.append("\t");
+      _builder.append("in A [ 3 ] @[ 50 , 100 , 44 , 15 ] ; ");
       _builder.newLine();
-      _builder.append("@[ 297 , 181 , 30 , 30 ] { commands @[ 246 , 173 , 50 , 40 ] { X = \"0001\" ; }");
+      _builder.append("\t");
+      _builder.append("out X [ 4 ] @[ 807 , 140 , 43 , 15 ] ; ");
       _builder.newLine();
-      _builder.append("transitions { S0 -> S1 when default @[ 432 , 151 , 50 , 21 ] ; S0 -> S3 when A");
+      _builder.append("\t");
+      _builder.append("codeWidth = 2 ; ");
       _builder.newLine();
-      _builder.append("== \"000\" @[ 346 , 269 , 68 , 21 ] ; } } state S1 = \"10\" @[ 470 , 186 , 30 , 30");
+      _builder.append("\t");
+      _builder.append("reset = S0 ; ");
       _builder.newLine();
-      _builder.append("] { commands @[ 522 , 190 , 40 , 40 ] { X = \"0010\" ; } transitions { S1 -> S2");
+      _builder.append("\t");
+      _builder.append("state S0 = \"01\" @[ 297 , 181 , 30 , 30 ] { ");
       _builder.newLine();
-      _builder.append("when default @[ 533 , 276 , 50 , 21 ] ; S1 -> S0 when A == \"000\" @[ 399 , 230 ,");
+      _builder.append("\t\t");
+      _builder.append("commands @[ 246 , 173 , 50 , 40 ] { X = \"0001\" ; }");
       _builder.newLine();
-      _builder.append("68 , 21 ] ; } } state S2 = \"00\" @[ 471 , 339 , 30 , 30 ] { commands @[ 524 ,");
+      _builder.append("\t\t");
+      _builder.append("transitions { ");
       _builder.newLine();
-      _builder.append("353 , 60 , 40 ] { X = { \"00\" , A [ 1 ] , \"1\" } ; } transitions { S2 -> S3 when");
+      _builder.append("\t\t\t");
+      _builder.append("S0 -> S1 when default @[ 432 , 151 , 50 , 21 ] ; ");
       _builder.newLine();
-      _builder.append("default @[ 392 , 398 , 50 , 21 ] ; S2 -> S1 when A [ 2 : 1 ] == \"11\" @[ 557 ,");
+      _builder.append("\t\t\t");
+      _builder.append("S0 -> S3 when A== \"000\" @[ 346 , 269 , 68 , 21 ] ; ");
       _builder.newLine();
-      _builder.append("250 , 90 , 21 ] ; } } state S3 = \"11\" @[ 287 , 325 , 30 , 30 ] { commands @[");
+      _builder.append("\t\t");
+      _builder.append("}");
       _builder.newLine();
-      _builder.append("244 , 341 , 60 , 40 ] { X = \"1000\" ; } transitions { S3 -> S0 when default @[");
+      _builder.append("\t");
+      _builder.append("} ");
       _builder.newLine();
-      _builder.append("248 , 278 , 50 , 21 ] ; S3 -> S2 when A == \"000\" @[ 388 , 313 , 68 , 21 ] ; } }");
+      _builder.append("\t");
+      _builder.append("state S1 = \"10\" @[ 470 , 186 , 30 , 30] { ");
+      _builder.newLine();
+      _builder.append("\t\t");
+      _builder.append("commands @[ 522 , 190 , 40 , 40 ] { X = \"0010\" ; } ");
+      _builder.newLine();
+      _builder.append("\t\t");
+      _builder.append("transitions { ");
+      _builder.newLine();
+      _builder.append("\t\t\t");
+      _builder.append("S1 -> S2 when default @[ 533 , 276 , 50 , 21 ] ; ");
+      _builder.newLine();
+      _builder.append("\t\t\t");
+      _builder.append("S1 -> S0 when A == \"000\" @[ 399 , 230 ,68 , 21 ] ; ");
+      _builder.newLine();
+      _builder.append("\t\t");
+      _builder.append("}");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("} ");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("state S2 = \"00\" @[ 471 , 339 , 30 , 30 ] { ");
+      _builder.newLine();
+      _builder.append("\t\t");
+      _builder.append("commands @[ 524 ,353 , 60 , 40 ] { ");
+      _builder.newLine();
+      _builder.append("\t\t\t");
+      _builder.append("X = { \"00\" , A [ 1 ] , \"1\" } ;");
+      _builder.newLine();
+      _builder.append("\t\t");
+      _builder.append("} ");
+      _builder.newLine();
+      _builder.append("\t\t");
+      _builder.append("transitions { ");
+      _builder.newLine();
+      _builder.append("\t\t\t");
+      _builder.append("S2 -> S3 when default @[ 392 , 398 , 50 , 21 ] ; ");
+      _builder.newLine();
+      _builder.append("\t\t\t");
+      _builder.append("S2 -> S1 when A [ 2 : 1 ] == \"11\" @[ 557 ,250 , 90 , 21 ] ; ");
+      _builder.newLine();
+      _builder.append("\t\t");
+      _builder.append("} ");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("} ");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("state S3 = \"11\" @[ 287 , 325 , 30 , 30 ] { ");
+      _builder.newLine();
+      _builder.append("\t\t");
+      _builder.append("commands @[244 , 341 , 60 , 40 ] { X = \"1000\" ; } ");
+      _builder.newLine();
+      _builder.append("\t\t");
+      _builder.append("transitions { ");
+      _builder.newLine();
+      _builder.append("\t\t\t");
+      _builder.append("S3 -> S0 when default @[248 , 278 , 50 , 21 ] ; ");
+      _builder.newLine();
+      _builder.append("\t\t\t");
+      _builder.append("S3 -> S2 when A == \"000\" @[ 388 , 313 , 68 , 21 ] ;");
+      _builder.newLine();
+      _builder.append("\t\t");
+      _builder.append("}");
+      _builder.newLine();
+      _builder.append("\t");
+      _builder.append("}");
       _builder.newLine();
       _builder.append("}");
       _builder.newLine();
@@ -183,7 +255,7 @@ public class FSMContent implements Cloneable {
   
   final static int CLK = 0;
   
-  final static int CLR = 1;
+  final static int RST = 1;
   
   final static int EN = 2;
   
@@ -201,7 +273,7 @@ public class FSMContent implements Cloneable {
   
   private Port[] ctrl;
   
-  public String getContent() {
+  public String getStringContent() {
     return FSMSerializer.saveAsString(this.fsm);
   }
   
@@ -283,14 +355,14 @@ public class FSMContent implements Cloneable {
       Port _port = new Port(0, FSMEntity.HEIGHT, Port.INPUT, 1);
       this.ctrl[FSMContent.CLK] = _port;
       Port _port_1 = new Port(0, (FSMEntity.HEIGHT + FSMEntity.PORT_GAP), Port.INPUT, 1);
-      this.ctrl[FSMContent.CLR] = _port_1;
+      this.ctrl[FSMContent.RST] = _port_1;
       Port _port_2 = new Port(0, (FSMEntity.HEIGHT + (2 * FSMEntity.PORT_GAP)), Port.INPUT, 1);
       this.ctrl[FSMContent.EN] = _port_2;
       Port _get = this.ctrl[FSMContent.CLK];
       StringGetter _ter = Strings.getter("registerClkTip");
       _get.setToolTip(_ter);
-      Port _get_1 = this.ctrl[FSMContent.CLR];
-      StringGetter _ter_1 = Strings.getter("registerClrTip");
+      Port _get_1 = this.ctrl[FSMContent.RST];
+      StringGetter _ter_1 = Strings.getter("registerRstTip");
       _get_1.setToolTip(_ter_1);
       Port _get_2 = this.ctrl[FSMContent.EN];
       StringGetter _ter_2 = Strings.getter("registerEnableTip");

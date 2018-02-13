@@ -7,6 +7,7 @@ import javax.swing.*;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLFactory;
 import com.cburch.logisim.statemachine.fSMDSL.Port;
 import com.cburch.logisim.statemachine.fSMDSL.Transition;
+import com.cburch.logisim.statemachine.validation.FSMValidation;
 
 
 
@@ -51,6 +52,17 @@ public class FSMPortEditPanel extends JPanel{
 					
 				}
 			}
+			if (!FSMValidation.isValidIdentifier(nameField.getText())) {
+				JOptionPane.showMessageDialog(null, "Error: Please enter a valid identifer string (instead of "+nameField.getText()+")", "Error Message",
+						JOptionPane.ERROR_MESSAGE);
+				return true;
+			}
+			if (FSMValidation.isReservedKeyword(nameField.getText())) {
+				JOptionPane.showMessageDialog(null, "Error: "+nameField.getText()+" is a reserved keyword)", "Error Message",
+						JOptionPane.ERROR_MESSAGE);
+				return true;
+			}
+
 		}
 		return false;
 	}

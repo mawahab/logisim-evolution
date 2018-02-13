@@ -23,12 +23,18 @@ import com.cburch.logisim.statemachine.fSMDSL.Transition;
 import com.google.common.base.Objects;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.xtend2.lib.StringConcatenation;
+import org.eclipse.xtext.xbase.lib.CollectionLiterals;
 import org.eclipse.xtext.xbase.lib.Conversions;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
@@ -45,6 +51,10 @@ public class FSMValidation {
   private List<String> errors = new ArrayList<String>();
   
   private BitWidthAnalyzer analyzer = new BitWidthAnalyzer();
+  
+  private static HashSet<String> keywords = new HashSet<String>(Collections.<String>unmodifiableList(CollectionLiterals.<String>newArrayList("CLK", "RST", "EN", "if", "then", "while", "for", "do", "end", "begin", "entity", "component")));
+  
+  private final static Pattern FQCN = Pattern.compile("(?:\\b[_a-zA-Z]|\\B\\$)[_$a-zA-Z0-9]*+");
   
   public FSMValidation(final FSM fsm) {
     this.fsm = fsm;
@@ -80,31 +90,54 @@ public class FSMValidation {
     if (_equals_3) {
       this.warning("The FSM has no input pins !");
     }
+    final HashMap<String, State> map = new HashMap<String, State>();
     EList<State> _states_1 = e.getStates();
     for (final State s : _states_1) {
+      String _code = s.getCode();
+      boolean _containsKey = map.containsKey(_code);
+      if (_containsKey) {
+        StringConcatenation _builder = new StringConcatenation();
+        _builder.append("The FSM has two states (");
+        String _name = s.getName();
+        _builder.append(_name, "");
+        _builder.append(", ");
+        String _code_1 = s.getCode();
+        State _get = map.get(_code_1);
+        String _name_1 = _get.getName();
+        _builder.append(_name_1, "");
+        _builder.append(") with the same encoding");
+        this.error(_builder.toString());
+      } else {
+        String _code_2 = s.getCode();
+        map.put(_code_2, s);
+      }
+    }
+    this.checkNames();
+    EList<State> _states_2 = e.getStates();
+    for (final State s_1 : _states_2) {
       {
-        this.validate(s);
-        EList<Transition> _transition = s.getTransition();
+        this.validate(s_1);
+        EList<Transition> _transition = s_1.getTransition();
         for (final Transition t : _transition) {
           State _dst = t.getDst();
           this.targets.add(_dst);
         }
       }
     }
-    EList<State> _states_2 = e.getStates();
-    for (final State s_1 : _states_2) {
+    EList<State> _states_3 = e.getStates();
+    for (final State s_2 : _states_3) {
       boolean _and = false;
       State _start_1 = this.fsm.getStart();
-      boolean _notEquals = (!Objects.equal(s_1, _start_1));
+      boolean _notEquals = (!Objects.equal(s_2, _start_1));
       if (!_notEquals) {
         _and = false;
       } else {
-        boolean _contains = this.targets.contains(s_1);
+        boolean _contains = this.targets.contains(s_2);
         boolean _not = (!_contains);
         _and = _not;
       }
       if (_and) {
-        String _pp = PrettyPrinter.pp(s_1);
+        String _pp = PrettyPrinter.pp(s_2);
         String _plus = ("State " + _pp);
         String _plus_1 = (_plus + " is not reachable from initial state ");
         State _start_2 = e.getStart();
@@ -114,6 +147,155 @@ public class FSMValidation {
       }
     }
     return null;
+  }
+  
+  public static boolean isValidBinaryString(final String s, final int width) {
+    String txt = s;
+    final char first = txt.charAt(0);
+    int _length = txt.length();
+    int _minus = (_length - 1);
+    final char last = txt.charAt(_minus);
+    boolean _and = false;
+    boolean _equals = Objects.equal(Character.valueOf(first), "\"");
+    if (!_equals) {
+      _and = false;
+    } else {
+      boolean _equals_1 = Objects.equal(Character.valueOf(last), "\"");
+      _and = _equals_1;
+    }
+    if (_and) {
+      int _length_1 = txt.length();
+      int _minus_1 = (_length_1 - 1);
+      String _substring = txt.substring(1, _minus_1);
+      txt = _substring;
+      char[] _charArray = txt.toCharArray();
+      for (final char c : _charArray) {
+        boolean _and_1 = false;
+        boolean _notEquals = (!Objects.equal(Character.valueOf(c), "0"));
+        if (!_notEquals) {
+          _and_1 = false;
+        } else {
+          boolean _notEquals_1 = (!Objects.equal(Character.valueOf(c), "1"));
+          _and_1 = _notEquals_1;
+        }
+        if (_and_1) {
+          return false;
+        }
+      }
+      int _length_2 = txt.length();
+      boolean _notEquals_2 = (_length_2 != width);
+      if (_notEquals_2) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+    return true;
+  }
+  
+  public static boolean isValidIdentifier(final String identifier) {
+    Matcher _matcher = FSMValidation.FQCN.matcher(identifier);
+    return _matcher.matches();
+  }
+  
+  public static boolean isReservedKeyword(final String identifier) {
+    return FSMValidation.keywords.contains(identifier);
+  }
+  
+  public boolean validateIdentifier(final String identifier) {
+    boolean _xifexpression = false;
+    boolean _isValidIdentifier = FSMValidation.isValidIdentifier(identifier);
+    boolean _not = (!_isValidIdentifier);
+    if (_not) {
+      StringConcatenation _builder = new StringConcatenation();
+      _builder.append("Ilegal identifier : ");
+      _builder.append(identifier, "");
+      _xifexpression = this.error(_builder.toString());
+    } else {
+      boolean _xifexpression_1 = false;
+      boolean _isReservedKeyword = FSMValidation.isReservedKeyword(identifier);
+      if (_isReservedKeyword) {
+        StringConcatenation _builder_1 = new StringConcatenation();
+        _builder_1.append("Reserved keyword : ");
+        _builder_1.append(identifier, "");
+        _xifexpression_1 = this.error(_builder_1.toString());
+      }
+      _xifexpression = _xifexpression_1;
+    }
+    return _xifexpression;
+  }
+  
+  public void checkNames() {
+    final HashMap<String, FSMElement> nameMap = new HashMap<String, FSMElement>();
+    EList<State> _states = this.fsm.getStates();
+    for (final State s : _states) {
+      {
+        String _name = s.getName();
+        this.validateIdentifier(_name);
+        String _name_1 = s.getName();
+        boolean _containsKey = nameMap.containsKey(_name_1);
+        if (_containsKey) {
+          StringConcatenation _builder = new StringConcatenation();
+          _builder.append("The FSM has two states with the same Label ");
+          String _name_2 = s.getName();
+          _builder.append(_name_2, "");
+          this.error(_builder.toString());
+        } else {
+          String _name_3 = s.getName();
+          nameMap.put(_name_3, s);
+        }
+      }
+    }
+    EList<Port> _in = this.fsm.getIn();
+    for (final Port s_1 : _in) {
+      {
+        String _name = s_1.getName();
+        this.validateIdentifier(_name);
+        String _name_1 = s_1.getName();
+        boolean _containsKey = nameMap.containsKey(_name_1);
+        if (_containsKey) {
+          StringConcatenation _builder = new StringConcatenation();
+          _builder.append("The FSM has two elements using a same identifier (");
+          String _pp = PrettyPrinter.pp(s_1);
+          _builder.append(_pp, "");
+          _builder.append(", ");
+          String _name_2 = s_1.getName();
+          FSMElement _get = nameMap.get(_name_2);
+          String _pp_1 = PrettyPrinter.pp(_get);
+          _builder.append(_pp_1, "");
+          _builder.append(") ");
+          this.error(_builder.toString());
+        } else {
+          String _name_3 = s_1.getName();
+          nameMap.put(_name_3, s_1);
+        }
+      }
+    }
+    EList<Port> _out = this.fsm.getOut();
+    for (final Port s_2 : _out) {
+      {
+        String _name = s_2.getName();
+        this.validateIdentifier(_name);
+        String _name_1 = s_2.getName();
+        boolean _containsKey = nameMap.containsKey(_name_1);
+        if (_containsKey) {
+          StringConcatenation _builder = new StringConcatenation();
+          _builder.append("The FSM has two elements using a same identifier (");
+          String _pp = PrettyPrinter.pp(s_2);
+          _builder.append(_pp, "");
+          _builder.append(", ");
+          String _name_2 = s_2.getName();
+          FSMElement _get = nameMap.get(_name_2);
+          String _pp_1 = PrettyPrinter.pp(_get);
+          _builder.append(_pp_1, "");
+          _builder.append(") ");
+          this.error(_builder.toString());
+        } else {
+          String _name_3 = s_2.getName();
+          nameMap.put(_name_3, s_2);
+        }
+      }
+    }
   }
   
   public boolean warning(final String string) {

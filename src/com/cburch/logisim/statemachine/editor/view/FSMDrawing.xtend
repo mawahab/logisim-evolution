@@ -16,6 +16,9 @@ import com.cburch.logisim.statemachine.fSMDSL.LayoutInfo
 import com.cburch.logisim.statemachine.fSMDSL.State
 import com.cburch.logisim.statemachine.fSMDSL.FSMElement
 import java.util.List
+import java.awt.geom.CubicCurve2D
+import java.awt.geom.Path2D
+import java.awt.geom.Rectangle2D
 
 class FSMDrawing {
 
@@ -119,6 +122,16 @@ class FSMDrawing {
 		g.drawLine(l.x, l.y+FSM_TITLE_HEIGHT, l.x+l.width,l.y+FSM_TITLE_HEIGHT);
 
 		for(p:e.in) drawElement(p,g, selection);
+		var offset = l.y
+		for(cst:e.constants) {
+			if(l.x==0) l.x=FSM_BORDER_X
+			if(l.y==0) l.y=FSM_BORDER_Y
+			if (l.width==0) l.width=FSMCustomFactory.FSM_WIDTH;
+			if (l.height==0) l.height=FSMCustomFactory.FSM_HEIGHT;
+			g.drawString(PrettyPrinter.pp(cst), l.x+10,  l.y+offset);
+			offset+=lineHeight+3
+
+		}
 		for(p:e.out) drawElement(p,g, selection);
 		for(s:e.states) for (t:s.transition) drawElement(t,g, selection);
 		for(s:e.states) drawElement(s,g, selection);
@@ -194,29 +207,55 @@ class FSMDrawing {
 		val sl = src.layout;
 		val l = e.layout;
 		val radius = sl.width
-		
-		val _s = shift(l.x - sl.x - radius, l.y - sl.y - radius, radius)
+		val pp = PrettyPrinter.pp(e.predicate)
+		val ph = g.fontMetrics.height + 6
+		val pw = g.fontMetrics.stringWidth(pp) + 6;
+	
+		val _s = shift(l.x +(pw/2)- sl.x - radius, l.y +(ph/2) - sl.y - radius, radius)
 		val srcx = sl.x + radius + _s.x
 		val srcy = sl.y + radius + _s.y
 		if (e.dst != null) {
 			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			val pp = PrettyPrinter.pp(e.predicate)
-			val ph = g.fontMetrics.height + 6
-			val pw = g.fontMetrics.stringWidth(pp) + 6;
+			
+			val dl = e.dst.layout;
+			val _d = shift(dl.x - l.x -(pw/2)+ radius, dl.y - l.y -(pw/2)+ radius, radius)
+			val dstx = dl.x + radius - _d.x
+			val dsty = dl.y + radius - _d.y
+			DrawUtils.drawArrowLine(g, l.x+pw/2, l.y+ph/2, dstx, dsty, 8, 6, true);
+			
+			val Path2D.Double path1 = new Path2D.Double();
+			val x1=srcx;
+			val y1=srcy;
+			val x2=l.x+pw/2;
+			val y2=l.y+ph/2;
+			val x3=dstx;
+			val y3=dsty;
+			val cx1a = x1 + (x2 - x1) / 3;
+			val cy1a = y1 + (y2 - y1) / 3;
+			val cx1b = x2 - (x3 - x1) / 3;
+			val cy1b = y2 - (y3 - y1) / 3;
+			val cx2a = x2 + (x3 - x1) / 3;
+			val cy2a = y2 + (y3 - y1) / 3;
+			val cx2b = x3 - (x3 - x2) / 3;
+			val cy2b = y3 - (y3 - y2) / 3;
+			path1.moveTo(x1, y1);
+			path1.curveTo(cx1a, cy1a, cx1b, cy1b, x2, y2);
+			path1.curveTo(cx2a, cy2a, cx2b, cy2b, x3, y3);
+			g.draw(path1);
+			
+			val Color color = new Color(255, 255, 255, 200); //Red 
+ 			 g.setPaint(color);
+//  g2d.fill(redSquare);
+//						g.setPaint(Color.green);
+    		g.fill(new Rectangle2D.Double(l.x , l.y, pw, ph));
 			g.setColor(Color.GRAY);
- 
-			g.drawRect(l.x, l.y, pw, ph);
+			g.drawRect(l.x , l.y, pw, ph);
+			g.drawRect(l.x , l.y, pw, ph);
 			l.width=pw
 			l.height=ph
 			g.setColor(Color.BLACK);
-			g.drawString(pp, l.x + 3, l.y + ph-3);
-			val dl = e.dst.layout;
-			val _d = shift(dl.x - l.x + radius, dl.y - l.y + radius, radius)
-			val dstx = dl.x + radius - _d.x
-			val dsty = dl.y + radius - _d.y
-			DrawUtils.drawArrowLine(g, l.x, l.y, dstx, dsty, 8, 8, true);
-			val quadCurve = new QuadCurve2D.Double(srcx , srcy , l.x, l.y, dstx, dsty);
-			g.draw(quadCurve);
+			g.drawString(pp, l.x , l.y + ph-3);
+			
 		} else {
 			g.drawLine(srcx, srcy, l.x, l.y);
 		}

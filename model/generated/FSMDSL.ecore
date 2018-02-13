@@ -4,23 +4,31 @@
     nsPrefix="fSMDSL">
   <eClassifiers xsi:type="ecore:EClass" name="TOP"/>
   <eClassifiers xsi:type="ecore:EClass" name="CommandStmt" eSuperTypes="#//TOP">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="in" upperBound="-1" eType="#//ShortInput"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cst" upperBound="-1" eType="#//ConstantDef"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="out" upperBound="-1" eType="#//ShortOutput"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="in" upperBound="-1" eType="#//Port"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="out" upperBound="-1" eType="#//Port"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="commands" upperBound="-1"
         eType="#//Command" containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstantDefList" eSuperTypes="#//TOP">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" upperBound="-1"
+        eType="#//ConstantDef" containment="true"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="PredicateStmt" eSuperTypes="#//TOP">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="in" upperBound="-1" eType="#//ShortInput"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cst" upperBound="-1" eType="#//ConstantDef"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="in" upperBound="-1" eType="#//Port"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="predicate" eType="#//BoolExpr"
         containment="true"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="ShortInput"/>
-  <eClassifiers xsi:type="ecore:EClass" name="ShortOutput"/>
   <eClassifiers xsi:type="ecore:EClass" name="FSM" eSuperTypes="#//TOP #//FSMElement">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="constants" upperBound="-1"
+        eType="#//ConstantDef" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="in" upperBound="-1" eType="#//Port"
         containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="out" upperBound="-1" eType="#//Port"
@@ -57,10 +65,10 @@
         eType="#//Transition" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Transition" eSuperTypes="#//FSMElement">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="src" eType="#//State"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="dst" eType="#//State"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="predicate" eType="#//BoolExpr"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="src" eType="#//State"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Command">
     <eStructuralFeatures xsi:type="ecore:EReference" name="name" eType="#//OutputPort"/>
@@ -69,13 +77,16 @@
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="BoolExpr"/>
   <eClassifiers xsi:type="ecore:EClass" name="Range">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ub" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
-        defaultValueLiteral="-1"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lb" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"
-        defaultValueLiteral="-1"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="ub" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="lb" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="InputPort" eSuperTypes="#//ShortInput #//Port"/>
-  <eClassifiers xsi:type="ecore:EClass" name="OutputPort" eSuperTypes="#//ShortOutput #//Port"/>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstantDef">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="value" eType="#//BoolExpr"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="InputPort" eSuperTypes="#//Port"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OutputPort" eSuperTypes="#//Port"/>
   <eClassifiers xsi:type="ecore:EClass" name="ConcatExpr" eSuperTypes="#//BoolExpr">
     <eStructuralFeatures xsi:type="ecore:EReference" name="args" upperBound="-1" eType="#//BoolExpr"
         containment="true"/>
@@ -84,6 +95,9 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="port" eType="#//Port"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="range" eType="#//Range"
         containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="ConstRef" eSuperTypes="#//BoolExpr">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="const" eType="#//ConstantDef"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="DefaultPredicate" eSuperTypes="#//BoolExpr"/>
   <eClassifiers xsi:type="ecore:EClass" name="OrExpr" eSuperTypes="#//BoolExpr">

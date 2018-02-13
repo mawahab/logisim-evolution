@@ -13,6 +13,6 @@ package com.cburch.logisim.statemachine.fSMDSL;
  * @model
  * @generated
  */
-public interface OutputPort extends ShortOutput, Port
+public interface OutputPort extends Port
 {
 } // OutputPort

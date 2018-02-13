@@ -8,7 +8,9 @@ import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
+import com.cburch.logisim.statemachine.fSMDSL.ConstRef;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
+import com.cburch.logisim.statemachine.fSMDSL.ConstantDef;
 import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.InputPort;
@@ -312,7 +314,26 @@ public class FSMSimulator extends ClockState implements InstanceData {
       String _xifexpression = null;
       boolean _containsKey = this.inputs.containsKey(ip);
       if (_containsKey) {
-        _xifexpression = this.inputs.put(ip, b);
+        String _xblockexpression_1 = null;
+        {
+          int _length = b.length();
+          int _minus = (_length - 2);
+          int _width = ip.getWidth();
+          boolean _notEquals = (_minus != _width);
+          if (_notEquals) {
+            String _name_1 = ip.getName();
+            String _plus_5 = ("port datawidth mismatch" + _name_1);
+            String _plus_6 = (_plus_5 + "[");
+            int _width_1 = ip.getWidth();
+            String _plus_7 = (_plus_6 + Integer.valueOf(_width_1));
+            String _plus_8 = (_plus_7 + "]  in ");
+            String _name_2 = this.fsm.getName();
+            String _plus_9 = (_plus_8 + _name_2);
+            throw new RuntimeException(_plus_9);
+          }
+          _xblockexpression_1 = this.inputs.put(ip, b);
+        }
+        _xifexpression = _xblockexpression_1;
       } else {
         String _name_1 = ip.getName();
         String _plus_5 = ("Unregistered input port " + _name_1);
@@ -335,7 +356,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
     String _plus_1 = (_plus + " current state ");
     String _name_1 = this.current.getName();
     String _plus_2 = (_plus_1 + _name_1);
-    InputOutput.<String>println(_plus_2);
+    this.debug(_plus_2);
     EList<Port> _in = this.fsm.getIn();
     int _size = _in.size();
     Set<Port> _keySet = this.inputs.keySet();
@@ -359,7 +380,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
       String _plus_4 = (_plus_3 + "=>");
       String _get = this.inputs.get(e);
       String _plus_5 = (_plus_4 + _get);
-      InputOutput.<String>println(_plus_5);
+      this.debug(_plus_5);
     }
     Set<Port> _keySet_3 = this.outputs.keySet();
     for (final Port e_1 : _keySet_3) {
@@ -368,7 +389,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
       String _plus_7 = (_plus_6 + "=>");
       String _get_1 = this.outputs.get(e_1);
       String _plus_8 = (_plus_7 + _get_1);
-      InputOutput.<String>println(_plus_8);
+      this.debug(_plus_8);
     }
     State defaultDst = null;
     State nextDst = null;
@@ -377,7 +398,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
       {
         String _pp = PrettyPrinter.pp(t);
         String _plus_9 = ("\tTransition= " + _pp);
-        InputOutput.<String>println(_plus_9);
+        this.debug(_plus_9);
         BoolExpr _predicate = t.getPredicate();
         if ((_predicate instanceof DefaultPredicate)) {
           State _dst = t.getDst();
@@ -391,16 +412,16 @@ public class FSMSimulator extends ClockState implements InstanceData {
           String _plus_11 = (_plus_10 + "=");
           String _plus_12 = (_plus_11 + res);
           String _plus_13 = (_plus_12 + "");
-          InputOutput.<String>print(_plus_13);
+          this.debug(_plus_13);
           boolean _isTrue = this.isTrue(res);
           if (_isTrue) {
             State _dst_1 = t.getDst();
             nextDst = _dst_1;
             String _name_4 = nextDst.getName();
             String _plus_14 = ("=> transition fired : next state is " + _name_4);
-            InputOutput.<String>println(_plus_14);
+            this.debug(_plus_14);
           } else {
-            InputOutput.<String>println("=> transition not fired");
+            this.debug("=> transition not fired");
           }
         }
       }
@@ -414,7 +435,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
         this.current = defaultDst;
         String _name_4 = defaultDst.getName();
         String _plus_9 = ("\t\tDefault transition fired " + _name_4);
-        InputOutput.<String>println(_plus_9);
+        this.debug(_plus_9);
       }
     }
     return this.current;
@@ -439,7 +460,7 @@ public class FSMSimulator extends ClockState implements InstanceData {
         String _plus_2 = (_plus_1 + Integer.valueOf(_hashCode));
         String _plus_3 = (_plus_2 + " to ");
         String _plus_4 = (_plus_3 + res);
-        InputOutput.<String>println(_plus_4);
+        this.debug(_plus_4);
       }
     }
   }
@@ -785,6 +806,12 @@ public class FSMSimulator extends ClockState implements InstanceData {
     return _xblockexpression;
   }
   
+  protected String _eval(final ConstRef b) {
+    ConstantDef _const = b.getConst();
+    BoolExpr _value = _const.getValue();
+    return this.eval(_value);
+  }
+  
   protected String _eval(final PortRef b) {
     String _xblockexpression = null;
     {
@@ -818,10 +845,6 @@ public class FSMSimulator extends ClockState implements InstanceData {
       Range _range = b.getRange();
       boolean _notEquals = (!Objects.equal(_range, null));
       if (_notEquals) {
-        StringBuilder _stringBuilder = new StringBuilder(res);
-        StringBuilder _reverse = _stringBuilder.reverse();
-        String _string = _reverse.toString();
-        res = _string;
         Range _range_1 = b.getRange();
         int _ub = _range_1.getUb();
         boolean _equals_1 = (_ub == (-1));
@@ -829,6 +852,10 @@ public class FSMSimulator extends ClockState implements InstanceData {
           Range _range_2 = b.getRange();
           int _lb = _range_2.getLb();
           final int lb = (_lb + 1);
+          StringBuilder _stringBuilder = new StringBuilder(res);
+          StringBuilder _reverse = _stringBuilder.reverse();
+          String _string = _reverse.toString();
+          res = _string;
           String _substring = res.substring(lb, (lb + 1));
           String _quote = this.quote(_substring);
           res = _quote;
@@ -839,11 +866,17 @@ public class FSMSimulator extends ClockState implements InstanceData {
           Range _range_4 = b.getRange();
           int _ub_1 = _range_4.getUb();
           final int ub = (_ub_1 + 1);
-          Port _port_5 = b.getPort();
-          String _get_1 = this.inputs.get(_port_5);
-          String _substring_1 = _get_1.substring(lb_1, ub);
+          StringBuilder _stringBuilder_1 = new StringBuilder(res);
+          StringBuilder _reverse_1 = _stringBuilder_1.reverse();
+          String _string_1 = _reverse_1.toString();
+          res = _string_1;
+          String _substring_1 = res.substring(lb_1, (ub + 1));
           String _quote_1 = this.quote(_substring_1);
           res = _quote_1;
+          StringBuilder _stringBuilder_2 = new StringBuilder(res);
+          StringBuilder _reverse_2 = _stringBuilder_2.reverse();
+          String _string_2 = _reverse_2.toString();
+          res = _string_2;
         }
       } else {
       }
@@ -868,6 +901,8 @@ public class FSMSimulator extends ClockState implements InstanceData {
       return _eval((CmpExpr)b);
     } else if (b instanceof ConcatExpr) {
       return _eval((ConcatExpr)b);
+    } else if (b instanceof ConstRef) {
+      return _eval((ConstRef)b);
     } else if (b instanceof Constant) {
       return _eval((Constant)b);
     } else if (b instanceof DefaultPredicate) {

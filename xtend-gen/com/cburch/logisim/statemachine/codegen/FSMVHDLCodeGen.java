@@ -154,13 +154,13 @@ public class FSMVHDLCodeGen {
       _builder.append("begin");
       _builder.newLine();
       _builder.append("\t");
-      _builder.append("UPDATE: process(clk,clr)");
+      _builder.append("UPDATE: process(clk,rst)");
       _builder.newLine();
       _builder.append("\t");
       _builder.append("begin");
       _builder.newLine();
       _builder.append("\t\t");
-      _builder.append("if clr=\'1\' then");
+      _builder.append("if rst=\'1\' then");
       _builder.newLine();
       _builder.append("\t\t\t");
       _builder.append("CS <= ");
@@ -213,18 +213,26 @@ public class FSMVHDLCodeGen {
       _builder.append("\t");
       _builder.newLine();
       _builder.append("\t");
-      _builder.append("OUTPUT : process(CS,");
+      _builder.append("OUTPUT : process(CS");
       {
         EList<Port> _in_1 = e.getIn();
-        boolean _hasElements = false;
-        for(final Port i : _in_1) {
-          if (!_hasElements) {
-            _hasElements = true;
-          } else {
-            _builder.appendImmediate(",", "\t");
+        int _size = _in_1.size();
+        boolean _greaterThan = (_size > 0);
+        if (_greaterThan) {
+          _builder.append(",");
+          {
+            EList<Port> _in_2 = e.getIn();
+            boolean _hasElements = false;
+            for(final Port i : _in_2) {
+              if (!_hasElements) {
+                _hasElements = true;
+              } else {
+                _builder.appendImmediate(",", "\t");
+              }
+              String _name_4 = i.getName();
+              _builder.append(_name_4, "\t");
+            }
           }
-          String _name_4 = i.getName();
-          _builder.append(_name_4, "\t");
         }
       }
       _builder.append(")");
@@ -470,6 +478,21 @@ public class FSMVHDLCodeGen {
         _builder_1.append(_genPred_3, "");
         _builder_1.append(")");
         _switchResult = _builder_1;
+        break;
+      case "/=":
+        StringConcatenation _builder_2 = new StringConcatenation();
+        _builder_2.append("BOOL_TO_SL(");
+        EList<BoolExpr> _args_4 = b.getArgs();
+        BoolExpr _get_4 = _args_4.get(0);
+        Object _genPred_4 = FSMVHDLCodeGen.genPred(_get_4);
+        _builder_2.append(_genPred_4, "");
+        _builder_2.append("/=");
+        EList<BoolExpr> _args_5 = b.getArgs();
+        BoolExpr _get_5 = _args_5.get(1);
+        Object _genPred_5 = FSMVHDLCodeGen.genPred(_get_5);
+        _builder_2.append(_genPred_5, "");
+        _builder_2.append(")");
+        _switchResult = _builder_2;
         break;
       default:
         throw new UnsupportedOperationException("Not implemented");

@@ -299,7 +299,7 @@ public class FPGACommanderGui implements ActionListener,LibraryListener,ProjectL
 	private JComboBox<String> circuitsList = new JComboBox<>();
 	private JComboBox<String> frequenciesList = new JComboBox<>();
 	private JComboBox<String> annotationList = new JComboBox<>();
-	private JButton HDLType = new JButton();
+//	private JButton HDLType = new JButton();
 	private JButton HDLOnly = new JButton();
 	private JButton ToolPath = new JButton();
 	private JButton Workspace = new JButton();
@@ -507,12 +507,12 @@ public class FPGACommanderGui implements ActionListener,LibraryListener,ProjectL
 		panel.add(annotateButton, c);
 
 		// HDL Type Button
-		HDLType.setText(MySettings.GetHDLType());
-		HDLType.setActionCommand("HDLType");
-		HDLType.addActionListener(this);
+//		HDLType.setText(MySettings.GetHDLType());
+//		HDLType.setActionCommand("HDLType");
+//		HDLType.addActionListener(this);
 		c.gridx = 0;
 		c.gridy = 0;
-		panel.add(HDLType, c);
+//		panel.add(HDLType, c);
 
 		// HDL Only Radio
 		if (Settings.vendors.get(MyBoardInformation.fpga.getVendor()).getToolPath().equals(Settings.Unknown)) {
@@ -1101,7 +1101,7 @@ public class FPGACommanderGui implements ActionListener,LibraryListener,ProjectL
 		} else {
 			MySettings.SetHDLType(Settings.VHDL);
 		}
-		HDLType.setText(MySettings.GetHDLType());
+		//HDLType.setText(MySettings.GetHDLType());
 		if (!MySettings.UpdateSettingsFile()) {
 			AddErrors("***SEVERE*** Could not update the FPGACommander settings file");
 		} else {
@@ -1175,7 +1175,7 @@ public class FPGACommanderGui implements ActionListener,LibraryListener,ProjectL
 		} else {
 			root.getNetList().clear();
 			DRCResult = root.getNetList().DesignRuleCheckResult(MyReporter,
-					HDLType.getText(), true, SheetNames);
+					Settings.VHDL, true, SheetNames);
 		}
 		return (DRCResult == Netlist.DRC_PASSED);
 	}

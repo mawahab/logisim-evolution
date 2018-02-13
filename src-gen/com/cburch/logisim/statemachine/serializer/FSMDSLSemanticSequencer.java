@@ -9,7 +9,10 @@ import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.CommandStmt;
 import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
+import com.cburch.logisim.statemachine.fSMDSL.ConstRef;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
+import com.cburch.logisim.statemachine.fSMDSL.ConstantDef;
+import com.cburch.logisim.statemachine.fSMDSL.ConstantDefList;
 import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage;
@@ -57,16 +60,33 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 				sequence_Command(context, (Command) semanticObject); 
 				return; 
 			case FSMDSLPackage.COMMAND_LIST:
-				sequence_CommandList(context, (CommandList) semanticObject); 
-				return; 
+				if(context == grammarAccess.getCommandListRule() ||
+				   context == grammarAccess.getFSMElementRule()) {
+					sequence_CommandList(context, (CommandList) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getShortCommandListRule()) {
+					sequence_ShortCommandList(context, (CommandList) semanticObject); 
+					return; 
+				}
+				else break;
 			case FSMDSLPackage.COMMAND_STMT:
 				sequence_CommandStmt(context, (CommandStmt) semanticObject); 
 				return; 
 			case FSMDSLPackage.CONCAT_EXPR:
 				sequence_ConcatExpr(context, (ConcatExpr) semanticObject); 
 				return; 
+			case FSMDSLPackage.CONST_REF:
+				sequence_ConstRef(context, (ConstRef) semanticObject); 
+				return; 
 			case FSMDSLPackage.CONSTANT:
 				sequence_Constant(context, (Constant) semanticObject); 
+				return; 
+			case FSMDSLPackage.CONSTANT_DEF:
+				sequence_ConstantDef(context, (ConstantDef) semanticObject); 
+				return; 
+			case FSMDSLPackage.CONSTANT_DEF_LIST:
+				sequence_ConstantDefList(context, (ConstantDefList) semanticObject); 
 				return; 
 			case FSMDSLPackage.DEFAULT_PREDICATE:
 				sequence_Default(context, (DefaultPredicate) semanticObject); 
@@ -76,12 +96,13 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 				return; 
 			case FSMDSLPackage.INPUT_PORT:
 				if(context == grammarAccess.getFSMElementRule() ||
-				   context == grammarAccess.getInputRule()) {
-					sequence_Input(context, (InputPort) semanticObject); 
+				   context == grammarAccess.getInputPortRule() ||
+				   context == grammarAccess.getPortRule()) {
+					sequence_InputPort(context, (InputPort) semanticObject); 
 					return; 
 				}
-				else if(context == grammarAccess.getShortInputRule()) {
-					sequence_ShortInput(context, (InputPort) semanticObject); 
+				else if(context == grammarAccess.getShortInputPortRule()) {
+					sequence_ShortInputPort(context, (InputPort) semanticObject); 
 					return; 
 				}
 				else break;
@@ -96,17 +117,18 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 				return; 
 			case FSMDSLPackage.OUTPUT_PORT:
 				if(context == grammarAccess.getFSMElementRule() ||
-				   context == grammarAccess.getOutputRule()) {
-					sequence_Output(context, (OutputPort) semanticObject); 
+				   context == grammarAccess.getOutputPortRule() ||
+				   context == grammarAccess.getPortRule()) {
+					sequence_OutputPort(context, (OutputPort) semanticObject); 
 					return; 
 				}
-				else if(context == grammarAccess.getShortOutputRule()) {
-					sequence_ShortOutput(context, (OutputPort) semanticObject); 
+				else if(context == grammarAccess.getShortOutputPortRule()) {
+					sequence_ShortOutputPort(context, (OutputPort) semanticObject); 
 					return; 
 				}
 				else break;
 			case FSMDSLPackage.PORT_REF:
-				sequence_Ref(context, (PortRef) semanticObject); 
+				sequence_PortRef(context, (PortRef) semanticObject); 
 				return; 
 			case FSMDSLPackage.PREDICATE_STMT:
 				sequence_PredicateStmt(context, (PredicateStmt) semanticObject); 
@@ -115,11 +137,33 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 				sequence_Range(context, (Range) semanticObject); 
 				return; 
 			case FSMDSLPackage.STATE:
-				sequence_State(context, (State) semanticObject); 
-				return; 
+				if(context == grammarAccess.getFSMElementRule()) {
+					sequence_FSMElement_LongState_ShortState(context, (State) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getLongStateRule()) {
+					sequence_LongState(context, (State) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getShortStateRule()) {
+					sequence_ShortState(context, (State) semanticObject); 
+					return; 
+				}
+				else break;
 			case FSMDSLPackage.TRANSITION:
-				sequence_Transition(context, (Transition) semanticObject); 
-				return; 
+				if(context == grammarAccess.getFSMElementRule()) {
+					sequence_DotTransition_FSMElement_GotoTransition(context, (Transition) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getDotTransitionRule()) {
+					sequence_DotTransition(context, (Transition) semanticObject); 
+					return; 
+				}
+				else if(context == grammarAccess.getGotoTransitionRule()) {
+					sequence_GotoTransition(context, (Transition) semanticObject); 
+					return; 
+				}
+				else break;
 			}
 		if (errorAcceptor != null) errorAcceptor.accept(diagnosticProvider.createInvalidContextOrTypeDiagnostic(semanticObject, context));
 	}
@@ -144,7 +188,7 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Constraint:
-	 *     ((layout=LayoutInfo commands+=Command*)?)
+	 *     (layout=LayoutInfo commands+=Command*)
 	 */
 	protected void sequence_CommandList(EObject context, CommandList semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -154,10 +198,9 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	/**
 	 * Constraint:
 	 *     (
-	 *         in+=ShortInput 
-	 *         in+=ShortInput* 
-	 *         out+=ShortOutput 
-	 *         out+=ShortOutput* 
+	 *         (cst+=ConstantDef cst+=ConstantDef*)? 
+	 *         (in+=ShortInputPort in+=ShortInputPort*)? 
+	 *         (out+=ShortOutputPort out+=ShortOutputPort*)? 
 	 *         commands+=Command 
 	 *         commands+=Command*
 	 *     )
@@ -169,10 +212,20 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Constraint:
-	 *     (name=[OutputPort|ID] (value=ConcatExpr | value=Or))
+	 *     (name=[OutputPort|ID] value=Or)
 	 */
 	protected void sequence_Command(EObject context, Command semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
+		if(errorAcceptor != null) {
+			if(transientValues.isValueTransient(semanticObject, FSMDSLPackage.Literals.COMMAND__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, FSMDSLPackage.Literals.COMMAND__NAME));
+			if(transientValues.isValueTransient(semanticObject, FSMDSLPackage.Literals.COMMAND__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, FSMDSLPackage.Literals.COMMAND__VALUE));
+		}
+		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
+		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		feeder.accept(grammarAccess.getCommandAccess().getNameOutputPortIDTerminalRuleCall_0_0_1(), semanticObject.getName());
+		feeder.accept(grammarAccess.getCommandAccess().getValueOrParserRuleCall_2_0(), semanticObject.getValue());
+		feeder.finish();
 	}
 	
 	
@@ -187,17 +240,54 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Constraint:
-	 *     value=BIN
+	 *     const=[ConstantDef|ID]
 	 */
-	protected void sequence_Constant(EObject context, Constant semanticObject) {
+	protected void sequence_ConstRef(EObject context, ConstRef semanticObject) {
 		if(errorAcceptor != null) {
-			if(transientValues.isValueTransient(semanticObject, FSMDSLPackage.Literals.CONSTANT__VALUE) == ValueTransient.YES)
-				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, FSMDSLPackage.Literals.CONSTANT__VALUE));
+			if(transientValues.isValueTransient(semanticObject, FSMDSLPackage.Literals.CONST_REF__CONST) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, FSMDSLPackage.Literals.CONST_REF__CONST));
 		}
 		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
 		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
-		feeder.accept(grammarAccess.getConstantAccess().getValueBINTerminalRuleCall_1_0(), semanticObject.getValue());
+		feeder.accept(grammarAccess.getConstRefAccess().getConstConstantDefIDTerminalRuleCall_2_0_1(), semanticObject.getConst());
 		feeder.finish();
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (constants+=ConstantDef constants+=ConstantDef*)
+	 */
+	protected void sequence_ConstantDefList(EObject context, ConstantDefList semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (name=ID value=Constant)
+	 */
+	protected void sequence_ConstantDef(EObject context, ConstantDef semanticObject) {
+		if(errorAcceptor != null) {
+			if(transientValues.isValueTransient(semanticObject, FSMDSLPackage.Literals.CONSTANT_DEF__NAME) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, FSMDSLPackage.Literals.CONSTANT_DEF__NAME));
+			if(transientValues.isValueTransient(semanticObject, FSMDSLPackage.Literals.CONSTANT_DEF__VALUE) == ValueTransient.YES)
+				errorAcceptor.accept(diagnosticProvider.createFeatureValueMissing(semanticObject, FSMDSLPackage.Literals.CONSTANT_DEF__VALUE));
+		}
+		INodesForEObjectProvider nodes = createNodeProvider(semanticObject);
+		SequenceFeeder feeder = createSequencerFeeder(semanticObject, nodes);
+		feeder.accept(grammarAccess.getConstantDefAccess().getNameIDTerminalRuleCall_1_0(), semanticObject.getName());
+		feeder.accept(grammarAccess.getConstantDefAccess().getValueConstantParserRuleCall_3_0(), semanticObject.getValue());
+		feeder.finish();
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (value=BIN | value=HEX)
+	 */
+	protected void sequence_Constant(EObject context, Constant semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
@@ -212,13 +302,44 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Constraint:
+	 *     ((src=[State|ID]? dst=[State|ID] predicate=Predicate? layout=LayoutInfo) | (dst=[State|ID] predicate=Predicate? layout=LayoutInfo))
+	 */
+	protected void sequence_DotTransition_FSMElement_GotoTransition(EObject context, Transition semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (src=[State|ID]? dst=[State|ID] predicate=Predicate? layout=LayoutInfo)
+	 */
+	protected void sequence_DotTransition(EObject context, Transition semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (
+	 *         (name=ID code=BIN? layout=LayoutInfo commandList=CommandList? transition+=DotTransition*) | 
+	 *         (name=ID code=BIN? layout=LayoutInfo commandList=ShortCommandList transition+=GotoTransition*)
+	 *     )
+	 */
+	protected void sequence_FSMElement_LongState_ShortState(EObject context, State semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     (
 	 *         name=ID 
 	 *         layout=LayoutInfo 
-	 *         (in+=Input | out+=Output)+ 
-	 *         width=INT? 
-	 *         start=[State|ID]? 
-	 *         states+=State*
+	 *         constants+=ConstantDef* 
+	 *         (in+=InputPort+ | out+=OutputPort+)+ 
+	 *         width=INT 
+	 *         start=[State|ID] 
+	 *         (states+=LongState | states+=ShortState)*
 	 *     )
 	 */
 	protected void sequence_FSM(EObject context, FSM semanticObject) {
@@ -228,9 +349,18 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Constraint:
+	 *     (dst=[State|ID] predicate=Predicate? layout=LayoutInfo)
+	 */
+	protected void sequence_GotoTransition(EObject context, Transition semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
 	 *     (name=ID width=INT? layout=LayoutInfo)
 	 */
-	protected void sequence_Input(EObject context, InputPort semanticObject) {
+	protected void sequence_InputPort(EObject context, InputPort semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -240,6 +370,15 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 *     ((x=INT y=INT (width=INT height=INT)?)?)
 	 */
 	protected void sequence_LayoutInfo(EObject context, LayoutInfo semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     (name=ID code=BIN? layout=LayoutInfo commandList=CommandList? transition+=DotTransition*)
+	 */
+	protected void sequence_LongState(EObject context, State semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
@@ -266,14 +405,23 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	 * Constraint:
 	 *     (name=ID width=INT? layout=LayoutInfo)
 	 */
-	protected void sequence_Output(EObject context, OutputPort semanticObject) {
+	protected void sequence_OutputPort(EObject context, OutputPort semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
 	 * Constraint:
-	 *     (in+=ShortInput in+=ShortInput* predicate=Predicate)
+	 *     (port=[Port|ID] range=Range?)
+	 */
+	protected void sequence_PortRef(EObject context, PortRef semanticObject) {
+		genericSequencer.createSequence(context, semanticObject);
+	}
+	
+	
+	/**
+	 * Constraint:
+	 *     ((cst+=ConstantDef cst+=ConstantDef*)? (in+=ShortInputPort in+=ShortInputPort*)? predicate=Predicate)
 	 */
 	protected void sequence_PredicateStmt(EObject context, PredicateStmt semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
@@ -291,52 +439,36 @@ public class FSMDSLSemanticSequencer extends AbstractDelegatingSemanticSequencer
 	
 	/**
 	 * Constraint:
-	 *     (port=[Port|ID] range=Range?)
+	 *     ((commands+=Command+ layout=LayoutInfo)?)
 	 */
-	protected void sequence_Ref(EObject context, PortRef semanticObject) {
+	protected void sequence_ShortCommandList(EObject context, CommandList semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
 	 * Constraint:
-	 *     (name=ID width=INT)
+	 *     (name=ID width=INT?)
 	 */
-	protected void sequence_ShortInput(EObject context, InputPort semanticObject) {
+	protected void sequence_ShortInputPort(EObject context, InputPort semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
 	 * Constraint:
-	 *     (name=ID width=INT)
+	 *     (name=ID width=INT?)
 	 */
-	protected void sequence_ShortOutput(EObject context, OutputPort semanticObject) {
+	protected void sequence_ShortOutputPort(EObject context, OutputPort semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 	
 	
 	/**
 	 * Constraint:
-	 *     (
-	 *         name=ID 
-	 *         code=BIN? 
-	 *         layout=LayoutInfo 
-	 *         code=BIN? 
-	 *         commandList=CommandList 
-	 *         transition+=Transition*
-	 *     )
+	 *     (name=ID code=BIN? layout=LayoutInfo commandList=ShortCommandList transition+=GotoTransition*)
 	 */
-	protected void sequence_State(EObject context, State semanticObject) {
-		genericSequencer.createSequence(context, semanticObject);
-	}
-	
-	
-	/**
-	 * Constraint:
-	 *     (src=[State|ID]? dst=[State|ID] predicate=Predicate? layout=LayoutInfo)
-	 */
-	protected void sequence_Transition(EObject context, Transition semanticObject) {
+	protected void sequence_ShortState(EObject context, State semanticObject) {
 		genericSequencer.createSequence(context, semanticObject);
 	}
 }

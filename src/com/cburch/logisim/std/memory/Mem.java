@@ -88,7 +88,9 @@ abstract class Mem extends InstanceFactory {
 		}
 	}
 
-	public static final int SymbolWidth = 200;
+	public static final int SymbolWidth = 260;
+	public static final int SymbolHeight= 260;
+	
 	public static final Attribute<BitWidth> ADDR_ATTR = Attributes.forBitWidth(
 			"addrWidth", Strings.getter("ramAddrWidthAttr"), 2, 24);
 
@@ -127,42 +129,8 @@ abstract class Mem extends InstanceFactory {
 			int NrAddressBits) {
 		Graphics g = painter.getGraphics();
 		GraphicsUtil.switchToWidth(g, 2);
-		g.drawLine(xpos + 10, ypos + 10, xpos + 19, ypos + 10);
-		g.drawLine(xpos + 5, ypos + 5, xpos + 10, ypos + 10);
-		g.drawLine(xpos + 10, ypos + 30, xpos + 19, ypos + 30);
-		g.drawLine(xpos + 5, ypos + 25, xpos + 10, ypos + 30);
-		if (NrAddressBits > 2) {
-			for (int i = 0; i < 3; i++) {
-				g.drawLine(xpos + 15, ypos + 13 + i * 6, xpos + 15, ypos + 15
-						+ i * 6);
-			}
-		}
-		GraphicsUtil.switchToWidth(g, 5);
-		g.drawLine(xpos, ypos, xpos + 5, ypos + 5);
-		g.drawLine(xpos + 5, ypos + 5, xpos + 5, ypos + 25);
-		GraphicsUtil.switchToWidth(g, 1);
-		GraphicsUtil.drawText(g, "0", xpos + 22, ypos + 10,
+		GraphicsUtil.drawText(g, "A", xpos + 20, ypos ,
 				GraphicsUtil.H_LEFT, GraphicsUtil.V_CENTER);
-		GraphicsUtil.drawText(g, Integer.toString(NrAddressBits - 1),
-				xpos + 22, ypos + 30, GraphicsUtil.H_LEFT,
-				GraphicsUtil.V_CENTER);
-		GraphicsUtil.drawText(g, "A", xpos + 50, ypos + 20,
-				GraphicsUtil.H_LEFT, GraphicsUtil.V_CENTER);
-		g.drawLine(xpos + 40, ypos + 5, xpos + 45, ypos + 10);
-		g.drawLine(xpos + 45, ypos + 10, xpos + 45, ypos + 17);
-		g.drawLine(xpos + 45, ypos + 17, xpos + 48, ypos + 20);
-		g.drawLine(xpos + 48, ypos + 20, xpos + 45, ypos + 23);
-		g.drawLine(xpos + 45, ypos + 23, xpos + 45, ypos + 30);
-		g.drawLine(xpos + 40, ypos + 35, xpos + 45, ypos + 30);
-		String size = Integer.toString((1 << NrAddressBits) - 1);
-		Font font = g.getFont();
-		FontMetrics fm = g.getFontMetrics(font);
-		int StrSize = fm.stringWidth(size);
-		g.drawLine(xpos + 60, ypos + 20, xpos + 60 + StrSize, ypos + 20);
-		GraphicsUtil.drawText(g, "0", xpos + 60 + (StrSize / 2), ypos + 19,
-				GraphicsUtil.H_CENTER, GraphicsUtil.V_BOTTOM);
-		GraphicsUtil.drawText(g, size, xpos + 60 + (StrSize / 2), ypos + 21,
-				GraphicsUtil.H_CENTER, GraphicsUtil.V_TOP);
 		painter.drawPort(ADDR);
 	}
 

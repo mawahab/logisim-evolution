@@ -1,9 +1,14 @@
 package com.cburch.logisim.statemachine.parser;
 
 import com.cburch.logisim.statemachine.FSMDSLStandaloneSetup;
+import com.cburch.logisim.statemachine.PrettyPrinter;
+import com.cburch.logisim.statemachine.fSMDSL.ConstantDef;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage;
+import com.cburch.logisim.statemachine.fSMDSL.LayoutInfo;
 import com.cburch.logisim.statemachine.fSMDSL.Port;
+import com.cburch.logisim.statemachine.parser.FSMTextSave;
+import com.google.common.collect.Iterables;
 import com.google.inject.Injector;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -13,11 +18,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import javax.swing.JOptionPane;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -31,29 +38,62 @@ import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 import org.eclipse.xtext.xbase.lib.Exceptions;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 import org.eclipse.xtext.xbase.lib.IterableExtensions;
 import org.eclipse.xtext.xbase.lib.ListExtensions;
 
 @SuppressWarnings("all")
 public class FSMSerializer {
   public static String saveAsString(final FSM fsm) {
-    try {
-      final ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      FSMSerializer.save(fsm, bos);
-      byte[] _byteArray = bos.toByteArray();
-      Charset _defaultCharset = Charset.defaultCharset();
-      return new String(_byteArray, _defaultCharset);
-    } catch (final Throwable _t) {
-      if (_t instanceof Exception) {
-        final Exception e = (Exception)_t;
-        String _message = e.getMessage();
-        JOptionPane.showConfirmDialog(null, null, _message, JOptionPane.ERROR_MESSAGE);
-        String _message_1 = e.getMessage();
-        throw new RuntimeException(_message_1);
-      } else {
-        throw Exceptions.sneakyThrow(_t);
-      }
+    final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    FSMSerializer.reorderInputPorts(fsm);
+    FSMSerializer.reorderOutputPorts(fsm);
+    FSMSerializer.save(fsm, bos);
+    byte[] _byteArray = bos.toByteArray();
+    Charset _defaultCharset = Charset.defaultCharset();
+    return new String(_byteArray, _defaultCharset);
+  }
+  
+  public static boolean reorderOutputPorts(final FSM fsm) {
+    boolean _xblockexpression = false;
+    {
+      EList<Port> _in = fsm.getIn();
+      BasicEList<Port> ips = new BasicEList<Port>(_in);
+      final Function1<Port, String> _function = (Port p) -> {
+        return p.getName();
+      };
+      List<String> _map = ListExtensions.<Port, String>map(ips, _function);
+      String _plus = ("before : " + _map);
+      InputOutput.<String>println(_plus);
+      EList<Port> _in_1 = fsm.getIn();
+      _in_1.clear();
+      final Function1<Port, Integer> _function_1 = (Port p) -> {
+        LayoutInfo _layout = p.getLayout();
+        return Integer.valueOf(_layout.getY());
+      };
+      List<Port> sips = IterableExtensions.<Port, Integer>sortBy(ips, _function_1);
+      EList<Port> _in_2 = fsm.getIn();
+      _xblockexpression = Iterables.<Port>addAll(_in_2, sips);
     }
+    return _xblockexpression;
+  }
+  
+  public static boolean reorderInputPorts(final FSM fsm) {
+    boolean _xblockexpression = false;
+    {
+      EList<Port> _out = fsm.getOut();
+      BasicEList<Port> ops = new BasicEList<Port>(_out);
+      EList<Port> _out_1 = fsm.getOut();
+      _out_1.clear();
+      final Function1<Port, Integer> _function = (Port p) -> {
+        LayoutInfo _layout = p.getLayout();
+        return Integer.valueOf(_layout.getY());
+      };
+      List<Port> sops = IterableExtensions.<Port, Integer>sortBy(ops, _function);
+      EList<Port> _out_2 = fsm.getOut();
+      _xblockexpression = Iterables.<Port>addAll(_out_2, sops);
+    }
+    return _xblockexpression;
   }
   
   public static void saveToFile(final FSM fsm, final File f) {
@@ -65,7 +105,7 @@ public class FSMSerializer {
         final Exception e = (Exception)_t;
         e.printStackTrace();
         String _message = e.getMessage();
-        JOptionPane.showConfirmDialog(null, null, _message, JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, _message, "Error during FSM serialization", JOptionPane.ERROR_MESSAGE);
         String _message_1 = e.getMessage();
         String _plus = ("Could not serialize current Model to string :" + _message_1);
         throw new RuntimeException(_plus);
@@ -75,7 +115,7 @@ public class FSMSerializer {
     }
   }
   
-  public static void save(final FSM fsm, final OutputStream os) {
+  public static void emfSave(final FSM fsm, final OutputStream os) {
     try {
       FSMDSLStandaloneSetup instance = new FSMDSLStandaloneSetup();
       Injector injector = instance.createInjectorAndDoEMFRegistration();
@@ -89,75 +129,145 @@ public class FSMSerializer {
       HashMap saveOptions = new HashMap<Object, Object>();
       saveOptions.put(XtextResource.OPTION_FORMAT, Boolean.TRUE);
       resource.save(os, saveOptions);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  public static void save(final FSM fsm, final OutputStream os) {
+    final PrintStream ps = new PrintStream(os);
+    String _pp = FSMTextSave.pp(fsm);
+    ps.append(_pp);
+    ps.close();
+  }
+  
+  public static EObject parseConstantList(final String input) {
+    try {
+      byte[] _bytes = input.getBytes(StandardCharsets.UTF_8);
+      InputStream fis = new ByteArrayInputStream(_bytes);
+      return FSMSerializer.parse(fis);
+    } catch (Throwable _e) {
+      throw Exceptions.sneakyThrow(_e);
+    }
+  }
+  
+  public static EObject parsePredicate(final FSM fsm, final String in) throws IOException {
+    EList<ConstantDef> _constants = fsm.getConstants();
+    final Function1<ConstantDef, String> _function = (ConstantDef c) -> {
+      return PrettyPrinter.pp(c);
+    };
+    List<String> _map = ListExtensions.<ConstantDef, String>map(_constants, _function);
+    List<String> _list = IterableExtensions.<String>toList(_map);
+    String _string = _list.toString();
+    EList<Port> _in = fsm.getIn();
+    final Function1<Port, String> _function_1 = (Port p) -> {
+      String _name = p.getName();
+      String _plus = (_name + "[");
+      int _width = p.getWidth();
+      String _plus_1 = (_plus + Integer.valueOf(_width));
+      return (_plus_1 + "]");
+    };
+    List<String> _map_1 = ListExtensions.<Port, String>map(_in, _function_1);
+    List<String> _list_1 = IterableExtensions.<String>toList(_map_1);
+    String _string_1 = _list_1.toString();
+    String _plus = (_string + _string_1);
+    String _plus_1 = (_plus + in);
+    String input = (_plus_1 + ";");
+    byte[] _bytes = input.getBytes(StandardCharsets.UTF_8);
+    InputStream fis = new ByteArrayInputStream(_bytes);
+    try {
+      return FSMSerializer.parse(fis);
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
         final Exception e = (Exception)_t;
-        e.printStackTrace();
+        StringConcatenation _builder = new StringConcatenation();
         String _message = e.getMessage();
-        JOptionPane.showConfirmDialog(null, null, _message, JOptionPane.ERROR_MESSAGE);
-        String _message_1 = e.getMessage();
-        throw new RuntimeException(_message_1);
+        _builder.append(_message, "");
+        _builder.append(" in \"");
+        _builder.append(input, "");
+        _builder.append("\"");
+        throw new IOException(_builder.toString());
       } else {
         throw Exceptions.sneakyThrow(_t);
       }
     }
   }
   
-  public static EObject parsePredicate(final FSM fsm, final String in) throws IOException {
-    EList<Port> _in = fsm.getIn();
-    final Function1<Port, String> _function = (Port p) -> {
-      String _name = p.getName();
-      String _plus = (_name + "[");
-      int _width = p.getWidth();
-      String _plus_1 = (_plus + Integer.valueOf(_width));
-      return (_plus_1 + "]");
-    };
-    List<String> _map = ListExtensions.<Port, String>map(_in, _function);
-    List<String> _list = IterableExtensions.<String>toList(_map);
-    String _plus = ("" + _list);
-    String _plus_1 = (_plus + in);
-    String input = (_plus_1 + ";");
-    byte[] _bytes = input.getBytes(StandardCharsets.UTF_8);
-    InputStream fis = new ByteArrayInputStream(_bytes);
-    return FSMSerializer.parse(fis);
-  }
-  
   public static EObject parseCommandList(final FSM fsm, final String in) throws IOException {
+    EList<ConstantDef> _constants = fsm.getConstants();
+    final Function1<ConstantDef, String> _function = (ConstantDef c) -> {
+      return PrettyPrinter.pp(c);
+    };
+    List<String> _map = ListExtensions.<ConstantDef, String>map(_constants, _function);
+    List<String> _list = IterableExtensions.<String>toList(_map);
+    String _string = _list.toString();
     EList<Port> _in = fsm.getIn();
-    final Function1<Port, String> _function = (Port p) -> {
+    final Function1<Port, String> _function_1 = (Port p) -> {
       String _name = p.getName();
       String _plus = (_name + "[");
       int _width = p.getWidth();
       String _plus_1 = (_plus + Integer.valueOf(_width));
       return (_plus_1 + "]");
     };
-    List<String> _map = ListExtensions.<Port, String>map(_in, _function);
-    List<String> _list = IterableExtensions.<String>toList(_map);
-    String _plus = ("" + _list);
+    List<String> _map_1 = ListExtensions.<Port, String>map(_in, _function_1);
+    List<String> _list_1 = IterableExtensions.<String>toList(_map_1);
+    String _string_1 = _list_1.toString();
+    String _plus = (_string + _string_1);
     EList<Port> _out = fsm.getOut();
-    final Function1<Port, String> _function_1 = (Port p) -> {
+    final Function1<Port, String> _function_2 = (Port p) -> {
       String _name = p.getName();
       String _plus_1 = (_name + "[");
       int _width = p.getWidth();
       String _plus_2 = (_plus_1 + Integer.valueOf(_width));
       return (_plus_2 + "]");
     };
-    List<String> _map_1 = ListExtensions.<Port, String>map(_out, _function_1);
-    List<String> _list_1 = IterableExtensions.<String>toList(_map_1);
-    String _plus_1 = (_plus + _list_1);
+    List<String> _map_2 = ListExtensions.<Port, String>map(_out, _function_2);
+    List<String> _list_2 = IterableExtensions.<String>toList(_map_2);
+    String _string_2 = _list_2.toString();
+    String _plus_1 = (_plus + _string_2);
     String _plus_2 = (_plus_1 + in);
     String input = (_plus_2 + ";");
     byte[] _bytes = input.getBytes(StandardCharsets.UTF_8);
     InputStream fis = new ByteArrayInputStream(_bytes);
-    return FSMSerializer.parse(fis);
+    try {
+      return FSMSerializer.parse(fis);
+    } catch (final Throwable _t) {
+      if (_t instanceof Exception) {
+        final Exception e = (Exception)_t;
+        StringConcatenation _builder = new StringConcatenation();
+        String _message = e.getMessage();
+        _builder.append(_message, "");
+        _builder.append(" in \"");
+        _builder.append(input, "");
+        _builder.append("\"");
+        throw new IOException(_builder.toString());
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
   }
   
   public static FSM load(final String in) throws IOException {
     byte[] _bytes = in.getBytes(StandardCharsets.UTF_8);
     InputStream fis = new ByteArrayInputStream(_bytes);
-    EObject _parse = FSMSerializer.parse(fis);
-    FSM fsm = ((FSM) _parse);
-    return fsm;
+    try {
+      EObject _parse = FSMSerializer.parse(fis);
+      FSM fsm = ((FSM) _parse);
+      return fsm;
+    } catch (final Throwable _t) {
+      if (_t instanceof Exception) {
+        final Exception e = (Exception)_t;
+        StringConcatenation _builder = new StringConcatenation();
+        String _message = e.getMessage();
+        _builder.append(_message, "");
+        _builder.append(" in \"");
+        _builder.append(in, "");
+        _builder.append("\"");
+        throw new IOException(_builder.toString());
+      } else {
+        throw Exceptions.sneakyThrow(_t);
+      }
+    }
   }
   
   public static FSM load(final File in) throws IOException {

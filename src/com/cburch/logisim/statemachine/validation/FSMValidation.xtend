@@ -23,6 +23,7 @@ import org.eclipse.emf.common.util.EList
 import com.cburch.logisim.statemachine.bdd.BitWidthAnalyzer
 import com.cburch.logisim.statemachine.editor.view.FSMCustomFactory
 import com.cburch.logisim.statemachine.fSMDSL.Transition
+import java.util.regex.Pattern
 
 class FSMValidation{
 
@@ -33,6 +34,11 @@ class FSMValidation{
 	List<String> errors= new ArrayList<String>();
 	BitWidthAnalyzer analyzer = new BitWidthAnalyzer
 
+	static HashSet<String> keywords = new HashSet<String>(#["CLK","RST","EN","if", "then", "while", "for", "do", "end","begin", "entity", "component"]);
+
+    private static final Pattern FQCN = Pattern.compile("(?:\\b[_a-zA-Z]|\\B\\$)[_$a-zA-Z0-9]*+");
+
+ 
 	new(FSM fsm) {
 		this.fsm=fsm;
 	}
@@ -53,6 +59,17 @@ class FSMValidation{
 		if(e.in==0) {
 			warning("The FSM has no input pins !")
 		}
+		val map = new HashMap<String, State>
+
+		for(s : e.states) {
+			if (map.containsKey(s.code)) {
+				error('''The FSM has two states («s.name», «map.get(s.code).name») with the same encoding''')
+			} else {
+				map.put(s.code,s);
+			}
+		}
+		
+		checkNames();
 		for(s : e.states) {
 			validate(s)
 			for(t: s.transition) {
@@ -64,6 +81,71 @@ class FSMValidation{
 				warning("State "+PrettyPrinter.pp(s)+" is not reachable from initial state "+PrettyPrinter.pp(e.start));
 			}
 		}
+	}
+	
+	def public static isValidBinaryString(String s, int width) {
+			var txt =s;
+			val first = txt.charAt(0);
+			val last = txt.charAt(txt.length()-1);
+			if(first=='"'&& last=='"') {
+				txt=txt.substring(1, txt.length()-1);
+				for (char c : txt.toCharArray()) {
+					if (c != '0' && c != '1') {
+						return false;
+					}
+				}
+				if ((txt.length())!=width) {
+					return false
+				}
+			}  else {
+				return false
+			}
+			return true
+	}
+
+	def public static boolean isValidIdentifier(String identifier) {
+		FQCN.matcher(identifier).matches()
+    }
+	def public static boolean isReservedKeyword(String identifier) {
+		(keywords.contains(identifier)) 
+    }
+	def boolean validateIdentifier(String identifier) {
+		if (!isValidIdentifier(identifier)) {
+			error('''Ilegal identifier : «identifier»''');
+		} else if (isReservedKeyword(identifier)) {
+			error('''Reserved keyword : «identifier»''');
+        }
+    }
+	
+	def checkNames() {
+	
+		val nameMap = new HashMap<String, FSMElement>
+		for(s : fsm.states) {
+			validateIdentifier(s.name)
+			if (nameMap.containsKey(s.name)) {
+				error('''The FSM has two states with the same Label «s.name»''')
+			} else {
+				nameMap.put(s.name,s);
+			}
+		}
+		for(s : fsm.in) {
+			validateIdentifier(s.name)
+			if (nameMap.containsKey(s.name)) {
+				error('''The FSM has two elements using a same identifier («PrettyPrinter.pp(s)», «PrettyPrinter.pp(nameMap.get(s.name))») ''')
+			} else {
+				nameMap.put(s.name,s);
+			}
+		}
+		for(s : fsm.out) {
+			validateIdentifier(s.name)
+			if (nameMap.containsKey(s.name)) {
+				error('''The FSM has two elements using a same identifier («PrettyPrinter.pp(s)», «PrettyPrinter.pp(nameMap.get(s.name))») ''')
+			} else {
+				nameMap.put(s.name,s);
+			}
+		}
+		
+		
 	}
 	
 	

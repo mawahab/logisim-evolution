@@ -2,6 +2,7 @@
  */
 package com.cburch.logisim.statemachine.fSMDSL.impl;
 
+import com.cburch.logisim.statemachine.fSMDSL.ConstantDef;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage;
 import com.cburch.logisim.statemachine.fSMDSL.FSMElement;
@@ -34,6 +35,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * <ul>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.FSMImpl#getLayout <em>Layout</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.FSMImpl#getName <em>Name</em>}</li>
+ *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.FSMImpl#getConstants <em>Constants</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.FSMImpl#getIn <em>In</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.FSMImpl#getOut <em>Out</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.FSMImpl#getWidth <em>Width</em>}</li>
@@ -74,6 +76,16 @@ public class FSMImpl extends TOPImpl implements FSM
    * @ordered
    */
   protected String name = NAME_EDEFAULT;
+
+  /**
+   * The cached value of the '{@link #getConstants() <em>Constants</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getConstants()
+   * @generated
+   * @ordered
+   */
+  protected EList<ConstantDef> constants;
 
   /**
    * The cached value of the '{@link #getIn() <em>In</em>}' containment reference list.
@@ -232,6 +244,20 @@ public class FSMImpl extends TOPImpl implements FSM
    * <!-- end-user-doc -->
    * @generated
    */
+  public EList<ConstantDef> getConstants()
+  {
+    if (constants == null)
+    {
+      constants = new EObjectContainmentEList<ConstantDef>(ConstantDef.class, this, FSMDSLPackage.FSM__CONSTANTS);
+    }
+    return constants;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   public EList<Port> getIn()
   {
     if (in == null)
@@ -347,6 +373,8 @@ public class FSMImpl extends TOPImpl implements FSM
     {
       case FSMDSLPackage.FSM__LAYOUT:
         return basicSetLayout(null, msgs);
+      case FSMDSLPackage.FSM__CONSTANTS:
+        return ((InternalEList<?>)getConstants()).basicRemove(otherEnd, msgs);
       case FSMDSLPackage.FSM__IN:
         return ((InternalEList<?>)getIn()).basicRemove(otherEnd, msgs);
       case FSMDSLPackage.FSM__OUT:
@@ -371,6 +399,8 @@ public class FSMImpl extends TOPImpl implements FSM
         return getLayout();
       case FSMDSLPackage.FSM__NAME:
         return getName();
+      case FSMDSLPackage.FSM__CONSTANTS:
+        return getConstants();
       case FSMDSLPackage.FSM__IN:
         return getIn();
       case FSMDSLPackage.FSM__OUT:
@@ -402,6 +432,10 @@ public class FSMImpl extends TOPImpl implements FSM
         return;
       case FSMDSLPackage.FSM__NAME:
         setName((String)newValue);
+        return;
+      case FSMDSLPackage.FSM__CONSTANTS:
+        getConstants().clear();
+        getConstants().addAll((Collection<? extends ConstantDef>)newValue);
         return;
       case FSMDSLPackage.FSM__IN:
         getIn().clear();
@@ -441,6 +475,9 @@ public class FSMImpl extends TOPImpl implements FSM
       case FSMDSLPackage.FSM__NAME:
         setName(NAME_EDEFAULT);
         return;
+      case FSMDSLPackage.FSM__CONSTANTS:
+        getConstants().clear();
+        return;
       case FSMDSLPackage.FSM__IN:
         getIn().clear();
         return;
@@ -474,6 +511,8 @@ public class FSMImpl extends TOPImpl implements FSM
         return layout != null;
       case FSMDSLPackage.FSM__NAME:
         return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+      case FSMDSLPackage.FSM__CONSTANTS:
+        return constants != null && !constants.isEmpty();
       case FSMDSLPackage.FSM__IN:
         return in != null && !in.isEmpty();
       case FSMDSLPackage.FSM__OUT:

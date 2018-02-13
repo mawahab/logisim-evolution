@@ -36,6 +36,7 @@ import java.awt.Graphics;
 
 import com.cburch.hex.HexModel;
 import com.cburch.hex.HexModelListener;
+import com.cburch.logisim.cpu.Instr;
 import com.cburch.logisim.data.Bounds;
 import com.cburch.logisim.instance.InstanceData;
 import com.cburch.logisim.util.GraphicsUtil;
@@ -58,6 +59,14 @@ class MemState implements InstanceData, Cloneable, HexModelListener {
 	private int yOffset = 0;
 	private int CharHeight = 0;
 	private int ControlBlockHeight = 0;
+	private boolean code= false;
+	public boolean isCode() {
+		return code;
+	}
+
+	public void setCode(boolean code) {
+		this.code = code;
+	}
 
 	MemState(MemContents contents) {
 		this.contents = contents;
@@ -85,7 +94,7 @@ class MemState implements InstanceData, Cloneable, HexModelListener {
 		int dataBits = contents.getWidth();
 		int TotalWidth = (HasDataIn) ? Mem.SymbolWidth - 80
 				: Mem.SymbolWidth - 40;
-		int TotalHeight = (dataBits == 1) ? 16 : (dataBits * 20) - 6;
+		int TotalHeight = (dataBits == 1) ? 16 : (dataBits * 10) - 6;
 		Font font = g.getFont();
 		FontMetrics fm = g.getFontMetrics(font);
 		AddrBlockSize = ((fm.stringWidth(StringUtil.toHexString(addrBits, 0)) + 9) / 10) * 10;
@@ -219,6 +228,72 @@ class MemState implements InstanceData, Cloneable, HexModelListener {
 
 	public void metainfoChanged(HexModel source) {
 		setBits(contents.getLogLength(), contents.getWidth());
+	}
+
+	public void paint2(Graphics g, int leftX, int topY, boolean HasDataIn,
+			int NrOfLines) {
+		if (RecalculateParameters)
+			CalculateDisplayParameters(g, HasDataIn);
+		int BlockHeigt = NrOfLines * (CharHeight + 2);
+		int TotalNrOfEntries = (1 << getAddrBits());
+		g.setColor(Color.LIGHT_GRAY);
+		g.fillRect(leftX + xOffset, topY + yOffset, DataBlockSize
+				+ AddrBlockSize, BlockHeigt);
+		g.setColor(Color.DARK_GRAY);
+		g.drawRect(leftX + xOffset + AddrBlockSize, topY + yOffset,
+				DataBlockSize, BlockHeigt);
+		g.setColor(Color.BLACK);
+		/* draw the addresses */
+		int addr = (int) curScroll;
+		if ((addr + (NrOfLines * NrDataSymbolsEachLine)) > TotalNrOfEntries) {
+			addr = TotalNrOfEntries - (NrOfLines * NrDataSymbolsEachLine);
+			if (addr < 0)
+				addr = 0;
+			curScroll = addr;
+		}
+		/* draw the contents */
+		int firsty = topY + yOffset + (CharHeight / 2) + 1;
+		int yinc = CharHeight + 2;
+		int firstx = leftX + xOffset + AddrBlockSize + (SpaceSize / 2)
+				+ ((DataSize - SpaceSize) / 2);
+		for (int i = 0; i < NrOfLines; i++) {
+			/* Draw address */
+			GraphicsUtil.drawText(g,
+					StringUtil.toHexString(getAddrBits(), addr), leftX
+							+ xOffset + (AddrBlockSize / 2), firsty + i
+							* (yinc), GraphicsUtil.H_CENTER,
+					GraphicsUtil.V_CENTER);
+			/* Draw data */
+			for (int j = 0; j < NrDataSymbolsEachLine; j++) {
+				int value = contents.get(addr + j);
+				if (isValidAddr(addr + j)) {
+					if ((addr + j) == curAddr) {
+						g.setColor(Color.DARK_GRAY);
+						g.fillRect(firstx + j * DataSize - (DataSize / 2) - 1,
+								firsty + i * yinc - (CharHeight / 2) - 1,
+								DataSize + 2, CharHeight + 2);
+						g.setColor(Color.WHITE);
+						GraphicsUtil.drawText(g, StringUtil.toHexString(
+								contents.getWidth(), value), firstx + j
+								* DataSize, firsty + i * yinc,
+								GraphicsUtil.H_CENTER, GraphicsUtil.V_CENTER);
+						g.setColor(Color.BLACK);
+					} else {
+						if (!code) {
+							GraphicsUtil.drawText(g, StringUtil.toHexString(
+									contents.getWidth(), value), firstx + j
+									* DataSize, firsty + i * yinc,
+									GraphicsUtil.H_CENTER, GraphicsUtil.V_CENTER);
+						} else {
+							GraphicsUtil.drawText(g, (new Instr((long)value)).toString(), firstx + j
+									* DataSize, firsty + i * yinc,
+									GraphicsUtil.H_CENTER, GraphicsUtil.V_CENTER);
+						}
+					}
+				}
+			}
+			addr += NrDataSymbolsEachLine;
+		}
 	}
 
 	public void paint(Graphics g, int leftX, int topY, boolean HasDataIn,

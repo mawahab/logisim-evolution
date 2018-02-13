@@ -12,9 +12,9 @@ package com.cburch.logisim.statemachine.fSMDSL;
  * The following features are supported:
  * </p>
  * <ul>
- *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.Transition#getSrc <em>Src</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.Transition#getDst <em>Dst</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.Transition#getPredicate <em>Predicate</em>}</li>
+ *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.Transition#getSrc <em>Src</em>}</li>
  * </ul>
  *
  * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#getTransition()
@@ -23,32 +23,6 @@ package com.cburch.logisim.statemachine.fSMDSL;
  */
 public interface Transition extends FSMElement
 {
-  /**
-   * Returns the value of the '<em><b>Src</b></em>' reference.
-   * <!-- begin-user-doc -->
-   * <p>
-   * If the meaning of the '<em>Src</em>' reference isn't clear,
-   * there really should be more of a description here...
-   * </p>
-   * <!-- end-user-doc -->
-   * @return the value of the '<em>Src</em>' reference.
-   * @see #setSrc(State)
-   * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#getTransition_Src()
-   * @model
-   * @generated
-   */
-  State getSrc();
-
-  /**
-   * Sets the value of the '{@link com.cburch.logisim.statemachine.fSMDSL.Transition#getSrc <em>Src</em>}' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @param value the new value of the '<em>Src</em>' reference.
-   * @see #getSrc()
-   * @generated
-   */
-  void setSrc(State value);
-
   /**
    * Returns the value of the '<em><b>Dst</b></em>' reference.
    * <!-- begin-user-doc -->
@@ -100,5 +74,31 @@ public interface Transition extends FSMElement
    * @generated
    */
   void setPredicate(BoolExpr value);
+
+  /**
+   * Returns the value of the '<em><b>Src</b></em>' reference.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Src</em>' reference isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Src</em>' reference.
+   * @see #setSrc(State)
+   * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#getTransition_Src()
+   * @model
+   * @generated
+   */
+  State getSrc();
+
+  /**
+   * Sets the value of the '{@link com.cburch.logisim.statemachine.fSMDSL.Transition#getSrc <em>Src</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @param value the new value of the '<em>Src</em>' reference.
+   * @see #getSrc()
+   * @generated
+   */
+  void setSrc(State value);
 
 } // Transition

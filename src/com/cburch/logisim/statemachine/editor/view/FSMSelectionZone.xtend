@@ -7,13 +7,12 @@ import java.awt.Point
 import java.util.List
 import com.cburch.logisim.statemachine.editor.FSMEditorController
 import java.util.ArrayList
+import com.cburch.logisim.statemachine.PrettyPrinter
+import com.cburch.logisim.statemachine.editor.FSMView
 
 class FSMSelectionZone {
 
-	FSM fsm = null;
-	
-	new(FSM model) {
-		 fsm = model;
+	new() {
 	}  
 	
 	def getSelectedElement(Point p,FSMElement e) {
@@ -29,7 +28,8 @@ class FSMSelectionZone {
 	int xmax;
 	int ymax;
 	
-	static final boolean VERBOSE=false
+	static final boolean VERBOSE=true
+	
 
 	def updateBoundingBox(FSMElement e) {
 		xmin= Math.min(xmin, e.layout.x);
@@ -70,7 +70,7 @@ class FSMSelectionZone {
 
 	}
 
-	def List<FSMElement> getElementsInZone(Zone z) {
+	def List<FSMElement> getElementsInZone(FSM fsm,Zone z) {
 		var List<FSMElement> candidates = new ArrayList<FSMElement>()
 		
 		
@@ -102,7 +102,7 @@ class FSMSelectionZone {
 	
 	}
 		
-	def List<FSMElement> getSelectedElements(Point p) {
+	def List<FSMElement> getSelectedElements(FSM fsm,Point p) {
 		var List<FSMElement> candidates = new ArrayList<FSMElement>()
 		
 		detectElement(p, fsm, candidates)
@@ -121,12 +121,12 @@ class FSMSelectionZone {
 
 		}
 		
-		println(candidates)
+		for (c:candidates) println("\t"+PrettyPrinter.pp(c))
 		return candidates	
 	}
 	
-	def public AreaType getAreaType(Point p) {
-		val List<FSMElement> selection = getSelectedElements(p);
+	def public AreaType getAreaType(FSM fsm,Point p) {
+		val List<FSMElement> selection = getSelectedElements(fsm,p);
 		if (selection.size()>0) {
 			val first = selection.get(0)
 			if(first instanceof State) {

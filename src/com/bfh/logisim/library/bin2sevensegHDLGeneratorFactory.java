@@ -103,12 +103,13 @@ public class bin2sevensegHDLGeneratorFactory extends AbstractHDLGeneratorFactory
 		Contents.add("         WHEN \"0111\" => s_output_value <= \"0000111\";");
 		Contents.add("         WHEN \"1000\" => s_output_value <= \"1111111\";");
 		Contents.add("         WHEN \"1001\" => s_output_value <= \"1101111\";");
-		Contents.add("         WHEN \"1010\" => s_output_value <= \"1111011\";");
-		Contents.add("         WHEN \"1011\" => s_output_value <= \"1101101\";");
-		Contents.add("         WHEN \"1100\" => s_output_value <= \"0010111\";");
-		Contents.add("         WHEN \"1101\" => s_output_value <= \"1111010\";");
-		Contents.add("         WHEN \"1110\" => s_output_value <= \"0011111\";");
-		Contents.add("         WHEN \"1111\" => s_output_value <= \"0001111\";");
+		Contents.add("         WHEN \"1010\" => s_output_value <= \"1110111\";");
+		Contents.add("         WHEN \"1011\" => s_output_value <= \"1111100\";");
+		
+		Contents.add("         WHEN \"1100\" => s_output_value <= \"0111001\";");
+		Contents.add("         WHEN \"1101\" => s_output_value <= \"1011110\";");
+		Contents.add("         WHEN \"1110\" => s_output_value <= \"1111001\";");
+		Contents.add("         WHEN \"1111\" => s_output_value <= \"1110001\";");
 		
 
 		Contents.add("         WHEN OTHERS => s_output_value <= \"-------\";");

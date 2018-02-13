@@ -2,7 +2,7 @@
 <TERASIC_DE0_CV>
 <BoardInformation>
 <!--This section decribes the FPGA and its clock-->
-<ClockInformation FPGApin="PIN_H13" Frequency="50000000" IOStandard="Default" PullBehavior="Float"/>
+<ClockInformation FPGApin="PIN_H13" Frequency="25000000" IOStandard="Default" PullBehavior="Float"/>
 <FPGAInformation 
 Family="Cyclone V" JTAGPos="1" Package="FBGA 484" Part="5CEBA4F23C7" Speedgrade="6" USBTMC="false" 
 Vendor="ALTERA" CYCLONEII_RESERVE_NCEO_AFTER_CONFIGURATION="USE AS REGULAR IO"/>

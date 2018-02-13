@@ -52,7 +52,7 @@ class FSMVHDLCodeGen{
 «««		
 «««		entity «e.name» is port (
 «««			clk : in std_logic;
-«««			clr : in std_logic;
+«««			rst : in std_logic;
 «««			en  : in std_logic;
 «««			«FOR i:ios SEPARATOR ";"»
 «««				«genPort(i)»
@@ -84,9 +84,9 @@ class FSMVHDLCodeGen{
 			«ENDFOR»
 			
 		begin
-			UPDATE: process(clk,clr)
+			UPDATE: process(clk,rst)
 			begin
-				if clr='1' then
+				if rst='1' then
 					CS <= «e.start.name»;
 					symCS <= S_«e.start.name»;
 				elsif rising_edge(clk) then
@@ -99,7 +99,7 @@ class FSMVHDLCodeGen{
 				end if;
 			end process;
 			
-			OUTPUT : process(CS,«FOR i:e.in SEPARATOR ","»«i.name»«ENDFOR»)
+			OUTPUT : process(CS«IF e.in.size>0»,«FOR i:e.in SEPARATOR ","»«i.name»«ENDFOR»«ENDIF»)
 			begin
 				«FOR o:e.out»«genDefaultValue(o)»«ENDFOR» 
 				case (CS) is

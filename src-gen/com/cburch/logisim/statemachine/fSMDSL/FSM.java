@@ -14,6 +14,7 @@ import org.eclipse.emf.common.util.EList;
  * </p>
  * <ul>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.FSM#getName <em>Name</em>}</li>
+ *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.FSM#getConstants <em>Constants</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.FSM#getIn <em>In</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.FSM#getOut <em>Out</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.FSM#getWidth <em>Width</em>}</li>
@@ -52,6 +53,22 @@ public interface FSM extends TOP, FSMElement
    * @generated
    */
   void setName(String value);
+
+  /**
+   * Returns the value of the '<em><b>Constants</b></em>' containment reference list.
+   * The list contents are of type {@link com.cburch.logisim.statemachine.fSMDSL.ConstantDef}.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Constants</em>' containment reference list isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Constants</em>' containment reference list.
+   * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#getFSM_Constants()
+   * @model containment="true"
+   * @generated
+   */
+  EList<ConstantDef> getConstants();
 
   /**
    * Returns the value of the '<em><b>In</b></em>' containment reference list.

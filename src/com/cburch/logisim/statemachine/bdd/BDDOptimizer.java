@@ -103,7 +103,7 @@ public class BDDOptimizer extends FSMDSLSwitch<Integer> {
 			map.map(object, bdd.getZero());
 			return bdd.getZero();
 		} else {
-			throw new UnsupportedOperationException("BDD analysis dos not support unkown constant value "+value);
+			throw new UnsupportedOperationException("BDD analysis does not support unkown constant value "+value);
 		}
 	}
 

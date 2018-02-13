@@ -21,10 +21,11 @@ class FSMPopupMenu extends PopupMenu implements ActionListener {
 	MenuItem deleteMenuItem
 	AreaType type = AreaType.NONE
 	Point currentPos
-
+	
 
 	/* FIXME Non-static inner classes are not supported.*/
 	override void actionPerformed(ActionEvent e) {
+		println("Menu command => "+e.getActionCommand())
 		if (e.getActionCommand().equals("Edit")) {
 			view.getController().executeEdit(currentPos)
 		} else if (e.getActionCommand().equals("Create")) {

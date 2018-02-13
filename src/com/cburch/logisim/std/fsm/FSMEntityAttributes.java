@@ -81,7 +81,7 @@ public class FSMEntityAttributes extends AbstractAttributeSet {
 	private Font labelFont = StdAttr.DEFAULT_LABEL_FONT;
 
 	FSMEntityAttributes() {
-		content = new FSMContent();
+		content = new FSMContent(FSMContent.TEMPLATE);
 	}
 
 	@Override

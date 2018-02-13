@@ -120,8 +120,13 @@ public class HexFrame extends LFrame {
 				if (choice == JFileChooser.APPROVE_OPTION) {
 					File f = chooser.getSelectedFile();
 					try {
-						HexFile.open(model, f);
-						lastFile = f;
+						if (f.getName().endsWith(".hex")) {
+							HexFile.open(model, f);
+							lastFile = f;
+						} else {
+							HexFile.open(model, f);
+							lastFile = f;
+						}
 					} catch (IOException e) {
 						JOptionPane.showMessageDialog(HexFrame.this,
 								e.getMessage(),

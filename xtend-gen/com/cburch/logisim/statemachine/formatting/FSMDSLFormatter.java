@@ -3,8 +3,13 @@
  */
 package com.cburch.logisim.statemachine.formatting;
 
+import com.cburch.logisim.statemachine.services.FSMDSLGrammarAccess;
+import com.google.inject.Inject;
+import org.eclipse.xtext.ParserRule;
+import org.eclipse.xtext.TerminalRule;
 import org.eclipse.xtext.formatting.impl.AbstractDeclarativeFormatter;
 import org.eclipse.xtext.formatting.impl.FormattingConfig;
+import org.eclipse.xtext.xbase.lib.Extension;
 
 /**
  * This class contains custom formatting declarations.
@@ -16,7 +21,32 @@ import org.eclipse.xtext.formatting.impl.FormattingConfig;
  */
 @SuppressWarnings("all")
 public class FSMDSLFormatter extends AbstractDeclarativeFormatter {
+  @Inject
+  @Extension
+  private FSMDSLGrammarAccess _fSMDSLGrammarAccess;
+  
   @Override
   protected void configureFormatting(final FormattingConfig c) {
+    FormattingConfig.LinewrapLocator _setLinewrap = c.setLinewrap();
+    ParserRule _layoutInfoRule = this._fSMDSLGrammarAccess.getLayoutInfoRule();
+    _setLinewrap.after(_layoutInfoRule);
+    FormattingConfig.LinewrapLocator _setLinewrap_1 = c.setLinewrap();
+    ParserRule _commandRule = this._fSMDSLGrammarAccess.getCommandRule();
+    _setLinewrap_1.after(_commandRule);
+    FormattingConfig.LinewrapLocator _setLinewrap_2 = c.setLinewrap();
+    ParserRule _commandListRule = this._fSMDSLGrammarAccess.getCommandListRule();
+    _setLinewrap_2.after(_commandListRule);
+    FormattingConfig.LinewrapLocator _setLinewrap_3 = c.setLinewrap();
+    ParserRule _commandRule_1 = this._fSMDSLGrammarAccess.getCommandRule();
+    _setLinewrap_3.after(_commandRule_1);
+    FormattingConfig.LinewrapLocator _setLinewrap_4 = c.setLinewrap(0, 1, 2);
+    TerminalRule _sL_COMMENTRule = this._fSMDSLGrammarAccess.getSL_COMMENTRule();
+    _setLinewrap_4.before(_sL_COMMENTRule);
+    FormattingConfig.LinewrapLocator _setLinewrap_5 = c.setLinewrap(0, 1, 2);
+    TerminalRule _mL_COMMENTRule = this._fSMDSLGrammarAccess.getML_COMMENTRule();
+    _setLinewrap_5.before(_mL_COMMENTRule);
+    FormattingConfig.LinewrapLocator _setLinewrap_6 = c.setLinewrap(0, 1, 1);
+    TerminalRule _mL_COMMENTRule_1 = this._fSMDSLGrammarAccess.getML_COMMENTRule();
+    _setLinewrap_6.after(_mL_COMMENTRule_1);
   }
 }

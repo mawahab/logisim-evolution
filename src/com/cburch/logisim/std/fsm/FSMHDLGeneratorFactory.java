@@ -79,7 +79,7 @@ public class FSMHDLGeneratorFactory extends AbstractHDLGeneratorFactory {
 					.getFixedBitWidth().getWidth());
 
 		inputs.put("Clk", 1);
-		inputs.put("CLR", 1);
+		inputs.put("RST", 1);  
 		inputs.put("EN", 1);
 		
 	
@@ -112,7 +112,7 @@ public class FSMHDLGeneratorFactory extends AbstractHDLGeneratorFactory {
 		Port[] outputs = content.getOutputs();
 
 		PortMap.putAll(GetNetMap("Clk", true,ComponentInfo,  0, Reporter, HDLType, Nets));
-		PortMap.putAll(GetNetMap("Clr", true,ComponentInfo,  1, Reporter, HDLType, Nets));
+		PortMap.putAll(GetNetMap("Rst", true,ComponentInfo,  1, Reporter, HDLType, Nets));
 		PortMap.putAll(GetNetMap("EN", true,ComponentInfo,   2, Reporter, HDLType, Nets));
 
 		for (int i = 0; i < inputs.length; i++)

@@ -6,7 +6,9 @@ import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
+import com.cburch.logisim.statemachine.fSMDSL.ConstRef;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
+import com.cburch.logisim.statemachine.fSMDSL.ConstantDef;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLFactory;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
@@ -282,6 +284,12 @@ public class RemoveBitVectors {
     return _xifexpression;
   }
   
+  protected BoolExpr _slice(final ConstRef e, final int offset) {
+    ConstantDef _const = e.getConst();
+    BoolExpr _value = _const.getValue();
+    return this.slice(_value, offset);
+  }
+  
   protected BoolExpr _slice(final PortRef e, final int offset) {
     PortRef _xifexpression = null;
     Range _range = e.getRange();
@@ -370,6 +378,8 @@ public class RemoveBitVectors {
       return _slice((AndExpr)e, offset);
     } else if (e instanceof ConcatExpr) {
       return _slice((ConcatExpr)e, offset);
+    } else if (e instanceof ConstRef) {
+      return _slice((ConstRef)e, offset);
     } else if (e instanceof Constant) {
       return _slice((Constant)e, offset);
     } else if (e instanceof NotExpr) {

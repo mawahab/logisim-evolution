@@ -72,10 +72,16 @@ class PrettyPrinter {
 			b.port.name
 		}
 	}
+	def static  dispatch pp(ConstRef b) {
+		"#"+b.const.name
+	}
 	def static dispatch pp(DefaultPredicate b) {
 		"default"
 	}
 	def static dispatch pp(Constant b) {
 		b.value
+	}
+	def static dispatch pp(ConstantDef b) {
+		'''define «b.name»=«pp(b.value)»'''.toString
 	}
 }

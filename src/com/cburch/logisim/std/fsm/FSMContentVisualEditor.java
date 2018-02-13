@@ -40,19 +40,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.cburch.logisim.proj.Project;
 import com.cburch.logisim.statemachine.codegen.FSMVHDLCodeGen;
 import com.cburch.logisim.statemachine.editor.FSMEditorWindow;
+import com.cburch.logisim.statemachine.fSMDSL.FSM;
+import com.cburch.logisim.statemachine.fSMDSL.State;
+import com.cburch.logisim.statemachine.fSMDSL.Transition;
+import com.cburch.logisim.statemachine.parser.FSMSerializer;
 import com.cburch.logisim.statemachine.validation.FSMValidation;
 import com.cburch.logisim.util.FileUtil;
 import com.cburch.logisim.util.JFileChoosers;
@@ -68,10 +75,11 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 
 	public void setContent(FSMContent content) {
 		this.content = content;
+		editor.setContent(content);
+		editor.repaint();
 	}
 
 	private class FrameListener extends WindowAdapter implements ActionListener, LocaleListener {
-
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			Object source = event.getSource();
@@ -91,6 +99,7 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 				}
 			}
 			if (source == save) {
+				validate();
 				JFileChooser chooser = JFileChoosers.createSelected(getDefaultExportFile(null));
 				chooser.setDialogTitle(Strings.get("saveButton"));
 				int choice = chooser.showSaveDialog(FSMContentVisualEditor.this);
@@ -99,37 +108,34 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 					try {
 						FSMFile.save(f, FSMContentVisualEditor.this);
 					} catch (IOException e) {
-						JOptionPane.showMessageDialog(FSMContentVisualEditor.this, e.getMessage(),
-								Strings.get("hexSaveErrorTitle"), JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(FSMContentVisualEditor.this,e.getLocalizedMessage()+"\n"+e.getStackTrace(),
+								"Error while saving FSM", JOptionPane.ERROR_MESSAGE);
 					}
 				}
 			}
 			if (source == validate) {
-				FSMValidation validator = new FSMValidation(content.getFsm());
-				validator.validate(content.getFsm());
-				int nbErrors = validator.getErrors().size();
-				int nbWarnings = validator.getWarnings().size();
-				if ((nbErrors > 0) || (nbWarnings > 0)) {
-
-					StringBuffer message = new StringBuffer("Validation results :\n\n");
-					for (String err : validator.getErrors()) {
-
-						message.append("Error :" + err + "\n");
-					}
-					for (String err : validator.getWarnings()) {
-						message.append("Warning:" + err + "\n");
-					}
-
-					JOptionPane.showMessageDialog(FSMContentVisualEditor.this, message.toString(),
-							Strings.get("fsmValidationWarning"), JOptionPane.INFORMATION_MESSAGE);
-				} else {
-					JOptionPane.showMessageDialog(FSMContentVisualEditor.this, "No Errors/Warning detected",
-							Strings.get("fsmValidationWarning"), JOptionPane.INFORMATION_MESSAGE);
-				}
+				validate();
+				
 
 			}
+			if (source == fix) {
+				FSM fsm = content.getFsm();
+				int id =0;
+				for (State s : fsm.getStates()) {
+					for (Transition t : new ArrayList<Transition>(s.getTransition())) {
+						if (t.getDst()==null) {
+							s.getTransition().remove(t);
+						}
+					}
+					int extended = 1 << fsm.getWidth();
+					String newCode= Integer.toBinaryString(extended | id++).substring( 1 );
+					s.setCode("\""+newCode+"\"");
+				}
+			}
 			if (source == close) {
-				dispose();
+				if (validate())
+					dispose();
+				
 			}
 			if (source == gen) {
 				JFileChooser chooser = JFileChoosers.createSelected( new File(content.getName() + ".vhd"));
@@ -148,20 +154,59 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 			}
 		}
 
+		private boolean validate() {
+			FSMValidation validator = new FSMValidation(content.getFsm());
+			
+			validator.validate(content.getFsm());
+			int nbErrors = validator.getErrors().size();
+			int nbWarnings = validator.getWarnings().size();
+			if ((nbErrors > 0) || (nbWarnings > 0)) {
+				StringBuffer message = new StringBuffer("Validation results :\n\n");
+				for (String err : validator.getErrors()) {
+					message.append("Error :" + err + "\n");
+				}
+				for (String err : validator.getWarnings()) {
+					message.append("Warning:" + err + "\n");
+				}
+				JOptionPane.showMessageDialog(FSMContentVisualEditor.this,message.toString() ,
+						"Error in FSM model", JOptionPane.ERROR_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(FSMContentVisualEditor.this, "No Errors/Warning detected\nValidation successfull",
+						"No Errors/Warning detected\nValidation successfull", JOptionPane.INFORMATION_MESSAGE);
+			}
+			try {
+				FSMSerializer.saveAsString(content.getFsm());
+			} catch (Exception e) {
+				nbErrors++;
+				JOptionPane.showMessageDialog(FSMContentVisualEditor.this,e.getMessage(),
+						"Error in FSM model", JOptionPane.ERROR_MESSAGE);
+			}
+			return (nbErrors==0);
+		}
+
 		@Override
 		public void localeChanged() {
 			setTitle(Strings.get("fsmFrameTitle"));
 			open.setText(Strings.get("openButton"));
 			save.setText(Strings.get("saveButton"));
 			gen.setText("Export VHDL");
+			fix.setText("Reassign codes");
 			validate.setText(Strings.get("validateButton"));
 			close.setText(Strings.get("closeButton"));
 		}
-
 		@Override
 		public void windowClosing(WindowEvent e) {
-			dispose();
-
+			if (validate()) {
+				dispose();
+				//close();
+			} else {
+				JOptionPane.showMessageDialog(FSMContentVisualEditor.this,"There are errors in your FSM, fix them before exiting the editor","Exit",JOptionPane.YES_NO_OPTION);
+//				if(confirm  == JOptionPane.YES_OPTION) {
+//				          setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//				} else if (confirm== JOptionPane.NO_OPTION) {
+//				          setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+//				}
+			}
 		}
 
 	}
@@ -196,6 +241,7 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 
 	private JButton open = new JButton();
 	private JButton save = new JButton();
+	private JButton fix = new JButton();
 	private JButton gen = new JButton();
 	private JButton validate = new JButton();
 	private JButton close = new JButton();
@@ -225,11 +271,13 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 		buttonsPanel.add(save);
 		buttonsPanel.add(gen);
 		buttonsPanel.add(validate);
+		buttonsPanel.add(fix);
 		buttonsPanel.add(close);
 
 		open.addActionListener(frameListener);
 		save.addActionListener(frameListener);
 		gen.addActionListener(frameListener);
+		fix.addActionListener(frameListener);
 		close.addActionListener(frameListener);
 		validate.addActionListener(frameListener);
 		
@@ -241,6 +289,7 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 
 		LocaleManager.addLocaleListener(frameListener);
 		frameListener.localeChanged();
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
 		pack();
 
@@ -283,7 +332,7 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 
 	@Override
 	public Object getValue() {
-		return content.getContent();
+		return content.getStringContent();
 	}
 
 	@Override

@@ -3,9 +3,10 @@
 package com.cburch.logisim.statemachine.fSMDSL.impl;
 
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
+import com.cburch.logisim.statemachine.fSMDSL.ConstantDef;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage;
+import com.cburch.logisim.statemachine.fSMDSL.Port;
 import com.cburch.logisim.statemachine.fSMDSL.PredicateStmt;
-import com.cburch.logisim.statemachine.fSMDSL.ShortInput;
 
 import java.util.Collection;
 
@@ -30,6 +31,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.PredicateStmtImpl#getCst <em>Cst</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.PredicateStmtImpl#getIn <em>In</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.PredicateStmtImpl#getPredicate <em>Predicate</em>}</li>
  * </ul>
@@ -39,6 +41,16 @@ import org.eclipse.emf.ecore.util.InternalEList;
 public class PredicateStmtImpl extends TOPImpl implements PredicateStmt
 {
   /**
+   * The cached value of the '{@link #getCst() <em>Cst</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getCst()
+   * @generated
+   * @ordered
+   */
+  protected EList<ConstantDef> cst;
+
+  /**
    * The cached value of the '{@link #getIn() <em>In</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -46,7 +58,7 @@ public class PredicateStmtImpl extends TOPImpl implements PredicateStmt
    * @generated
    * @ordered
    */
-  protected EList<ShortInput> in;
+  protected EList<Port> in;
 
   /**
    * The cached value of the '{@link #getPredicate() <em>Predicate</em>}' containment reference.
@@ -84,11 +96,25 @@ public class PredicateStmtImpl extends TOPImpl implements PredicateStmt
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<ShortInput> getIn()
+  public EList<ConstantDef> getCst()
+  {
+    if (cst == null)
+    {
+      cst = new EObjectContainmentEList<ConstantDef>(ConstantDef.class, this, FSMDSLPackage.PREDICATE_STMT__CST);
+    }
+    return cst;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<Port> getIn()
   {
     if (in == null)
     {
-      in = new EObjectContainmentEList<ShortInput>(ShortInput.class, this, FSMDSLPackage.PREDICATE_STMT__IN);
+      in = new EObjectContainmentEList<Port>(Port.class, this, FSMDSLPackage.PREDICATE_STMT__IN);
     }
     return in;
   }
@@ -151,6 +177,8 @@ public class PredicateStmtImpl extends TOPImpl implements PredicateStmt
   {
     switch (featureID)
     {
+      case FSMDSLPackage.PREDICATE_STMT__CST:
+        return ((InternalEList<?>)getCst()).basicRemove(otherEnd, msgs);
       case FSMDSLPackage.PREDICATE_STMT__IN:
         return ((InternalEList<?>)getIn()).basicRemove(otherEnd, msgs);
       case FSMDSLPackage.PREDICATE_STMT__PREDICATE:
@@ -169,6 +197,8 @@ public class PredicateStmtImpl extends TOPImpl implements PredicateStmt
   {
     switch (featureID)
     {
+      case FSMDSLPackage.PREDICATE_STMT__CST:
+        return getCst();
       case FSMDSLPackage.PREDICATE_STMT__IN:
         return getIn();
       case FSMDSLPackage.PREDICATE_STMT__PREDICATE:
@@ -188,9 +218,13 @@ public class PredicateStmtImpl extends TOPImpl implements PredicateStmt
   {
     switch (featureID)
     {
+      case FSMDSLPackage.PREDICATE_STMT__CST:
+        getCst().clear();
+        getCst().addAll((Collection<? extends ConstantDef>)newValue);
+        return;
       case FSMDSLPackage.PREDICATE_STMT__IN:
         getIn().clear();
-        getIn().addAll((Collection<? extends ShortInput>)newValue);
+        getIn().addAll((Collection<? extends Port>)newValue);
         return;
       case FSMDSLPackage.PREDICATE_STMT__PREDICATE:
         setPredicate((BoolExpr)newValue);
@@ -209,6 +243,9 @@ public class PredicateStmtImpl extends TOPImpl implements PredicateStmt
   {
     switch (featureID)
     {
+      case FSMDSLPackage.PREDICATE_STMT__CST:
+        getCst().clear();
+        return;
       case FSMDSLPackage.PREDICATE_STMT__IN:
         getIn().clear();
         return;
@@ -229,6 +266,8 @@ public class PredicateStmtImpl extends TOPImpl implements PredicateStmt
   {
     switch (featureID)
     {
+      case FSMDSLPackage.PREDICATE_STMT__CST:
+        return cst != null && !cst.isEmpty();
       case FSMDSLPackage.PREDICATE_STMT__IN:
         return in != null && !in.isEmpty();
       case FSMDSLPackage.PREDICATE_STMT__PREDICATE:

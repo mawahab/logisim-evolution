@@ -4,7 +4,9 @@ import com.cburch.logisim.statemachine.PrettyPrinter;
 import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
+import com.cburch.logisim.statemachine.fSMDSL.ConstRef;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
+import com.cburch.logisim.statemachine.fSMDSL.ConstantDef;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Port;
@@ -37,39 +39,37 @@ public class BitWidthAnalyzer {
   private HashMap<BoolExpr, Integer> typeMap = new HashMap<BoolExpr, Integer>();
   
   public Integer checkWidth(final EList<BoolExpr> args, final BoolExpr b) {
-    Integer _xblockexpression = null;
-    {
-      int width = (-1);
-      for (final BoolExpr a : args) {
-        boolean _containsKey = this.typeMap.containsKey(a);
-        if (_containsKey) {
-          final Integer w = this.typeMap.get(a);
-          if (((w).intValue() != width)) {
-            if ((width != (-1))) {
-              String _pp = PrettyPrinter.pp(a);
-              String _plus = ("Bitwidth mismatch in term " + _pp);
-              String _plus_1 = (_plus + " in ");
-              EObject _eContainer = a.eContainer();
-              String _pp_1 = PrettyPrinter.pp(((BoolExpr) _eContainer));
-              String _plus_2 = (_plus_1 + _pp_1);
-              String _plus_3 = (_plus_2 + " ");
-              String _plus_4 = (_plus_3 + Integer.valueOf(width));
-              String _plus_5 = (_plus_4 + " expected, ");
-              String _plus_6 = (_plus_5 + w);
-              final String string = (_plus_6 + "found");
-              InputOutput.<String>println(string);
-              throw new RuntimeException(string);
-            } else {
-              width = (w).intValue();
-            }
+    int width = (-1);
+    for (final BoolExpr a : args) {
+      boolean _containsKey = this.typeMap.containsKey(a);
+      if (_containsKey) {
+        final Integer w = this.typeMap.get(a);
+        if (((w).intValue() != width)) {
+          if ((width != (-1))) {
+            String _pp = PrettyPrinter.pp(a);
+            String _plus = ("Bitwidth mismatch in term " + _pp);
+            String _plus_1 = (_plus + " in ");
+            EObject _eContainer = a.eContainer();
+            String _pp_1 = PrettyPrinter.pp(((BoolExpr) _eContainer));
+            String _plus_2 = (_plus_1 + _pp_1);
+            String _plus_3 = (_plus_2 + " ");
+            String _plus_4 = (_plus_3 + Integer.valueOf(width));
+            String _plus_5 = (_plus_4 + " expected, ");
+            String _plus_6 = (_plus_5 + w);
+            final String string = (_plus_6 + "found");
+            InputOutput.<String>println(string);
+            throw new RuntimeException(string);
+          } else {
+            width = (w).intValue();
           }
-        } else {
-          throw new RuntimeException("ERROR mismatch in predicate expression ");
         }
+      } else {
+        String _pp_2 = PrettyPrinter.pp(b);
+        String _plus_7 = ("ERROR : bitwidth mismatch in predicate expression " + _pp_2);
+        throw new RuntimeException(_plus_7);
       }
-      _xblockexpression = this.typeMap.put(b, Integer.valueOf(width));
     }
-    return _xblockexpression;
+    return this.typeMap.put(b, Integer.valueOf(width));
   }
   
   public Integer _computeBitwidth(final BoolExpr b) {
@@ -145,7 +145,21 @@ public class BitWidthAnalyzer {
     String _value = b.getValue();
     int _length = _value.length();
     int _minus = (_length - 2);
-    return this.typeMap.put(b, Integer.valueOf(_minus));
+    this.typeMap.put(b, Integer.valueOf(_minus));
+    return this.typeMap.get(b);
+  }
+  
+  public Integer _computeBitwidth(final ConstRef b) {
+    Integer _xblockexpression = null;
+    {
+      ConstantDef _const = b.getConst();
+      BoolExpr _value = _const.getValue();
+      String _value_1 = ((Constant) _value).getValue();
+      int _length = _value_1.length();
+      final int res = (_length - 2);
+      _xblockexpression = this.typeMap.put(b, ((Integer) Integer.valueOf(res)));
+    }
+    return _xblockexpression;
   }
   
   public Integer _computeBitwidth(final PortRef b) {
@@ -258,6 +272,8 @@ public class BitWidthAnalyzer {
       return _computeBitwidth((AndExpr)b);
     } else if (b instanceof CmpExpr) {
       return _computeBitwidth((CmpExpr)b);
+    } else if (b instanceof ConstRef) {
+      return _computeBitwidth((ConstRef)b);
     } else if (b instanceof Constant) {
       return _computeBitwidth((Constant)b);
     } else if (b instanceof NotExpr) {

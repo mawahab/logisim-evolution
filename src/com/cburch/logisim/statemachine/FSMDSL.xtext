@@ -4,76 +4,135 @@ generate fSMDSL "http://www.cburch.com/logisim/statemachine/FSMDSL"
 
 TOP: 
 	FSM | 
+//	ShortFSM |
+	ConstantDefList |
 	CommandStmt | 
 	PredicateStmt
 ;
 
 CommandStmt :
-	'[' in+=ShortInput (',' in+=ShortInput )*']'
-	'[' out+=ShortOutput (',' out+=ShortOutput )*']'
-	(commands+=Command) (commands+=Command)*
+	'[' (cst+=ConstantDef (',' cst+=ConstantDef )*)? ']'
+	'[' (in+=ShortInputPort (',' in+=ShortInputPort )*)? ']'
+	'[' (out+=ShortOutputPort (',' out+=ShortOutputPort )*)?']'
+	(commands+=Command (';')?) (commands+=Command (';')?)*
 ;
 
-
+ConstantDefList:
+	((constants+=ConstantDef (';' constants+=ConstantDef)*) ';' )?
+;
 PredicateStmt :
-	'[' in+=ShortInput (',' in+=ShortInput )*']' predicate=Predicate ';'
+	'[' (cst+=ConstantDef (',' cst+=ConstantDef )*)? ']'
+	'[' (in+=ShortInputPort (',' in+=ShortInputPort )*)? ']' predicate=Predicate ';'
 ;
 
-ShortInput :  {InputPort}  name =ID '[' width=INT']' ;
 
-ShortOutput : {OutputPort} name =ID '[' width=INT']';
 
-FSM :
-{FSM}'fsm' name=ID (layout=LayoutInfo)  '{'
-	(in+=Input | out+=Output)+
-	("codeWidth" "=" width=INT ';')?
-	("reset" "=" start=[State] ';')?
-	(states+=State)*
+FSM returns FSM:
+{FSM}("fsm"|"state_machine") name=ID layout=LayoutInfo '{'
+	
+	(constants+=ConstantDef ';')* 
+	(('in' (in+=InputPort)+ | ('out' (out+=OutputPort)+)))+
+	("codeWidth" "=" width=INT ';')
+	("reset" "=" start=[State] ';')
+	(states+=(LongState| ShortState))*
 '}'	
 ;
 
-FSMElement: FSM | Input | CommandList | State | Output | Transition; 
-	
+//ShortFSM returns FSM:
+//{FSM}name=ID '{'
+//	(layout=LayoutInfo)?  
+////	(constants+=ConstantDef ';')* 
+////	('in' (in+=InputPort)+ )?
+////	('out' (out+=OutputPort)+)?
+//	("codeWidth" "=" width=INT ';')?
+//	("reset" "=" start=[State] ';')?
+////	(states+=ShortState)*
+//'}'	
+//;
 
-
-Input returns Port:
-	{InputPort} 'in' name =ID ('[' width=INT']')? (layout=LayoutInfo) ';';
+FSMElement: 
+	FSM | 
+	InputPort | 
+	OutputPort | 
+	CommandList | 
+	LongState | 
+	DotTransition | 
+	ShortState | 
+	GotoTransition
+; 
 	
-Output returns Port:
-	{OutputPort} 'out' name=ID ('[' width=INT']')? (layout=LayoutInfo) ';';
+//Port :
+//	name=ID width=INT (layout=LayoutInfo) ;
+//;
+Port :  InputPort | OutputPort;
+
+ShortInputPort returns Port:
+	{InputPort} name =ID ('[' width=INT']')? 
+;
+ShortOutputPort returns Port:
+	{OutputPort} name =ID ('[' width=INT']')? 
+;
+
+InputPort returns Port:
+	 {InputPort} name =ID ('[' width=INT']')? (layout=LayoutInfo) ';';
+ 	
+OutputPort returns Port:
+	{OutputPort} name=ID ('[' width=INT']')? (layout=LayoutInfo) ';';
+
 
 CommandList :
-	{CommandList}('commands' (layout=LayoutInfo) '{'
+	{CommandList}
+	(('commands' (layout=LayoutInfo) '{'
 			(commands+=Command)*
-	'}')? 
+	'}')) 
 ;
 
-LayoutInfo :
-	{LayoutInfo}('@[' x=INT',' y=INT (',' width=INT',' height=INT)?  ']')?
+LayoutInfo  returns LayoutInfo :
+	{LayoutInfo}('@' '[' x=INT',' y=INT (',' width=INT',' height=INT)?  ']')?
 ;
-State :
+
+LongState returns State:
 	{State}'state' name=ID ('=' code=BIN )? (layout=LayoutInfo) '{'
-		('code' '=' code=BIN ';')?
-		commandList=CommandList
+		(commandList=CommandList)?
 		('transitions' '{'
-			(transition+=Transition)*
-		'}')?
+			(transition+=(DotTransition))*
+		'}')? 
 	'}';
 
-Transition:
-	(((src=[State])? '->')|("goto")) dst=[State] ('when' predicate=Predicate)? (layout=LayoutInfo) ';';
+ShortState returns State:
+	'state' name=ID ('[' code=BIN ']')?  ':'
+		layout=LayoutInfo
+		commandList=ShortCommandList
+		(transition+=GotoTransition)*
+	;
+
+ShortCommandList returns CommandList:
+	{CommandList} ('set'  (commands+=Command)+ layout=LayoutInfo )?
+;
+
+GotoTransition returns Transition:
+	"goto" dst=[State] ('when' predicate=Predicate)?  layout=LayoutInfo ';';
+ 
+DotTransition returns Transition:
+	(((src=[State])? '->')) dst=[State] ('when' predicate=Predicate)? (layout=LayoutInfo) ';';
  
 Command:
-	name=[OutputPort] '=' value=(ConcatExpr|Or) ';';
+	name=[OutputPort] '=' value=(Or) ';';
 	
 ConcatExpr returns BoolExpr:
 	{ConcatExpr}'{' args+=Or (',' args+=Or)* '}'
 ;
+//Port : 
+//	name=ID ('[' width=INT']')? (layout=LayoutInfo) ';';
 
-Ref returns BoolExpr:
+
+PortRef returns BoolExpr:
 	{PortRef} port=[Port] (range=Range)?	
 ;
-
+ 
+ConstRef returns BoolExpr:
+	{ConstRef} ('#') const=[ConstantDef]
+;
 Range :
 	'[' ((ub=INT) ':')? lb=INT']'	
 ;
@@ -100,16 +159,32 @@ Primary returns BoolExpr:
 	|
 	Constant
 	|
+//	HexConstant
+//	|
 	Not
 	|
-	Ref
+	ConcatExpr 
+	|
+	PortRef
+	|
+	ConstRef
 	;
 
 Not returns BoolExpr:
 	{NotExpr}'/' args+=Primary;
 	
 Constant returns BoolExpr:
-	{Constant}  value=BIN
+	{Constant}  value=(BIN|HEX)
 ;
 
+ConstantDef:
+	"define" name=ID '=' value=Constant
+;
+//HexConstant returns BoolExpr:
+//	{HexConstant}  value=HEX	
+//;
 terminal BIN : '"'(('0'|'1')+)'"';
+
+terminal HEX : '0x'((('0'..'9')
+	|('A'..'F')|('a'..'f')
+)+)'"';

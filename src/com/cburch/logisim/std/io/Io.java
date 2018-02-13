@@ -95,6 +95,9 @@ public class Io extends Library {
 			new FactoryDescription("DotMatrix",
 					Strings.getter("dotMatrixComponent"), "dotmat.gif",
 					"DotMatrix"),
+			new FactoryDescription("NiosIIDisassembly",
+					Strings.getter("NiosIIDisassembly"), "NiosIIDisassembly.gif",
+					"NiosIIDisassembly"),
 			new FactoryDescription("TTY", Strings.getter("ttyComponent"),
 					"tty.gif", "Tty"), };
 

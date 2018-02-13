@@ -23,25 +23,15 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
  * The following features are implemented:
  * </p>
  * <ul>
- *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.TransitionImpl#getSrc <em>Src</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.TransitionImpl#getDst <em>Dst</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.TransitionImpl#getPredicate <em>Predicate</em>}</li>
+ *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.TransitionImpl#getSrc <em>Src</em>}</li>
  * </ul>
  *
  * @generated
  */
 public class TransitionImpl extends FSMElementImpl implements Transition
 {
-  /**
-   * The cached value of the '{@link #getSrc() <em>Src</em>}' reference.
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @see #getSrc()
-   * @generated
-   * @ordered
-   */
-  protected State src;
-
   /**
    * The cached value of the '{@link #getDst() <em>Dst</em>}' reference.
    * <!-- begin-user-doc -->
@@ -63,6 +53,16 @@ public class TransitionImpl extends FSMElementImpl implements Transition
   protected BoolExpr predicate;
 
   /**
+   * The cached value of the '{@link #getSrc() <em>Src</em>}' reference.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getSrc()
+   * @generated
+   * @ordered
+   */
+  protected State src;
+
+  /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated
@@ -81,49 +81,6 @@ public class TransitionImpl extends FSMElementImpl implements Transition
   protected EClass eStaticClass()
   {
     return FSMDSLPackage.Literals.TRANSITION;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public State getSrc()
-  {
-    if (src != null && src.eIsProxy())
-    {
-      InternalEObject oldSrc = (InternalEObject)src;
-      src = (State)eResolveProxy(oldSrc);
-      if (src != oldSrc)
-      {
-        if (eNotificationRequired())
-          eNotify(new ENotificationImpl(this, Notification.RESOLVE, FSMDSLPackage.TRANSITION__SRC, oldSrc, src));
-      }
-    }
-    return src;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public State basicGetSrc()
-  {
-    return src;
-  }
-
-  /**
-   * <!-- begin-user-doc -->
-   * <!-- end-user-doc -->
-   * @generated
-   */
-  public void setSrc(State newSrc)
-  {
-    State oldSrc = src;
-    src = newSrc;
-    if (eNotificationRequired())
-      eNotify(new ENotificationImpl(this, Notification.SET, FSMDSLPackage.TRANSITION__SRC, oldSrc, src));
   }
 
   /**
@@ -222,6 +179,49 @@ public class TransitionImpl extends FSMElementImpl implements Transition
    * <!-- end-user-doc -->
    * @generated
    */
+  public State getSrc()
+  {
+    if (src != null && src.eIsProxy())
+    {
+      InternalEObject oldSrc = (InternalEObject)src;
+      src = (State)eResolveProxy(oldSrc);
+      if (src != oldSrc)
+      {
+        if (eNotificationRequired())
+          eNotify(new ENotificationImpl(this, Notification.RESOLVE, FSMDSLPackage.TRANSITION__SRC, oldSrc, src));
+      }
+    }
+    return src;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public State basicGetSrc()
+  {
+    return src;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public void setSrc(State newSrc)
+  {
+    State oldSrc = src;
+    src = newSrc;
+    if (eNotificationRequired())
+      eNotify(new ENotificationImpl(this, Notification.SET, FSMDSLPackage.TRANSITION__SRC, oldSrc, src));
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
   @Override
   public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs)
   {
@@ -243,14 +243,14 @@ public class TransitionImpl extends FSMElementImpl implements Transition
   {
     switch (featureID)
     {
-      case FSMDSLPackage.TRANSITION__SRC:
-        if (resolve) return getSrc();
-        return basicGetSrc();
       case FSMDSLPackage.TRANSITION__DST:
         if (resolve) return getDst();
         return basicGetDst();
       case FSMDSLPackage.TRANSITION__PREDICATE:
         return getPredicate();
+      case FSMDSLPackage.TRANSITION__SRC:
+        if (resolve) return getSrc();
+        return basicGetSrc();
     }
     return super.eGet(featureID, resolve, coreType);
   }
@@ -265,14 +265,14 @@ public class TransitionImpl extends FSMElementImpl implements Transition
   {
     switch (featureID)
     {
-      case FSMDSLPackage.TRANSITION__SRC:
-        setSrc((State)newValue);
-        return;
       case FSMDSLPackage.TRANSITION__DST:
         setDst((State)newValue);
         return;
       case FSMDSLPackage.TRANSITION__PREDICATE:
         setPredicate((BoolExpr)newValue);
+        return;
+      case FSMDSLPackage.TRANSITION__SRC:
+        setSrc((State)newValue);
         return;
     }
     super.eSet(featureID, newValue);
@@ -288,14 +288,14 @@ public class TransitionImpl extends FSMElementImpl implements Transition
   {
     switch (featureID)
     {
-      case FSMDSLPackage.TRANSITION__SRC:
-        setSrc((State)null);
-        return;
       case FSMDSLPackage.TRANSITION__DST:
         setDst((State)null);
         return;
       case FSMDSLPackage.TRANSITION__PREDICATE:
         setPredicate((BoolExpr)null);
+        return;
+      case FSMDSLPackage.TRANSITION__SRC:
+        setSrc((State)null);
         return;
     }
     super.eUnset(featureID);
@@ -311,12 +311,12 @@ public class TransitionImpl extends FSMElementImpl implements Transition
   {
     switch (featureID)
     {
-      case FSMDSLPackage.TRANSITION__SRC:
-        return src != null;
       case FSMDSLPackage.TRANSITION__DST:
         return dst != null;
       case FSMDSLPackage.TRANSITION__PREDICATE:
         return predicate != null;
+      case FSMDSLPackage.TRANSITION__SRC:
+        return src != null;
     }
     return super.eIsSet(featureID);
   }

@@ -55,10 +55,10 @@ public class bin2bcd extends InstanceFactory{
 	private static final int InnerDistance = 60;
 
 	public static final Attribute<BitWidth> ATTR_BinBits = Attributes
-			.forBitWidth("binvalue", Strings.getter("Binairy data bits"), 4, 13);
+			.forBitWidth("binvalue", Strings.getter("Binary data bits"), 4, 13);
 
 	public bin2bcd() {
-		super("Binairy_to_BCD_converter", Strings.getter("Bin2BCD"));
+		super("Binary_to_BCD_converter", Strings.getter("Bin2BCD"));
 		setAttributes(new Attribute[] { bin2bcd.ATTR_BinBits },
 				new Object[] { BitWidth.create(9) });
 		setKeyConfigurator(new BitWidthConfigurator(bin2bcd.ATTR_BinBits,4,13,0));

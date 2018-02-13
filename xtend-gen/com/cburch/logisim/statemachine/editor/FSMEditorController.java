@@ -1,5 +1,6 @@
 package com.cburch.logisim.statemachine.editor;
 
+import com.cburch.logisim.statemachine.PrettyPrinter;
 import com.cburch.logisim.statemachine.editor.FSMView;
 import com.cburch.logisim.statemachine.editor.view.FSMCustomFactory;
 import com.cburch.logisim.statemachine.editor.view.FSMDrawing;
@@ -84,6 +85,8 @@ public class FSMEditorController {
   
   private Map<State, State> copyMap = new HashMap<State, State>();
   
+  private FSMSelectionZone zones;
+  
   /**
    * Constructor. Initialize the color to the default color and create the
    * ArrayList to hold the shapes.
@@ -98,6 +101,8 @@ public class FSMEditorController {
     this.edit = _fSMEdit;
     FSMRemoveElement _fSMRemoveElement = new FSMRemoveElement(fsm);
     this.remover = _fSMRemoveElement;
+    FSMSelectionZone _fSMSelectionZone = new FSMSelectionZone();
+    this.zones = _fSMSelectionZone;
   }
   
   public int getNbState() {
@@ -111,6 +116,21 @@ public class FSMEditorController {
   
   public List<FSMElement> getClipboard() {
     return this.clipboard;
+  }
+  
+  public void showContextMenu() {
+    Point _scaledPosition = this.view.getScaledPosition();
+    FSMSelectionZone.AreaType _areaType = this.zones.getAreaType(this.fsm, _scaledPosition);
+    this.view.showContextMenu(_areaType);
+  }
+  
+  public List<FSMElement> getCurrentSelection() {
+    Point _scaledPosition = this.view.getScaledPosition();
+    return this.zones.getSelectedElements(this.fsm, _scaledPosition);
+  }
+  
+  public List<FSMElement> getElementsWithin(final Zone z) {
+    return this.zones.getElementsInZone(this.fsm, z);
   }
   
   public String findUnassignedStateCode() {
@@ -213,21 +233,24 @@ public class FSMEditorController {
    * @param g
    */
   public void draw(final Graphics2D g) {
-    this.drawing.drawElement(this.fsm, g, this.activeSelection);
-    String _string = this.state.toString();
-    g.drawString(_string, 20, 20);
-    boolean _notEquals = (!Objects.equal(this.selectionZone, null));
+    boolean _notEquals = (!Objects.equal(this.fsm, null));
     if (_notEquals) {
-      final float[] f = { ((float) 3.0) };
-      BasicStroke _basicStroke = new BasicStroke(((float) 0.3), BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, f, 0);
-      g.setStroke(_basicStroke);
-      final Stroke old = g.getStroke();
-      final Point p0 = this.selectionZone.getX0();
-      final Point p1 = this.selectionZone.getX1();
-      int _abs = Math.abs((p1.x - p0.x));
-      int _abs_1 = Math.abs((p1.y - p0.y));
-      g.drawRect(p0.x, p0.y, _abs, _abs_1);
-      g.setStroke(old);
+      this.drawing.drawElement(this.fsm, g, this.activeSelection);
+      String _string = this.state.toString();
+      g.drawString(_string, 20, 20);
+      boolean _notEquals_1 = (!Objects.equal(this.selectionZone, null));
+      if (_notEquals_1) {
+        final float[] f = { ((float) 3.0) };
+        BasicStroke _basicStroke = new BasicStroke(((float) 0.3), BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, f, 0);
+        g.setStroke(_basicStroke);
+        final Stroke old = g.getStroke();
+        final Point p0 = this.selectionZone.getX0();
+        final Point p1 = this.selectionZone.getX1();
+        int _abs = Math.abs((p1.x - p0.x));
+        int _abs_1 = Math.abs((p1.y - p0.y));
+        g.drawRect(p0.x, p0.y, _abs, _abs_1);
+        g.setStroke(old);
+      }
     }
   }
   
@@ -318,7 +341,7 @@ public class FSMEditorController {
   }
   
   public void executeEdit(final Point p) {
-    final List<FSMElement> selection = this.view.getElementsAt();
+    final List<FSMElement> selection = this.getCurrentSelection();
     int _size = selection.size();
     boolean _greaterThan = (_size > 0);
     if (_greaterThan) {
@@ -329,13 +352,28 @@ public class FSMEditorController {
   }
   
   public void executeDelete(final Point p) {
-    final List<FSMElement> selection = this.view.getElementsAt();
+    if (FSMEditorController.DEBUG) {
+      InputOutput.<String>println((("[Delete] command " + this.state) + " state"));
+    }
+    final List<FSMElement> selection = this.getCurrentSelection();
     int _size = selection.size();
     boolean _greaterThan = (_size > 0);
     if (_greaterThan) {
-      final FSMElement first = selection.get(0);
-      this.remover.remove(first);
-      this.view.repaint();
+      int _size_1 = selection.size();
+      int _minus = (_size_1 - 1);
+      IntegerRange _upTo = new IntegerRange(0, _minus);
+      for (final Integer i : _upTo) {
+        {
+          final FSMElement first = selection.get((i).intValue());
+          if (FSMEditorController.DEBUG) {
+            String _pp = PrettyPrinter.pp(first);
+            String _plus = ("[Delete] object " + _pp);
+            InputOutput.<String>println(_plus);
+          }
+          this.remover.remove(first);
+          this.view.repaint();
+        }
+      }
     }
   }
   
@@ -472,8 +510,8 @@ public class FSMEditorController {
       String _name = e.getName();
       String _plus_1 = ("copy_of_" + _name);
       e.setName(_plus_1);
-      EList<Port> _in = this.fsm.getIn();
-      _xblockexpression = _in.add(e);
+      EList<Port> _out = this.fsm.getOut();
+      _xblockexpression = _out.add(e);
     }
     return Boolean.valueOf(_xblockexpression);
   }
@@ -590,15 +628,20 @@ public class FSMEditorController {
       switch (state) {
         case IDLE:
           if (FSMEditorController.DEBUG) {
-            InputOutput.<String>println((("[RightClick] state " + this.state) + "-> ERROR !!!!"));
+            InputOutput.<String>println((("[RightClick] show context menu (state=" + this.state) + ")"));
           }
           this.view.repaint();
-          this.view.showContextMenu();
+          this.showContextMenu();
           break;
         default:
           {
             if (FSMEditorController.DEBUG) {
               InputOutput.<String>println("[RightClick] going back to IDLE!!!!");
+            }
+            boolean _notEquals = (!Objects.equal(this.newTransition, null));
+            if (_notEquals) {
+              this.newTransition.setSrc(null);
+              this.newTransition = null;
             }
             this.state = FSMEditorController.CtrlState.IDLE;
           }
@@ -609,6 +652,11 @@ public class FSMEditorController {
         if (FSMEditorController.DEBUG) {
           InputOutput.<String>println("[RightClick] going back to IDLE!!!!");
         }
+        boolean _notEquals = (!Objects.equal(this.newTransition, null));
+        if (_notEquals) {
+          this.newTransition.setSrc(null);
+          this.newTransition = null;
+        }
         this.state = FSMEditorController.CtrlState.IDLE;
       }
     }
@@ -616,7 +664,7 @@ public class FSMEditorController {
   }
   
   public void executePress(final Point p) {
-    final List<FSMElement> localSelection = this.view.getElementsAt();
+    final List<FSMElement> localSelection = this.getCurrentSelection();
     final FSMEditorController.CtrlState state = this.state;
     if (state != null) {
       switch (state) {
@@ -653,21 +701,11 @@ public class FSMEditorController {
             InputOutput.<String>println((((("[Press] state " + this.state) + "-> ") + this.state) + "!!!!"));
           }
           break;
-        default:
-          {
-            if (FSMEditorController.DEBUG) {
-              InputOutput.<String>println((("[Press] state " + this.state) + "-> ERROR !!!!"));
-            }
-            this.state = FSMEditorController.CtrlState.ERROR_STATE;
-          }
+        case ERROR_STATE:
+          this.state = FSMEditorController.CtrlState.IDLE;
           break;
-      }
-    } else {
-      {
-        if (FSMEditorController.DEBUG) {
-          InputOutput.<String>println((("[Press] state " + this.state) + "-> ERROR !!!!"));
-        }
-        this.state = FSMEditorController.CtrlState.ERROR_STATE;
+        default:
+          break;
       }
     }
     this.view.repaint();
@@ -719,7 +757,7 @@ public class FSMEditorController {
             if (FSMEditorController.DEBUG) {
               InputOutput.<String>println((("[Move] state " + this.state) + "-> choosing transition destination state"));
             }
-            final List<FSMElement> selection = this.view.getElementsAt();
+            final List<FSMElement> selection = this.getCurrentSelection();
             int _size = selection.size();
             boolean _equals = (_size == 1);
             if (_equals) {
@@ -750,6 +788,9 @@ public class FSMEditorController {
                 }
               }
               this.newTransition = null;
+            } else {
+              this.deleteElement(this.newTransition);
+              this.newTransition = null;
             }
           }
           this.state = FSMEditorController.CtrlState.IDLE;
@@ -768,7 +809,7 @@ public class FSMEditorController {
           }
           this.zoneStart = null;
           this.zoneEnd = null;
-          List<FSMElement> _elementsWithin = this.view.getElementsWithin(this.selectionZone);
+          List<FSMElement> _elementsWithin = this.getElementsWithin(this.selectionZone);
           this.activeSelection = _elementsWithin;
           this.selectionZone = null;
           break;
@@ -776,6 +817,10 @@ public class FSMEditorController {
           {
             if (FSMEditorController.DEBUG) {
               InputOutput.<String>println((("[Release] state " + this.state) + "-> ERROR !!!!"));
+            }
+            boolean _notEquals_3 = (!Objects.equal(this.newTransition, null));
+            if (_notEquals_3) {
+              this.deleteElement(this.newTransition);
             }
             this.state = FSMEditorController.CtrlState.ERROR_STATE;
           }
@@ -785,6 +830,10 @@ public class FSMEditorController {
       {
         if (FSMEditorController.DEBUG) {
           InputOutput.<String>println((("[Release] state " + this.state) + "-> ERROR !!!!"));
+        }
+        boolean _notEquals_3 = (!Objects.equal(this.newTransition, null));
+        if (_notEquals_3) {
+          this.deleteElement(this.newTransition);
         }
         this.state = FSMEditorController.CtrlState.ERROR_STATE;
       }
@@ -842,6 +891,7 @@ public class FSMEditorController {
     if (FSMEditorController.DEBUG) {
       InputOutput.<String>println(("[LeftClick] state " + this.state));
     }
+    this.view.revalidate();
     this.view.repaint();
   }
   

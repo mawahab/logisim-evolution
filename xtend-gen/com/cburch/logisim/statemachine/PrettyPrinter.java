@@ -6,7 +6,9 @@ import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
+import com.cburch.logisim.statemachine.fSMDSL.ConstRef;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
+import com.cburch.logisim.statemachine.fSMDSL.ConstantDef;
 import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate;
 import com.cburch.logisim.statemachine.fSMDSL.FSMElement;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
@@ -235,12 +237,30 @@ public class PrettyPrinter {
     return _xifexpression;
   }
   
+  protected static String _pp(final ConstRef b) {
+    ConstantDef _const = b.getConst();
+    String _name = _const.getName();
+    return ("#" + _name);
+  }
+  
   protected static String _pp(final DefaultPredicate b) {
     return "default";
   }
   
   protected static String _pp(final Constant b) {
     return b.getValue();
+  }
+  
+  protected static String _pp(final ConstantDef b) {
+    StringConcatenation _builder = new StringConcatenation();
+    _builder.append("define ");
+    String _name = b.getName();
+    _builder.append(_name, "");
+    _builder.append("=");
+    BoolExpr _value = b.getValue();
+    Object _pp = PrettyPrinter.pp(_value);
+    _builder.append(_pp, "");
+    return _builder.toString();
   }
   
   public static String pp(final EObject b) {
@@ -252,6 +272,8 @@ public class PrettyPrinter {
       return _pp((CommandList)b);
     } else if (b instanceof ConcatExpr) {
       return _pp((ConcatExpr)b);
+    } else if (b instanceof ConstRef) {
+      return _pp((ConstRef)b);
     } else if (b instanceof Constant) {
       return _pp((Constant)b);
     } else if (b instanceof DefaultPredicate) {
@@ -270,6 +292,8 @@ public class PrettyPrinter {
       return _pp((BoolExpr)b);
     } else if (b instanceof Command) {
       return _pp((Command)b);
+    } else if (b instanceof ConstantDef) {
+      return _pp((ConstantDef)b);
     } else if (b instanceof FSMElement) {
       return _pp((FSMElement)b);
     } else {

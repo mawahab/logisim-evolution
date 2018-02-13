@@ -34,7 +34,8 @@ import com.cburch.logisim.instance.InstanceData;
 
 class RegisterFileData extends ClockState implements InstanceData {
 	int value[] ;
-
+	int offset=0;
+	int lastRegEvent = -1;
 	public RegisterFileData(int addrbits) {
 		
 		value = new int[1<<addrbits];
@@ -53,4 +54,14 @@ class RegisterFileData extends ClockState implements InstanceData {
 	public void setValue(int addr, int value) {
 		this.value[addr] = value;
 	}
+
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+	
+	
 }

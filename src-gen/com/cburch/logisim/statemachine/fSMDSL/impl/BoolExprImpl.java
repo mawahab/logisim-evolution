@@ -2,7 +2,6 @@
  */
 package com.cburch.logisim.statemachine.fSMDSL.impl;
 
-import com.cburch.logisim.statemachine.PrettyPrinter;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage;
 
@@ -19,12 +18,7 @@ import org.eclipse.emf.ecore.impl.MinimalEObjectImpl;
  */
 public class BoolExprImpl extends MinimalEObjectImpl.Container implements BoolExpr
 {
-  @Override
-	public String toString() {
-		return PrettyPrinter.pp(this);
-	}
-
-/**
+  /**
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
    * @generated

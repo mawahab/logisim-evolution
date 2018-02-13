@@ -17,17 +17,17 @@ Workflow {
     	platformUri = "${runtimeProject}/.."
     }
     
-//    component = DirectoryCleaner {
-//    	directory = "${runtimeProject}/src-gen"
-//    }
+    component = DirectoryCleaner {
+    	directory = "${runtimeProject}/src-gen"
+    }
 //    
-//    component = DirectoryCleaner {
-//    	directory = "${runtimeProject}/model/generated"
-//    }
-//    
-//    component = DirectoryCleaner {
-//    	directory = "${runtimeProject}.ui/src-gen"
-//    }  
+    component = DirectoryCleaner {
+    	directory = "${runtimeProject}/model/generated"
+    }
+    
+    component = DirectoryCleaner {
+    	directory = "${runtimeProject}.ui/src-gen"
+    }  
 //    
 //    component = DirectoryCleaner {
 //    	directory = "${runtimeProject}.tests/src-gen"
@@ -62,9 +62,9 @@ Workflow {
     
     		// The antlr parser generator fragment.
     		fragment = parser.antlr.XtextAntlrGeneratorFragment auto-inject {
-    		  options = {
-    		      backtrack = true
-    		  }
+//    		  options = {
+//    		      backtrack = true
+//    		  }
     		}
     
     		// Xtend-based API for validation

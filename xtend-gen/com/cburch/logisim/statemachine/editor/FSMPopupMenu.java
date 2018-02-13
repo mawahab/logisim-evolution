@@ -10,6 +10,7 @@ import java.awt.PopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class FSMPopupMenu extends PopupMenu implements ActionListener {
@@ -35,31 +36,34 @@ public class FSMPopupMenu extends PopupMenu implements ActionListener {
   @Override
   public void actionPerformed(final ActionEvent e) {
     String _actionCommand = e.getActionCommand();
-    boolean _equals = _actionCommand.equals("Edit");
+    String _plus = ("Menu command => " + _actionCommand);
+    InputOutput.<String>println(_plus);
+    String _actionCommand_1 = e.getActionCommand();
+    boolean _equals = _actionCommand_1.equals("Edit");
     if (_equals) {
       FSMEditorController _controller = this.view.getController();
       _controller.executeEdit(this.currentPos);
     } else {
-      String _actionCommand_1 = e.getActionCommand();
-      boolean _equals_1 = _actionCommand_1.equals("Create");
+      String _actionCommand_2 = e.getActionCommand();
+      boolean _equals_1 = _actionCommand_2.equals("Create");
       if (_equals_1) {
         FSMEditorController _controller_1 = this.view.getController();
         _controller_1.executeCreate(this.currentPos, this.type);
       } else {
-        String _actionCommand_2 = e.getActionCommand();
-        boolean _equals_2 = _actionCommand_2.equals("Copy");
+        String _actionCommand_3 = e.getActionCommand();
+        boolean _equals_2 = _actionCommand_3.equals("Copy");
         if (_equals_2) {
           FSMEditorController _controller_2 = this.view.getController();
           _controller_2.executeCopy(this.currentPos);
         } else {
-          String _actionCommand_3 = e.getActionCommand();
-          boolean _equals_3 = _actionCommand_3.equals("Paste");
+          String _actionCommand_4 = e.getActionCommand();
+          boolean _equals_3 = _actionCommand_4.equals("Paste");
           if (_equals_3) {
             FSMEditorController _controller_3 = this.view.getController();
             _controller_3.executePaste(this.currentPos);
           } else {
-            String _actionCommand_4 = e.getActionCommand();
-            boolean _equals_4 = _actionCommand_4.equals("Delete");
+            String _actionCommand_5 = e.getActionCommand();
+            boolean _equals_4 = _actionCommand_5.equals("Delete");
             if (_equals_4) {
               FSMEditorController _controller_4 = this.view.getController();
               _controller_4.executeDelete(this.currentPos);

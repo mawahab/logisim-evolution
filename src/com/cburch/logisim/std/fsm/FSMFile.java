@@ -58,7 +58,7 @@ public class FSMFile {
 			}
 			editor.setContent(new FSMContent(content.toString()));
 		} catch (IOException ex) {
-			throw new IOException(Strings.get("hdlFileReaderError"));
+			throw new IOException(ex.getMessage());
 		} finally {
 			if (in != null) {
 				in.close();
@@ -66,16 +66,17 @@ public class FSMFile {
 		}
 	}
 
+	
 	public static void save(File file, IFSMEditor editor)
 			throws IOException {
 		BufferedWriter out = null;
 
 		try {
 			out = new BufferedWriter(new FileWriter(file));
-			String data = editor.getContent().getContent();
+			String data = editor.getContent().getStringContent();
 			out.write(data, 0, data.length());
 		} catch (IOException ex) {
-			throw new IOException(Strings.get("fsmFileWriterError"));
+			throw ex;
 		} finally {
 			if (out != null) {
 				out.close();

@@ -28,21 +28,35 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.OutputStream
 import javax.swing.JOptionPane
+import org.eclipse.emf.common.util.BasicEList
+import com.cburch.logisim.statemachine.PrettyPrinter
+import java.io.PrintStream
 
 /** 
   */ 
 class FSMSerializer {
 	
 	def static String saveAsString(FSM fsm) {
-		try {
 			val bos = new ByteArrayOutputStream()
+			reorderInputPorts(fsm);
+			reorderOutputPorts(fsm);
 			save(fsm,bos);
 			return new String(bos.toByteArray,Charset.defaultCharset())
-		} catch (Exception e) {
-			JOptionPane.showConfirmDialog(null, null, e.message,JOptionPane.ERROR_MESSAGE);
-			throw new RuntimeException(e.message);
-				
-		}
+	}
+	
+	def static reorderOutputPorts(FSM fsm) {
+		var ips= new BasicEList(fsm.in);
+		println("before : "+ips.map[p|p.name])
+		fsm.in.clear
+		var sips= ips.sortBy[p|p.layout.y];
+		fsm.in+=sips
+	}
+	
+	def static reorderInputPorts(FSM fsm) {
+		var ops= new BasicEList(fsm.out);
+		fsm.out.clear
+		var sops= ops.sortBy[p|p.layout.y];
+		fsm.out+=sops
 	}
 
 	def static void saveToFile(FSM fsm, File f) {
@@ -51,12 +65,12 @@ class FSMSerializer {
 			save(fsm,bos);
 		} catch (Exception e) {
 			e.printStackTrace
-			JOptionPane.showConfirmDialog(null, null, e.message,JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, e.message,"Error during FSM serialization", JOptionPane.ERROR_MESSAGE);
 			throw new RuntimeException("Could not serialize current Model to string :"+e.message);
 		}
 	}
-	def static void save(FSM fsm, OutputStream os) {
-		try {
+	
+	def static void emfSave(FSM fsm, OutputStream os) {
 			var FSMDSLStandaloneSetup instance = new FSMDSLStandaloneSetup()
 			var Injector injector = instance.createInjectorAndDoEMFRegistration()
 			FSMDSLStandaloneSetup.doSetup()
@@ -66,32 +80,54 @@ class FSMSerializer {
 			var HashMap saveOptions = new HashMap()
 			saveOptions.put(XtextResource.OPTION_FORMAT, Boolean.TRUE)
 			resource.save(os, saveOptions)
-		} catch (Exception e) {
-			e.printStackTrace
-			JOptionPane.showConfirmDialog(null, null, e.message,JOptionPane.ERROR_MESSAGE);
-			throw new RuntimeException(e.message);
-		}
 	}
-  
-	def static EObject parsePredicate(FSM fsm, String in) throws IOException {
-		var String input = ""+fsm.getIn().map[p|p.name+'['+p.width+']'].toList + in +';'
+	def static void save(FSM fsm, OutputStream os) {
+		val ps = new PrintStream(os);
+		ps.append(FSMTextSave.pp(fsm));
+		ps.close
+	}
+
+	def static parseConstantList(String input) {
 		var InputStream fis = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8))
 		return parse(fis)
+	
+	}
+
+	def static EObject parsePredicate(FSM fsm, String in) throws IOException {
+		var String input = 
+			fsm.getConstants().map[c|PrettyPrinter.pp(c)].toList.toString+
+			fsm.getIn().map[p|p.name+'['+p.width+']'].toList.toString+ in +';'
+		var InputStream fis = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8))
+		try {
+			return parse(fis)
+		} catch (Exception e) {
+			throw new IOException('''«e.getMessage()» in "«input»"''')
+		}	
 	}
 
 	def static EObject parseCommandList(FSM fsm, String in) throws IOException {
 		
-		var String input = ""+ fsm.getIn().map[p|p.name+'['+p.width+']'].toList+fsm.getOut().map[p|p.name+'['+p.width+']'].toList +in +';'
+		var String input = 
+			fsm.getConstants().map[c|PrettyPrinter.pp(c)].toList.toString+
+			fsm.getIn().map[p|p.name+'['+p.width+']'].toList.toString+
+			fsm.getOut().map[p|p.name+'['+p.width+']'].toList.toString +in +';'
 		var InputStream fis = new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8))
-		return parse(fis)
+		try {
+			return parse(fis)
+		} catch (Exception e) {
+			throw new IOException('''«e.getMessage()» in "«input»"''')
+		}	
 	}
 
 	def public static FSM load(String in) throws IOException {
 		var InputStream fis = new ByteArrayInputStream(in.getBytes(StandardCharsets.UTF_8))
-		var FSM fsm = parse(fis) as FSM
-		
-		return fsm
-	}
+		try {
+			var FSM fsm = parse(fis) as FSM
+			return fsm
+		} catch (Exception e) {
+			throw new IOException('''«e.getMessage()» in "«in»"''')
+		}	
+	} 
 
 	def static FSM load(File in) throws IOException {
 		var InputStream fis = new FileInputStream(in)

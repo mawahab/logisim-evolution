@@ -72,12 +72,12 @@ public class FSMContentTextEditor extends JDialog implements JInputDialog,IFSMEd
 
 		@Override
 		public void insertUpdate(DocumentEvent de) {
-			validate.setEnabled(!editor.getText().equals(content.getContent()));
+			validate.setEnabled(!editor.getText().equals(content.getStringContent()));
 		}
 
 		@Override
 		public void removeUpdate(DocumentEvent de) {
-			validate.setEnabled(!editor.getText().equals(content.getContent()));
+			validate.setEnabled(!editor.getText().equals(content.getStringContent()));
 		}
 
 	}
@@ -321,7 +321,7 @@ public class FSMContentTextEditor extends JDialog implements JInputDialog,IFSMEd
 	@Override
 	public void setVisible(boolean b) {
 		if (b) {
-			editor.setText(content.getContent());
+			editor.setText(content.getStringContent());
 			editor.discardAllEdits();
 		}
 

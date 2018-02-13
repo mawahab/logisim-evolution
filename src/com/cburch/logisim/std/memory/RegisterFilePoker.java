@@ -63,9 +63,41 @@ public class RegisterFilePoker extends InstancePoker {
 		return true;
 	}
 
+	
+	
+	@Override
+	public void mouseDragged(InstanceState state, MouseEvent e) {
+		// TODO Auto-generated method stub
+		super.mouseDragged(state, e);
+		analyzePosition(e, state);
+		
+	}
+	@Override
+	public void mousePressed(InstanceState state, MouseEvent e) {
+		Point pos = analyzePosition(e, state);
+		System.out.println("Pressed !!!"+pos);
+		RegisterFileData data = (RegisterFileData) state.getData();
+		if (pos.x>RegisterFile.UP_X && pos.y>RegisterFile.UP_Y && pos.x<(RegisterFile.UP_X+15) && pos.y<(RegisterFile.UP_Y+15)) {
+			System.out.println("UP Pressed !!!");
+			data.setOffset(Math.max(data.getOffset()-1, 0));
+		}
+		if (pos.x>RegisterFile.DOWN_X && pos.y>RegisterFile.DOWN_Y && pos.x<(RegisterFile.DOWN_X+15) && pos.y<(RegisterFile.DOWN_Y+15)) {
+			System.out.println("Down Pressed !!!");
+			data.setOffset(Math.min(data.getOffset()+1, data.value.length-1));
+		}
+	}
+
+
+
 	@Override
 	public void mouseMoved(InstanceState state, MouseEvent e) {
+		analyzePosition(e, state);
 		
+	}
+
+
+
+	private Point analyzePosition(MouseEvent e, InstanceState state) {
 		Bounds bds = state.getInstance().getBounds();
 		int x = e.getX() ;
 		int y = e.getY() ;
@@ -74,8 +106,12 @@ public class RegisterFilePoker extends InstancePoker {
 		int x1 = bds.getX() + bds.getWidth() ;
 		int y1 = bds.getY() + bds.getHeight();
 		inZone = (x>=x0) && (x<=x1) && (y>=y0) && (y<=y1);
-		pos=new Point(x-x0,y-y0);
-		
+		if(inZone) {
+			pos=new Point(x-x0,y-y0);
+			return pos;
+		} else {
+			return null;
+		}
 	}
 
 	
@@ -96,7 +132,7 @@ public class RegisterFilePoker extends InstancePoker {
 			if(row>0&&row<16&&col>=0&&col<=1) {
 	
 				
-				int addr = (int) (16*col + row);
+				int addr = (int) (16*col + row+data.getOffset());
 				
 				BitWidth dataWidth = state.getAttributeValue(StdAttr.WIDTH);
 				if (dataWidth == null)

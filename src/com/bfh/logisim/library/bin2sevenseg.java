@@ -104,14 +104,16 @@ public class bin2sevenseg extends InstanceFactory{
 			int value = state.getPortValue(Din).toIntValue();
 			int segs;
 			switch (value) {
-			   case 0 : state.setPort(Segment_A, Value.createKnown(BitWidth.create(1), 1), PER_DELAY);
-			            state.setPort(Segment_B, Value.createKnown(BitWidth.create(1), 1), PER_DELAY);
-			            state.setPort(Segment_C, Value.createKnown(BitWidth.create(1), 1), PER_DELAY);
-  			            state.setPort(Segment_D, Value.createKnown(BitWidth.create(1), 1), PER_DELAY);
-			            state.setPort(Segment_E, Value.createKnown(BitWidth.create(1), 1), PER_DELAY);
-			            state.setPort(Segment_F, Value.createKnown(BitWidth.create(1), 1), PER_DELAY);
-			            state.setPort(Segment_G, Value.createKnown(BitWidth.create(1), 0), PER_DELAY);
-			            break;
+			   case 0 : 
+					segs = 0b0111111;
+					state.setPort(Segment_A, Value.createKnown(BitWidth.create(1),bit(segs,0)), PER_DELAY);
+          			state.setPort(Segment_B, Value.createKnown(BitWidth.create(1),bit(segs,1)), PER_DELAY);
+          			state.setPort(Segment_C, Value.createKnown(BitWidth.create(1),bit(segs,2)), PER_DELAY);
+          			state.setPort(Segment_D, Value.createKnown(BitWidth.create(1),bit(segs,3)), PER_DELAY);
+          			state.setPort(Segment_E, Value.createKnown(BitWidth.create(1),bit(segs,4)), PER_DELAY);
+          			state.setPort(Segment_F, Value.createKnown(BitWidth.create(1),bit(segs,5)), PER_DELAY);
+          			state.setPort(Segment_G, Value.createKnown(BitWidth.create(1),bit(segs,6)), PER_DELAY);
+					break;
 			   case 1 : state.setPort(Segment_A, Value.createKnown(BitWidth.create(1), 0), PER_DELAY);
                         state.setPort(Segment_B, Value.createKnown(BitWidth.create(1), 1), PER_DELAY);
                         state.setPort(Segment_C, Value.createKnown(BitWidth.create(1), 1), PER_DELAY);

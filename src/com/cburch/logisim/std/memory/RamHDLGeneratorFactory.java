@@ -299,8 +299,8 @@ public class RamHDLGeneratorFactory extends AbstractHDLGeneratorFactory {
 				Reporter, HDLType, Nets));
 		PortMap.putAll(GetNetMap("WE", true, ComponentInfo, Ram.WE, Reporter,
 				HDLType, Nets));
-		PortMap.putAll(GetNetMap("OE", true, ComponentInfo, Ram.OE, Reporter,
-				HDLType, Nets));
+//		PortMap.putAll(GetNetMap("OE", true, ComponentInfo, Ram.OE, Reporter,
+//				HDLType, Nets));
 		if (!asynch) {
 			String SetBit = (HDLType.equals(Settings.VHDL)) ? "'1'" : "1'b1";
 			String ZeroBit = (HDLType.equals(Settings.VHDL)) ? "'0'" : "1'b0";

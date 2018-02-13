@@ -1,6 +1,9 @@
 package com.cburch.logisim.statemachine.editor.editpanels;
 
 import java.awt.Color;
+import java.awt.TextArea;
+import java.awt.event.TextEvent;
+import java.awt.event.TextListener;
 import java.io.IOException;
 import java.util.Optional;
 
@@ -22,40 +25,43 @@ import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.CommandStmt;
 import com.cburch.logisim.statemachine.parser.FSMSerializer;
 
-public class FSMCommandListEditPanel extends JPanel{
+public class FSMCommandListEditPanel extends JPanel implements TextListener{
 
-	JTextField condField ;
+//	JTextField condField ;
 	CommandList list;
-	
+
+	JTextArea textArea = new JTextArea(10, 15);
+	JScrollPane scrollPane = new JScrollPane(textArea);
+
 	public FSMCommandListEditPanel(CommandList state) {
 		super();
 		this.list=state;
-		
-		condField = new JTextField(20);
-		condField.setText("");
+
 		if(state!=null & state.getCommands().size()>0) {
 			Optional<String> command = state.getCommands().stream().map(
 					(c)->
 					(c.getName().getName()+"="+PrettyPrinter.pp(c.getValue()))
-			).reduce((x,y)->(x+";"+y));
-			condField.setText(command.get());
+			).reduce((x,y)->(x+";\n"+y));
+			textArea.setRows(state.getCommands().size()+1);
+			textArea.setText(command.get());
 		}
-		
+
 		add(new JLabel("Commands"));
-		add(condField);
+//		add(typeText);
+//		typeText.addTextListener(this);
 
 	}
 	
 	private EList<Command> checkInput(int result) {
 		CommandStmt res= null;
 		if (result == JOptionPane.OK_OPTION) {
-			String txt = condField.getText();
+			String txt = textArea.getText();
 			try {
 				FSM fsm = (FSM)list.eContainer().eContainer();
 				res= (CommandStmt) FSMSerializer.parseCommandList(fsm, txt);
 				EList<Command> commands = res.getCommands();
 				for(Command c:commands) {
-					PortReferenceFix fixer = new PortReferenceFix(fsm);
+					UpdateCrossReferences fixer = new UpdateCrossReferences(fsm);
 					fixer.replaceRef(c);
 				}
 				return commands;
@@ -68,11 +74,19 @@ public class FSMCommandListEditPanel extends JPanel{
 	}
 	public void configure() {
 		EList<Command> commands=null;
+		// display them in a message dialog
+
 		while(commands==null) {
-			int dialog = JOptionPane.showConfirmDialog(null, this, "Configure Command" ,JOptionPane.OK_CANCEL_OPTION);
+			int dialog = JOptionPane.showConfirmDialog(this, scrollPane, "Configure Command" ,JOptionPane.OK_CANCEL_OPTION);
+			//int dialog = JOptionPane.showConfirmDialog(null, this, "Configure Command" ,JOptionPane.OK_CANCEL_OPTION);
+			if(dialog==JOptionPane.CANCEL_OPTION) return;
 			commands = checkInput(dialog);
 		}
 		list.getCommands().clear();
 		list.getCommands().addAll(commands);
+	}
+
+	@Override
+	public void textValueChanged(TextEvent e) {
 	}
 }

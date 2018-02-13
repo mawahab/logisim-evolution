@@ -31,7 +31,10 @@
 package com.cburch.logisim.std.memory;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Polygon;
 
 import org.eclipse.xpand2.XpandExecutionContextImpl.DefinitionOperationAdapter;
 
@@ -60,54 +63,99 @@ public class RegisterFile extends InstanceFactory {
 
 	public static final int COL_WIDTH = 130;
 
-	public  static final int HEIGHT = 360;
+	public  static final int HEIGHT = 220;
 
-	public  static final int WIDTH = 360;
-	public  static final int OFFX_VAL = 50;
-	public  static final int OFFY_VAL = 40;
+	public  static final int WIDTH = 240;
+	
+	public  static final int OFFX_VAL = 30;
+	public  static final int OFFY_VAL = 35;
+
+	public  static final int UP_X = OFFX_VAL+25;
+	public  static final int UP_Y = OFFY_VAL;
+
+	public  static final int DOWN_X = UP_X;
+
+	private static final int NB_ROW = 8;
+	public  static final int DOWN_Y = UP_Y+(NB_ROW-1)*ROW_HEIGHT+5;
 
 	
 	Port[] ps = new Port[9];
 	
-	static int OFFX = 30;
-	static int OFFY = 30;
 	public static void DrawRegister(InstancePainter painter, int x, int y, int nr_of_bits, boolean has_we,
 			RegisterFileData data) {
 
 		Graphics g = painter.getGraphics();
+		GraphicsUtil.switchToWidth(g, 2);
 		g.drawRect(x, y , WIDTH, HEIGHT);
-
-		GraphicsUtil.drawCenteredText(g,"CLK",x+WIDTH/4, y+10);
-		GraphicsUtil.drawCenteredText(g,"RST",x+2*WIDTH/4, y+10);
-		GraphicsUtil.drawCenteredText(g,"WE",x+3*WIDTH/4, y+10);
+		GraphicsUtil.switchToWidth(g, 1);
 		
-		GraphicsUtil.drawCenteredText(g,"WAD",x+20,y-5+ HEIGHT/3 );
-		GraphicsUtil.drawCenteredText(g,"DI",x+20, y-5+2*HEIGHT/3 );
-		
-		GraphicsUtil.drawCenteredText(g,"DO0",x+WIDTH-20, y-5+HEIGHT/3 );
-		GraphicsUtil.drawCenteredText(g,"DO1",x+WIDTH-20, y-5+2*HEIGHT/3 );
+		GraphicsUtil.drawCenteredText(g,"Register File 32x32",x+WIDTH/2, y+10);
 
-		GraphicsUtil.drawCenteredText(g,"RAD0",x+WIDTH/3, y+HEIGHT-15);
-		GraphicsUtil.drawCenteredText(g,"RAD1",x+2*WIDTH/3, y+HEIGHT-15);
+		GraphicsUtil.drawCenteredText(g,"CLK",x+15, y+30);
+		GraphicsUtil.drawCenteredText(g,"RST",x+15, y+60);
+
+		GraphicsUtil.drawCenteredText(g,"DI",x+15, y+120 );
+		GraphicsUtil.drawCenteredText(g,"WE",x+15, y+160);
+
+		GraphicsUtil.drawCenteredText(g,"DO0",x+WIDTH-20, y+80 );
+		GraphicsUtil.drawCenteredText(g,"DO1",x+WIDTH-20, y+HEIGHT-80);
+
+		GraphicsUtil.drawCenteredText(g,"WAD" ,x+40,  y+HEIGHT-15);
+		GraphicsUtil.drawCenteredText(g,"RAD0",x+120, y+HEIGHT-15);
+		GraphicsUtil.drawCenteredText(g,"RAD1",x+180, y+HEIGHT-15);
 
 		
-		for (int c = 0; c < 2; c += 1) {
-			for (int r = 0; r < 16; r += 1) {
-				int locX = x + OFFX_VAL + c*COL_WIDTH;
-				int locY = y + OFFY_VAL + ROW_HEIGHT * r;
-				int address = 16*c+r;
-				g.drawRect(locX+35, locY, 80, ROW_HEIGHT-3);
-				g.drawString("R" + address, locX, locY+13);
-				String code = Integer.toHexString(data.getValue(address)).toUpperCase();
-				while (code.length() < ((nr_of_bits+1)/4)) {    //pad with 16 0's
-	        		code = "0" + code;
-	  			}
-				g.drawString(code, x + OFFX_VAL + 90 / 2 + c*COL_WIDTH, y + OFFY_VAL+13 + ROW_HEIGHT * r);
-			}	
-		}
+		
+		drawRegValues(g, x+OFFX_VAL+40, y+OFFY_VAL, data.getOffset(), NB_ROW, nr_of_bits, has_we, data);
+		drawTriangle(g, x + UP_X, y +UP_Y, 15, 15, false);
+		drawTriangle(g, x + DOWN_X, y +DOWN_Y, 15, 15, true);
+		g.fillRect(x+ UP_X+5, y+UP_Y+9, 4, DOWN_Y-UP_Y-5);
 		
 		
 	}
+	
+	static void  drawRegValues(Graphics g,  int x, int y,int offset, int nvalues, int nr_of_bits, boolean has_we,
+			RegisterFileData data) {
+		g.setColor(Color.LIGHT_GRAY);
+		g.fillRect(x-20, y-4, 140, nvalues*ROW_HEIGHT+8);
+		g.setColor(Color.black);
+		for (int r = offset; r < Math.min(offset+nvalues, data.value.length-1); r += 1) {
+			int locY = y + ROW_HEIGHT * (r-offset);
+			int address = r;
+			String code = getPaddedBinary(nr_of_bits, data, address);
+			if(data.lastRegEvent!=r) {
+				g.drawRect(x+30, locY, 80, ROW_HEIGHT-3);
+				g.drawString("R" + address, x+5, locY+13);
+				g.drawString(code, x +37, locY +13);
+			} else {
+				g.setColor(Color.RED);
+				g.drawRect(x+30, locY, 80, ROW_HEIGHT-3);
+				g.drawString("R" + address, x+5, locY+13);
+				Font oldfont = g.getFont();
+				g.setFont(oldfont.deriveFont(Font.BOLD));
+				g.drawString(code, x +35, locY +13);
+				g.setFont(oldfont);
+				g.setColor(Color.black);
+			}
+		}
+	}
+
+	private static String getPaddedBinary(int nr_of_bits, RegisterFileData data, int address) {
+		String code = Integer.toHexString(data.getValue(address)).toUpperCase();
+		while (code.length() < ((nr_of_bits+1)/4)) {    //pad with 16 0's
+			code = "0" + code;
+		}
+		return code;
+	}
+	static void  drawTriangle(Graphics g, int x, int y, int w, int h, boolean reverse) {
+		
+		if (reverse) {
+			g.fillPolygon(new Polygon(new int[] {x, x+w/2, x+w}, new int[] {y, y + h, y }, 3));
+		} else {
+			g.fillPolygon(new Polygon(new int[] {x, x+w/2, x+w}, new int[] {y+h, y, y+h}, 3));
+		}
+	}
+
 
 	public static final int CLK = 0;
 	public static final int RST = 1;
@@ -142,19 +190,19 @@ public class RegisterFile extends InstanceFactory {
 		setInstancePoker(RegisterFilePoker.class);
 		setInstanceLogger(RegisterFileLogger.class);
 
-		
-		ps[CLK]= new Port(WIDTH/4, 0, Port.INPUT, 1);
-		ps[RST]= new Port(2*WIDTH/4, 0, Port.INPUT, 1);
-		ps[WE]= new Port(3*WIDTH/4, 0, Port.INPUT, 1);
-		
-		ps[WAD]= new Port(0, HEIGHT/3, Port.INPUT, ADDR_WIDTH);
-		ps[DI]= new Port(0, 2*HEIGHT/3, Port.INPUT, StdAttr.WIDTH);
-		
-		ps[DO0]= new Port(WIDTH, HEIGHT/3, Port.OUTPUT, StdAttr.WIDTH);
-		ps[DO1]= new Port(WIDTH, 2*HEIGHT/3, Port.OUTPUT, StdAttr.WIDTH);
+		ps[CLK]= new Port(0, 30, Port.INPUT, 1);
+		ps[RST]= new Port(0, 60, Port.INPUT, 1);
 
-		ps[RAD0]= new Port(WIDTH/3, HEIGHT, Port.INPUT, ADDR_WIDTH);
-		ps[RAD1]= new Port(2*WIDTH/3, HEIGHT, Port.INPUT, ADDR_WIDTH);
+		ps[DI]= new Port(0, 120, Port.INPUT, StdAttr.WIDTH);
+		ps[WE]= new Port(0, 160, Port.INPUT, 1);
+		
+		
+		ps[DO0]= new Port(WIDTH, 80, Port.OUTPUT, StdAttr.WIDTH);
+		ps[DO1]= new Port(WIDTH, HEIGHT-80, Port.OUTPUT, StdAttr.WIDTH);
+
+		ps[WAD]= new Port(40, HEIGHT, Port.INPUT, ADDR_WIDTH);
+		ps[RAD0]= new Port(120, HEIGHT, Port.INPUT, ADDR_WIDTH);
+		ps[RAD1]= new Port(180, HEIGHT, Port.INPUT, ADDR_WIDTH);
 
 
 		ps[DO1].setToolTip(Strings.getter("registerQTip"));
@@ -226,10 +274,13 @@ public class RegisterFile extends InstanceFactory {
 		if (state.getPortValue(RST) == Value.TRUE) {
 			data.clear();
 		} else if (triggered && state.getPortValue(WE) != Value.FALSE) {
+			data.lastRegEvent=-1;
 			Value in = state.getPortValue(DI);
 			Value addr = state.getPortValue(WAD);
 			if (in.isFullyDefined()) {
-				data.setValue(addr.toIntValue(), in.toIntValue());
+				int intAddr = addr.toIntValue();
+				data.lastRegEvent=intAddr;
+				data.setValue(intAddr, in.toIntValue());
 			}
 		}
 

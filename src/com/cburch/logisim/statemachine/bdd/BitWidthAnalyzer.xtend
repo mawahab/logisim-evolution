@@ -11,6 +11,7 @@ import com.cburch.logisim.statemachine.fSMDSL.PortRef
 import java.util.HashMap
 import javax.management.RuntimeErrorException
 import org.eclipse.emf.common.util.EList
+import com.cburch.logisim.statemachine.fSMDSL.ConstRef
 
 class BitWidthAnalyzer {
 	
@@ -18,7 +19,7 @@ class BitWidthAnalyzer {
 		
 	}
 	
-	def getBitwidth(BoolExpr b) {
+	def Integer getBitwidth(BoolExpr b) {
 		if (typeMap.containsKey(b)) {
 			typeMap.get(b);
 		} else {
@@ -42,10 +43,10 @@ class BitWidthAnalyzer {
 					}
 				}
 			} else {
-				throw new RuntimeException("ERROR mismatch in predicate expression ");
+				throw new RuntimeException("ERROR : bitwidth mismatch in predicate expression "+PrettyPrinter.pp(b));
 			}	
 		}
-		typeMap.put(b,width);
+		return typeMap.put(b,width);
 	}
 
 	public def dispatch  computeBitwidth(BoolExpr b) {}
@@ -76,6 +77,12 @@ class BitWidthAnalyzer {
 	
 	public def dispatch computeBitwidth(Constant b) {
 		typeMap.put(b,b.value.length-2)
+		return typeMap.get(b)
+	}
+	public def dispatch computeBitwidth(ConstRef b) {
+		val res = (b.const.value as Constant).value.length-2 
+		typeMap.put(b,res as Integer)
+		
 	}
 	
 	public def dispatch computeBitwidth(PortRef b) {

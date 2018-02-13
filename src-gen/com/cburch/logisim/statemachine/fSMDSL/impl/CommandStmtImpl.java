@@ -4,9 +4,9 @@ package com.cburch.logisim.statemachine.fSMDSL.impl;
 
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandStmt;
+import com.cburch.logisim.statemachine.fSMDSL.ConstantDef;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage;
-import com.cburch.logisim.statemachine.fSMDSL.ShortInput;
-import com.cburch.logisim.statemachine.fSMDSL.ShortOutput;
+import com.cburch.logisim.statemachine.fSMDSL.Port;
 
 import java.util.Collection;
 
@@ -28,6 +28,7 @@ import org.eclipse.emf.ecore.util.InternalEList;
  * The following features are implemented:
  * </p>
  * <ul>
+ *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.CommandStmtImpl#getCst <em>Cst</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.CommandStmtImpl#getIn <em>In</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.CommandStmtImpl#getOut <em>Out</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.impl.CommandStmtImpl#getCommands <em>Commands</em>}</li>
@@ -38,6 +39,16 @@ import org.eclipse.emf.ecore.util.InternalEList;
 public class CommandStmtImpl extends TOPImpl implements CommandStmt
 {
   /**
+   * The cached value of the '{@link #getCst() <em>Cst</em>}' containment reference list.
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @see #getCst()
+   * @generated
+   * @ordered
+   */
+  protected EList<ConstantDef> cst;
+
+  /**
    * The cached value of the '{@link #getIn() <em>In</em>}' containment reference list.
    * <!-- begin-user-doc -->
    * <!-- end-user-doc -->
@@ -45,7 +56,7 @@ public class CommandStmtImpl extends TOPImpl implements CommandStmt
    * @generated
    * @ordered
    */
-  protected EList<ShortInput> in;
+  protected EList<Port> in;
 
   /**
    * The cached value of the '{@link #getOut() <em>Out</em>}' containment reference list.
@@ -55,7 +66,7 @@ public class CommandStmtImpl extends TOPImpl implements CommandStmt
    * @generated
    * @ordered
    */
-  protected EList<ShortOutput> out;
+  protected EList<Port> out;
 
   /**
    * The cached value of the '{@link #getCommands() <em>Commands</em>}' containment reference list.
@@ -93,11 +104,25 @@ public class CommandStmtImpl extends TOPImpl implements CommandStmt
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<ShortInput> getIn()
+  public EList<ConstantDef> getCst()
+  {
+    if (cst == null)
+    {
+      cst = new EObjectContainmentEList<ConstantDef>(ConstantDef.class, this, FSMDSLPackage.COMMAND_STMT__CST);
+    }
+    return cst;
+  }
+
+  /**
+   * <!-- begin-user-doc -->
+   * <!-- end-user-doc -->
+   * @generated
+   */
+  public EList<Port> getIn()
   {
     if (in == null)
     {
-      in = new EObjectContainmentEList<ShortInput>(ShortInput.class, this, FSMDSLPackage.COMMAND_STMT__IN);
+      in = new EObjectContainmentEList<Port>(Port.class, this, FSMDSLPackage.COMMAND_STMT__IN);
     }
     return in;
   }
@@ -107,11 +132,11 @@ public class CommandStmtImpl extends TOPImpl implements CommandStmt
    * <!-- end-user-doc -->
    * @generated
    */
-  public EList<ShortOutput> getOut()
+  public EList<Port> getOut()
   {
     if (out == null)
     {
-      out = new EObjectContainmentEList<ShortOutput>(ShortOutput.class, this, FSMDSLPackage.COMMAND_STMT__OUT);
+      out = new EObjectContainmentEList<Port>(Port.class, this, FSMDSLPackage.COMMAND_STMT__OUT);
     }
     return out;
   }
@@ -140,6 +165,8 @@ public class CommandStmtImpl extends TOPImpl implements CommandStmt
   {
     switch (featureID)
     {
+      case FSMDSLPackage.COMMAND_STMT__CST:
+        return ((InternalEList<?>)getCst()).basicRemove(otherEnd, msgs);
       case FSMDSLPackage.COMMAND_STMT__IN:
         return ((InternalEList<?>)getIn()).basicRemove(otherEnd, msgs);
       case FSMDSLPackage.COMMAND_STMT__OUT:
@@ -160,6 +187,8 @@ public class CommandStmtImpl extends TOPImpl implements CommandStmt
   {
     switch (featureID)
     {
+      case FSMDSLPackage.COMMAND_STMT__CST:
+        return getCst();
       case FSMDSLPackage.COMMAND_STMT__IN:
         return getIn();
       case FSMDSLPackage.COMMAND_STMT__OUT:
@@ -181,13 +210,17 @@ public class CommandStmtImpl extends TOPImpl implements CommandStmt
   {
     switch (featureID)
     {
+      case FSMDSLPackage.COMMAND_STMT__CST:
+        getCst().clear();
+        getCst().addAll((Collection<? extends ConstantDef>)newValue);
+        return;
       case FSMDSLPackage.COMMAND_STMT__IN:
         getIn().clear();
-        getIn().addAll((Collection<? extends ShortInput>)newValue);
+        getIn().addAll((Collection<? extends Port>)newValue);
         return;
       case FSMDSLPackage.COMMAND_STMT__OUT:
         getOut().clear();
-        getOut().addAll((Collection<? extends ShortOutput>)newValue);
+        getOut().addAll((Collection<? extends Port>)newValue);
         return;
       case FSMDSLPackage.COMMAND_STMT__COMMANDS:
         getCommands().clear();
@@ -207,6 +240,9 @@ public class CommandStmtImpl extends TOPImpl implements CommandStmt
   {
     switch (featureID)
     {
+      case FSMDSLPackage.COMMAND_STMT__CST:
+        getCst().clear();
+        return;
       case FSMDSLPackage.COMMAND_STMT__IN:
         getIn().clear();
         return;
@@ -230,6 +266,8 @@ public class CommandStmtImpl extends TOPImpl implements CommandStmt
   {
     switch (featureID)
     {
+      case FSMDSLPackage.COMMAND_STMT__CST:
+        return cst != null && !cst.isEmpty();
       case FSMDSLPackage.COMMAND_STMT__IN:
         return in != null && !in.isEmpty();
       case FSMDSLPackage.COMMAND_STMT__OUT:

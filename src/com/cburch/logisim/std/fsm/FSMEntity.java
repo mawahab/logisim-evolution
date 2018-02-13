@@ -37,6 +37,7 @@ import java.awt.Graphics;
 import java.awt.Window;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.WeakHashMap;
 
 import org.slf4j.Logger;
@@ -124,7 +125,7 @@ public class FSMEntity extends InstanceFactory {
 	static final int X_PADDING = 5;
 
 	private static final int CLK = 0;
-	private static final int CLR = 1;
+	private static final int RST = 1;
 	private static final int EN = 2;
 
 	private static final int DELAY = 0;
@@ -235,6 +236,7 @@ public class FSMEntity extends InstanceFactory {
 		if (attr == CONTENT_ATTR) {
 			updatePorts(instance);
 			instance.recomputeBounds();
+			instance.fireInvalidated();
 		}
 	}
 
@@ -248,7 +250,7 @@ public class FSMEntity extends InstanceFactory {
 			painter.setData(fsmSimulator);
 		}
 
-		
+		getOffsetBounds(painter.getAttributeSet());
 		FontMetrics metric = g.getFontMetrics();
 
 		Bounds bds = painter.getBounds();
@@ -292,7 +294,7 @@ public class FSMEntity extends InstanceFactory {
 		Port[] ctrl = content.getControls();
 		Port[] inputs = content.getInputs();
 		Port[] outputs = content.getOutputs();
-		String names[] =new String[]{"CLK","CLR","EN"};
+		String names[] =new String[]{"CLK","RST","EN"};
 		for (int i = 0; i < ctrl.length; i++)
 			GraphicsUtil.drawText(g, StringUtil.resizeString(
 					names[i], metric, (WIDTH / 2) - X_PADDING),
@@ -365,7 +367,7 @@ public class FSMEntity extends InstanceFactory {
 		}
 
 		Value clk = istate.getPortValue(CLK);
-		Value clear = istate.getPortValue(CLR);
+		Value clear = istate.getPortValue(RST);
 		Value enable = istate.getPortValue(EN);
 		boolean triggered = fsmSim.updateClock(clk, null);// triggerType);
 		int offsetInput = content.getControls().length;
@@ -411,9 +413,15 @@ public class FSMEntity extends InstanceFactory {
 				String substring = res.substring(1, res.length()-1);
 				int portIndex = istate.getPortIndex(content.outputs[i]);
 				try {
-					int parseInt = Integer.parseInt(substring,2);
-					Value v= Value.createKnown(BitWidth.create(substring.length()), parseInt);
-					istate.setPort(portIndex, v,DELAY); 
+					Value v= null;
+					if(substring.length()>64) {
+ 						throw new RuntimeException("Commands with wordlength larger than 63 bits are not supported in FSM");
+					} else {
+						long parseLong= Long.parseLong(substring,2);
+						String hexstr = Long.toHexString(parseLong);
+						v= Value.fromLogString(BitWidth.create(substring.length()), "0x"+hexstr);
+						istate.setPort(portIndex, v,DELAY); 
+					}
 				} catch (Exception e) {
 					Port key = content.outputs[i];
 					Value v= Value.createUnknown(key.getFixedBitWidth());

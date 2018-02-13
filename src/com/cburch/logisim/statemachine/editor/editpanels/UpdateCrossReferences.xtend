@@ -15,12 +15,17 @@ import com.cburch.logisim.statemachine.fSMDSL.Transition
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr
 import com.cburch.logisim.statemachine.fSMDSL.Constant
 import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr
+import com.cburch.logisim.statemachine.fSMDSL.ConstRef
+import com.cburch.logisim.statemachine.fSMDSL.ConstantDef
+import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate
 
-class PortReferenceFix {
+class UpdateCrossReferences {
 	
 	HashMap<String,Port> portMap = new HashMap<String,Port>()
+	HashMap<String,ConstantDef> constMap = new HashMap<String,ConstantDef>()
 	
 	new(FSM fsm) {
+		fsm.constants.forEach[cst|constMap.put(cst.name,cst)]
 		fsm.in.forEach[ip|portMap.put(ip.name,ip)]
 		fsm.out.forEach[op|portMap.put(op.name,op)]
 	}
@@ -32,11 +37,17 @@ class PortReferenceFix {
 		replaceRef(c.value)
 	}
 
+	def dispatch void replaceRef(Transition t) {
+		replaceRef(t.predicate)
+	}
 
 	def dispatch void replaceRef(BoolExpr b) {
 		throw new UnsupportedOperationException("Support for class "+b.class.simpleName+" NYI");
 	}
 	
+	def dispatch void replaceRef(DefaultPredicate b) {
+	}
+
 	def dispatch void replaceRef(Constant  b) {
 	
 	}
@@ -63,5 +74,10 @@ class PortReferenceFix {
 		}
 	}
 	
+	def dispatch void replaceRef(ConstRef b) {
+		if (b.const!=null && constMap.containsKey(b.const.name)) {
+			b.const = constMap.get(b.const.name);
+		}
+	}
 
 }

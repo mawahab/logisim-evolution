@@ -1,5 +1,6 @@
 package com.cburch.logisim.statemachine.editor.view;
 
+import com.cburch.logisim.statemachine.PrettyPrinter;
 import com.cburch.logisim.statemachine.editor.view.FSMDrawing;
 import com.cburch.logisim.statemachine.editor.view.Zone;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
@@ -33,10 +34,7 @@ public class FSMSelectionZone {
     NONE;
   }
   
-  private FSM fsm = null;
-  
-  public FSMSelectionZone(final FSM model) {
-    this.fsm = model;
+  public FSMSelectionZone() {
   }
   
   public FSMElement getSelectedElement(final Point p, final FSMElement e) {
@@ -58,7 +56,7 @@ public class FSMSelectionZone {
   
   private int ymax;
   
-  private final static boolean VERBOSE = false;
+  private final static boolean VERBOSE = true;
   
   public int updateBoundingBox(final FSMElement e) {
     int _xblockexpression = (int) 0;
@@ -129,18 +127,18 @@ public class FSMSelectionZone {
     }
   }
   
-  public List<FSMElement> getElementsInZone(final Zone z) {
+  public List<FSMElement> getElementsInZone(final FSM fsm, final Zone z) {
     List<FSMElement> candidates = new ArrayList<FSMElement>();
-    this.detectElement(z, this.fsm, candidates);
-    EList<Port> _in = this.fsm.getIn();
+    this.detectElement(z, fsm, candidates);
+    EList<Port> _in = fsm.getIn();
     for (final Port ip : _in) {
       this.detectElement(z, ip, candidates);
     }
-    EList<Port> _out = this.fsm.getOut();
+    EList<Port> _out = fsm.getOut();
     for (final Port op : _out) {
       this.detectElement(z, op, candidates);
     }
-    EList<State> _states = this.fsm.getStates();
+    EList<State> _states = fsm.getStates();
     for (final State s : _states) {
       {
         this.detectElement(z, s, candidates);
@@ -164,18 +162,18 @@ public class FSMSelectionZone {
     return null;
   }
   
-  public List<FSMElement> getSelectedElements(final Point p) {
+  public List<FSMElement> getSelectedElements(final FSM fsm, final Point p) {
     List<FSMElement> candidates = new ArrayList<FSMElement>();
-    this.detectElement(p, this.fsm, candidates);
-    EList<Port> _in = this.fsm.getIn();
+    this.detectElement(p, fsm, candidates);
+    EList<Port> _in = fsm.getIn();
     for (final Port ip : _in) {
       this.detectElement(p, ip, candidates);
     }
-    EList<Port> _out = this.fsm.getOut();
+    EList<Port> _out = fsm.getOut();
     for (final Port op : _out) {
       this.detectElement(p, op, candidates);
     }
-    EList<State> _states = this.fsm.getStates();
+    EList<State> _states = fsm.getStates();
     for (final State s : _states) {
       {
         this.detectElement(p, s, candidates);
@@ -187,12 +185,16 @@ public class FSMSelectionZone {
         }
       }
     }
-    InputOutput.<List<FSMElement>>println(candidates);
+    for (final FSMElement c : candidates) {
+      String _pp = PrettyPrinter.pp(c);
+      String _plus = ("\t" + _pp);
+      InputOutput.<String>println(_plus);
+    }
     return candidates;
   }
   
-  public FSMSelectionZone.AreaType getAreaType(final Point p) {
-    final List<FSMElement> selection = this.getSelectedElements(p);
+  public FSMSelectionZone.AreaType getAreaType(final FSM fsm, final Point p) {
+    final List<FSMElement> selection = this.getSelectedElements(fsm, p);
     int _size = selection.size();
     boolean _greaterThan = (_size > 0);
     if (_greaterThan) {
@@ -201,7 +203,7 @@ public class FSMSelectionZone {
         return FSMSelectionZone.AreaType.TRANSITION;
       }
     }
-    this.computeBoundingBox(this.fsm);
+    this.computeBoundingBox(fsm);
     if (((p.y > this.ymin) && (p.y < this.ymax))) {
       if ((p.x < this.xmin)) {
         return FSMSelectionZone.AreaType.INPUT;

@@ -13,6 +13,7 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * </p>
  * <ul>
+ *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.PredicateStmt#getCst <em>Cst</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.PredicateStmt#getIn <em>In</em>}</li>
  *   <li>{@link com.cburch.logisim.statemachine.fSMDSL.PredicateStmt#getPredicate <em>Predicate</em>}</li>
  * </ul>
@@ -24,8 +25,24 @@ import org.eclipse.emf.common.util.EList;
 public interface PredicateStmt extends TOP
 {
   /**
+   * Returns the value of the '<em><b>Cst</b></em>' containment reference list.
+   * The list contents are of type {@link com.cburch.logisim.statemachine.fSMDSL.ConstantDef}.
+   * <!-- begin-user-doc -->
+   * <p>
+   * If the meaning of the '<em>Cst</em>' containment reference list isn't clear,
+   * there really should be more of a description here...
+   * </p>
+   * <!-- end-user-doc -->
+   * @return the value of the '<em>Cst</em>' containment reference list.
+   * @see com.cburch.logisim.statemachine.fSMDSL.FSMDSLPackage#getPredicateStmt_Cst()
+   * @model containment="true"
+   * @generated
+   */
+  EList<ConstantDef> getCst();
+
+  /**
    * Returns the value of the '<em><b>In</b></em>' containment reference list.
-   * The list contents are of type {@link com.cburch.logisim.statemachine.fSMDSL.ShortInput}.
+   * The list contents are of type {@link com.cburch.logisim.statemachine.fSMDSL.Port}.
    * <!-- begin-user-doc -->
    * <p>
    * If the meaning of the '<em>In</em>' containment reference list isn't clear,
@@ -37,7 +54,7 @@ public interface PredicateStmt extends TOP
    * @model containment="true"
    * @generated
    */
-  EList<ShortInput> getIn();
+  EList<Port> getIn();
 
   /**
    * Returns the value of the '<em><b>Predicate</b></em>' containment reference.

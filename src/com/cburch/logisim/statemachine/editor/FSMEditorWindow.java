@@ -25,7 +25,7 @@ public class FSMEditorWindow extends Panel implements IFSMEditor, ChangeListener
 	private FSMContent content;
 	private FSMView view;
 	private ScrollPane scroller;
-	private JSlider slider;
+	//private JSlider slider;
 	
 
 	public FSMEditorWindow(FSMContent content) {
@@ -37,27 +37,19 @@ public class FSMEditorWindow extends Panel implements IFSMEditor, ChangeListener
 		
 		Panel shapePanel = new Panel(); // holds buttons for adding shapes
 		shapePanel.setLayout(new FlowLayout());
-		add(shapePanel);
+		add(shapePanel);	
 
 		view =new FSMView(this);
-	    scroller = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
-		scroller.setMinimumSize(new Dimension(500, 500));
+		scroller = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
+		scroller.setMinimumSize(new Dimension(300, 300));
 		scroller.setSize(new Dimension(500, 500));
 
-	    //	    Adjustable vadjust = scroller.getVAdjustable();
-//        Adjustable hadjust = scroller.getHAdjustable();
-//        hadjust.setUnitIncrement(10);
-//        vadjust.setUnitIncrement(10);
-       
-        scroller.add(view);
-        scroller.setEnabled(true);
-	    //scroller.setScrollPosition(300, 300);
+		scroller.add(view);
+		scroller.setEnabled(true);
+
 		add(scroller);
 	}
 	
- 
-	
-
 	@Override
 	public FSMContent getContent() {
 		return content;
@@ -66,22 +58,26 @@ public class FSMEditorWindow extends Panel implements IFSMEditor, ChangeListener
 	@Override
 	public void setContent(FSMContent content) {
 		this.content=content;
+		repaint();
+		revalidate();
 	}
+	
 	@Override
 	public void stateChanged(ChangeEvent e) {
-	    int value = ((JSlider)e.getSource()).getValue();
-	    view.setScale(value/100.0);
-	    repaint();
-	    revalidate();
+		int value = ((JSlider)e.getSource()).getValue();
+		view.setScale(value/100.0);
+		repaint();
+		revalidate();
 	}
 
 	@Override
 	public void repaint() {
 		super.repaint();
-		slider.repaint();
-		scroller.repaint();
+//		slider.repaint();
 		view.repaint();
 		
+		scroller.repaint();
+		revalidate();
 	}
 
 }

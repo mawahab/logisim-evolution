@@ -47,18 +47,26 @@ public class TestBDDOptimizer {
 //				EQU(x[7],12)
 		);
 	
+	static final BoolExpr exp5 = 
+			and( new BoolExpr[]{
+					negpref(x[0]),
+					(negpref(x[1]))}
+//					NEQ(x[7],13),
+//					EQU(x[7],12)
+			);
+	
 	static int rand(int max) {
 		return (int) (Math.random()*max);
 	}
 	public static void main(String[] args) {
-		BDDOptimizer optimizer = new BDDOptimizer(exp3);
+		BDDOptimizer optimizer = new BDDOptimizer(exp5);
 		System.out.println("prefest 1 :");
-		System.out.println("Before simplification"+PrettyPrinter.pp(exp3));
+		System.out.println("Before simplification"+PrettyPrinter.pp(exp5));
 		System.out.println("After simplification"+PrettyPrinter.pp(optimizer.simplify()));
 		
-		optimizer = new BDDOptimizer(exp1);
-		System.out.println("Before simplification"+PrettyPrinter.pp(exp1));
-		System.out.println("After simplification"+PrettyPrinter.pp(optimizer.simplify()));
+//		optimizer = new BDDOptimizer(exp1);
+//		System.out.println("Before simplification"+PrettyPrinter.pp(exp1));
+//		System.out.println("After simplification"+PrettyPrinter.pp(optimizer.simplify()));
 	}
 
 

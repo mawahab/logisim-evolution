@@ -155,7 +155,7 @@ public class RamAttributes extends AbstractAttributeSet {
 
 	@Override
 	public boolean isToSave(Attribute<?> attr) {
-		return !attr.equals(Ram.CONTENTS_ATTR);
+		return true;//!attr.equals(Ram.CONTENTS_ATTR);
 	}
 
 	@Override

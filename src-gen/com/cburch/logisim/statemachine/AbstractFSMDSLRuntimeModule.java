@@ -7,7 +7,6 @@ import java.util.Properties;
 
 import org.eclipse.xtext.Constants;
 
-import com.cburch.logisim.statemachine.validation.FSMDSLValidator;
 import com.google.inject.Binder;
 import com.google.inject.name.Names;
 

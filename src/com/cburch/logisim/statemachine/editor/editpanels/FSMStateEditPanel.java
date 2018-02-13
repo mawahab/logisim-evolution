@@ -8,6 +8,7 @@ import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLFactory;
 import com.cburch.logisim.statemachine.fSMDSL.State;
 import com.cburch.logisim.statemachine.fSMDSL.Transition;
+import com.cburch.logisim.statemachine.validation.FSMValidation;
 
 
 
@@ -52,25 +53,20 @@ public class FSMStateEditPanel extends JPanel{
 			if(initialState.isSelected()) {
 				fsm.setStart(state);
 			}
-			char first = txt.charAt(0);
-			char last = txt.charAt(txt.length()-1);
-			if(first=='"'&& last=='"') {
-				txt=txt.substring(1, txt.length()-1);
-				for (char c : txt.toCharArray()) {
-					if (c != '0' && c != '1') {
-						JOptionPane.showMessageDialog(null, "Error: Please enter a binary code (instead of "+txt+")", "Error Message",
-								JOptionPane.ERROR_MESSAGE);
-						return true;
-						
-					}
-				}
-				if ((txt.length())!=fsm.getWidth()) {
-					JOptionPane.showMessageDialog(null, "Error: Please enter a "+fsm.getWidth()+" bit code ", "Error Message",
-							JOptionPane.ERROR_MESSAGE);
-				}
-			}  else {
-				JOptionPane.showMessageDialog(null, "Error: Please enter a binary code (instead of "+txt+")", "Error Message",
+			if (!FSMValidation.isValidBinaryString(codeField.getText(), fsm.getWidth())) {
+				JOptionPane.showMessageDialog(null, "Error: Please enter a binary code (instead of "+codeField.getText()+")", "Error Message",
 						JOptionPane.ERROR_MESSAGE);
+				return true;
+			}
+			if (!FSMValidation.isValidIdentifier(nameField.getText())) {
+				JOptionPane.showMessageDialog(null, "Error: Please enter a valid identifer string (instead of "+nameField.getText()+")", "Error Message",
+						JOptionPane.ERROR_MESSAGE);
+				return true;
+			}
+			if (FSMValidation.isReservedKeyword(nameField.getText())) {
+				JOptionPane.showMessageDialog(null, "Error: "+nameField.getText()+" is a reserved keyword)", "Error Message",
+						JOptionPane.ERROR_MESSAGE);
+				return true;
 			}
 		}
 		return false;

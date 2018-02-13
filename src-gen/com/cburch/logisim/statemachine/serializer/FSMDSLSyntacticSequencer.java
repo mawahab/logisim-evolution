@@ -22,18 +22,26 @@ import org.eclipse.xtext.serializer.sequencer.AbstractSyntacticSequencer;
 public class FSMDSLSyntacticSequencer extends AbstractSyntacticSequencer {
 
 	protected FSMDSLGrammarAccess grammarAccess;
+	protected AbstractElementAlias match_CommandStmt_SemicolonKeyword_10_1_q;
+	protected AbstractElementAlias match_CommandStmt_SemicolonKeyword_9_1_q;
+	protected AbstractElementAlias match_FSM_FsmKeyword_1_0_or_State_machineKeyword_1_1;
+	protected AbstractElementAlias match_FSM_InKeyword_6_0_0_q;
+	protected AbstractElementAlias match_FSM_OutKeyword_6_1_0_q;
+	protected AbstractElementAlias match_LongState___TransitionsKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3__q;
 	protected AbstractElementAlias match_Primary_LeftParenthesisKeyword_0_0_a;
 	protected AbstractElementAlias match_Primary_LeftParenthesisKeyword_0_0_p;
-	protected AbstractElementAlias match_State___TransitionsKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3__q;
-	protected AbstractElementAlias match_Transition_GotoKeyword_0_1_or_HyphenMinusGreaterThanSignKeyword_0_0_1;
 	
 	@Inject
 	protected void init(IGrammarAccess access) {
 		grammarAccess = (FSMDSLGrammarAccess) access;
+		match_CommandStmt_SemicolonKeyword_10_1_q = new TokenAlias(false, true, grammarAccess.getCommandStmtAccess().getSemicolonKeyword_10_1());
+		match_CommandStmt_SemicolonKeyword_9_1_q = new TokenAlias(false, true, grammarAccess.getCommandStmtAccess().getSemicolonKeyword_9_1());
+		match_FSM_FsmKeyword_1_0_or_State_machineKeyword_1_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getFSMAccess().getFsmKeyword_1_0()), new TokenAlias(false, false, grammarAccess.getFSMAccess().getState_machineKeyword_1_1()));
+		match_FSM_InKeyword_6_0_0_q = new TokenAlias(false, true, grammarAccess.getFSMAccess().getInKeyword_6_0_0());
+		match_FSM_OutKeyword_6_1_0_q = new TokenAlias(false, true, grammarAccess.getFSMAccess().getOutKeyword_6_1_0());
+		match_LongState___TransitionsKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getLongStateAccess().getTransitionsKeyword_7_0()), new TokenAlias(false, false, grammarAccess.getLongStateAccess().getLeftCurlyBracketKeyword_7_1()), new TokenAlias(false, false, grammarAccess.getLongStateAccess().getRightCurlyBracketKeyword_7_3()));
 		match_Primary_LeftParenthesisKeyword_0_0_a = new TokenAlias(true, true, grammarAccess.getPrimaryAccess().getLeftParenthesisKeyword_0_0());
 		match_Primary_LeftParenthesisKeyword_0_0_p = new TokenAlias(true, false, grammarAccess.getPrimaryAccess().getLeftParenthesisKeyword_0_0());
-		match_State___TransitionsKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3__q = new GroupAlias(false, true, new TokenAlias(false, false, grammarAccess.getStateAccess().getTransitionsKeyword_8_0()), new TokenAlias(false, false, grammarAccess.getStateAccess().getLeftCurlyBracketKeyword_8_1()), new TokenAlias(false, false, grammarAccess.getStateAccess().getRightCurlyBracketKeyword_8_3()));
-		match_Transition_GotoKeyword_0_1_or_HyphenMinusGreaterThanSignKeyword_0_0_1 = new AlternativeAlias(false, false, new TokenAlias(false, false, grammarAccess.getTransitionAccess().getGotoKeyword_0_1()), new TokenAlias(false, false, grammarAccess.getTransitionAccess().getHyphenMinusGreaterThanSignKeyword_0_0_1()));
 	}
 	
 	@Override
@@ -48,26 +56,106 @@ public class FSMDSLSyntacticSequencer extends AbstractSyntacticSequencer {
 		List<INode> transitionNodes = collectNodes(fromNode, toNode);
 		for (AbstractElementAlias syntax : transition.getAmbiguousSyntaxes()) {
 			List<INode> syntaxNodes = getNodesFor(transitionNodes, syntax);
-			if(match_Primary_LeftParenthesisKeyword_0_0_a.equals(syntax))
+			if(match_CommandStmt_SemicolonKeyword_10_1_q.equals(syntax))
+				emit_CommandStmt_SemicolonKeyword_10_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if(match_CommandStmt_SemicolonKeyword_9_1_q.equals(syntax))
+				emit_CommandStmt_SemicolonKeyword_9_1_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if(match_FSM_FsmKeyword_1_0_or_State_machineKeyword_1_1.equals(syntax))
+				emit_FSM_FsmKeyword_1_0_or_State_machineKeyword_1_1(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if(match_FSM_InKeyword_6_0_0_q.equals(syntax))
+				emit_FSM_InKeyword_6_0_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if(match_FSM_OutKeyword_6_1_0_q.equals(syntax))
+				emit_FSM_OutKeyword_6_1_0_q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if(match_LongState___TransitionsKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3__q.equals(syntax))
+				emit_LongState___TransitionsKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3__q(semanticObject, getLastNavigableState(), syntaxNodes);
+			else if(match_Primary_LeftParenthesisKeyword_0_0_a.equals(syntax))
 				emit_Primary_LeftParenthesisKeyword_0_0_a(semanticObject, getLastNavigableState(), syntaxNodes);
 			else if(match_Primary_LeftParenthesisKeyword_0_0_p.equals(syntax))
 				emit_Primary_LeftParenthesisKeyword_0_0_p(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_State___TransitionsKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3__q.equals(syntax))
-				emit_State___TransitionsKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3__q(semanticObject, getLastNavigableState(), syntaxNodes);
-			else if(match_Transition_GotoKeyword_0_1_or_HyphenMinusGreaterThanSignKeyword_0_0_1.equals(syntax))
-				emit_Transition_GotoKeyword_0_1_or_HyphenMinusGreaterThanSignKeyword_0_0_1(semanticObject, getLastNavigableState(), syntaxNodes);
 			else acceptNodes(getLastNavigableState(), syntaxNodes);
 		}
 	}
 
 	/**
 	 * Ambiguous syntax:
+	 *     ';'?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     commands+=Command (ambiguity) (rule end)
+	 *     commands+=Command (ambiguity) commands+=Command
+	 */
+	protected void emit_CommandStmt_SemicolonKeyword_10_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ';'?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     commands+=Command (ambiguity) (rule end)
+	 *     commands+=Command (ambiguity) commands+=Command
+	 */
+	protected void emit_CommandStmt_SemicolonKeyword_9_1_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     'fsm' | 'state_machine'
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) name=ID
+	 */
+	protected void emit_FSM_FsmKeyword_1_0_or_State_machineKeyword_1_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     'in'?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     in+=InputPort (ambiguity) in+=InputPort
+	 */
+	protected void emit_FSM_InKeyword_6_0_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     'out'?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     out+=OutputPort (ambiguity) out+=OutputPort
+	 */
+	protected void emit_FSM_OutKeyword_6_1_0_q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
+	 *     ('transitions' '{' '}')?
+	 *
+	 * This ambiguous syntax occurs at:
+	 *     commandList=CommandList (ambiguity) '}' (rule end)
+	 *     layout=LayoutInfo '{' (ambiguity) '}' (rule end)
+	 */
+	protected void emit_LongState___TransitionsKeyword_7_0_LeftCurlyBracketKeyword_7_1_RightCurlyBracketKeyword_7_3__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
+		acceptNodes(transition, nodes);
+	}
+	
+	/**
+	 * Ambiguous syntax:
 	 *     '('*
 	 *
 	 * This ambiguous syntax occurs at:
+	 *     (rule start) (ambiguity) '#' const=[ConstantDef|ID]
 	 *     (rule start) (ambiguity) '/' args+=Primary
+	 *     (rule start) (ambiguity) '{' args+=Or
 	 *     (rule start) (ambiguity) port=[Port|ID]
 	 *     (rule start) (ambiguity) value=BIN
+	 *     (rule start) (ambiguity) value=HEX
 	 *     (rule start) (ambiguity) {AndExpr.args+=}
 	 *     (rule start) (ambiguity) {CmpExpr.args+=}
 	 *     (rule start) (ambiguity) {OrExpr.args+=}
@@ -86,28 +174,6 @@ public class FSMDSLSyntacticSequencer extends AbstractSyntacticSequencer {
 	 *     (rule start) (ambiguity) {OrExpr.args+=}
 	 */
 	protected void emit_Primary_LeftParenthesisKeyword_0_0_p(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
-	 *     ('transitions' '{' '}')?
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     commandList=CommandList (ambiguity) '}' (rule end)
-	 */
-	protected void emit_State___TransitionsKeyword_8_0_LeftCurlyBracketKeyword_8_1_RightCurlyBracketKeyword_8_3__q(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
-		acceptNodes(transition, nodes);
-	}
-	
-	/**
-	 * Ambiguous syntax:
-	 *     '->' | 'goto'
-	 *
-	 * This ambiguous syntax occurs at:
-	 *     (rule start) (ambiguity) dst=[State|ID]
-	 */
-	protected void emit_Transition_GotoKeyword_0_1_or_HyphenMinusGreaterThanSignKeyword_0_0_1(EObject semanticObject, ISynNavigable transition, List<INode> nodes) {
 		acceptNodes(transition, nodes);
 	}
 	

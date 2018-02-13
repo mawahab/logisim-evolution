@@ -154,8 +154,7 @@ public class TraceRecorder extends InstanceFactory {
 		setKeyConfigurator(new BitWidthConfigurator(StdAttr.WIDTH));
 		setOffsetBounds(Bounds.create(0, 0, Xsize, Ysize));
 		setIconName("register.gif");
-		//setInstancePoker(RegisterPoker.class);
-		//setInstanceLogger(RegisterLogger.class);
+		
 
 		Port[] ps = new Port[4];
 		ps[IN] = new Port(0, 30, Port.INPUT, StdAttr.WIDTH);
@@ -195,10 +194,8 @@ public class TraceRecorder extends InstanceFactory {
 	@Override
 	public boolean HDLSupportedComponent(String HDLIdentifier,
 			AttributeSet attrs) {
-		if (MyHDLGenerator == null) {
-			MyHDLGenerator = new RegisterHDLGeneratorFactory();
-		}
-		return MyHDLGenerator.HDLTargetSupported(HDLIdentifier, attrs);
+		
+		return false;
 	}
 
 	@Override

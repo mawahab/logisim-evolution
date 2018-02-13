@@ -11,6 +11,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr
 import com.cburch.logisim.statemachine.PrettyPrinter
 import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr
+import com.cburch.logisim.statemachine.fSMDSL.ConstRef
 
 class RemoveBitVectors {
 
@@ -144,6 +145,10 @@ class RemoveBitVectors {
 		} else {
 			throw new IndexOutOfBoundsException("Offset "+offset+" is out of bound w.r.t to expression "+e)
 		}
+	}
+	
+	def dispatch BoolExpr slice(ConstRef e, int offset) {
+		return slice(e.const.value,offset)
 	}
 	
 	def dispatch BoolExpr slice(PortRef e, int offset) {

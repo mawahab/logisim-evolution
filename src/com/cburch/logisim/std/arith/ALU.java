@@ -30,7 +30,11 @@
 
 package com.cburch.logisim.std.arith;
 
+import static com.cburch.logisim.util.GraphicsUtil.*;
+import static com.cburch.logisim.util.GraphicsUtil.drawText;
+
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 
 import com.bfh.logisim.designrulecheck.CorrectLabel;
@@ -50,6 +54,10 @@ import com.cburch.logisim.tools.key.BitWidthConfigurator;
 import com.cburch.logisim.util.GraphicsUtil;
 
 public class ALU extends InstanceFactory {
+	private static final int ALU_H = 160;
+	private static final int SPAN = 10*(ALU_H/40);
+	private static final int ALU_W = 80;
+	private static final int HSTEP = 10*(ALU_W/40);
 	static Value[] computeSum(BitWidth width, Value a, Value b, Value c_in) {
 		int w = width.getWidth();
 		if (c_in == Value.UNKNOWN || c_in == Value.NIL)
@@ -105,33 +113,39 @@ public class ALU extends InstanceFactory {
 	private static final int C_IN = 3;
 
 	private static final int C_OUT = 4;
-	private static final int ZERO = 4;
-	private static final int OP = 4;
+	private static final int ZERO = 5;
+	private static final int NEG = 6;
+	private static final int OP = 7;
+	private static final int SLOPE = 20;
 
 	public ALU() {
-		super("Adder", Strings.getter("adderComponent"));
+		super("ALU", Strings.getter("aluComponent"));
 		setAttributes(new Attribute[] { StdAttr.WIDTH },
-				new Object[] { BitWidth.create(8) });
+				new Object[] { BitWidth.create(32) });
 		setKeyConfigurator(new BitWidthConfigurator(StdAttr.WIDTH));
-		setOffsetBounds(Bounds.create(-40, -40, 40, 40));
-		setIconName("adder.gif");
+		setOffsetBounds(Bounds.create(-ALU_W/2, -ALU_H/2, ALU_W, ALU_H));
+		setIconName("alu.gif");
 
-		Port[] ps = new Port[5];
+		Port[] ps = new Port[8];
+		int x0 = ALU_W/2;
+		int y0 = ALU_H/2;
 		
-		ps[IN0] = new Port(-40, -10, Port.INPUT, StdAttr.WIDTH);
-		ps[IN1] = new Port(-40, 10, Port.INPUT, StdAttr.WIDTH);
-		ps[OUT] = new Port(0, 0, Port.OUTPUT, StdAttr.WIDTH);
-		ps[C_IN] = new Port(-20, -20, Port.INPUT, 1);
-		ps[C_OUT] = new Port(-20, 20, Port.OUTPUT, 1);
-		ps[ZERO] = new Port(-20, 20, Port.OUTPUT, 1);
-		ps[OP] = new Port(-20, 20, Port.INPUT, 2);
+	
+		ps[IN0] = new Port(-x0, -SPAN, Port.INPUT, StdAttr.WIDTH);
+		ps[IN1] = new Port(-x0, SPAN, Port.INPUT, StdAttr.WIDTH);
+		ps[OUT] = new Port(x0, 0, Port.OUTPUT, StdAttr.WIDTH);
+		ps[C_IN] = new Port(-x0+HSTEP, y0, Port.INPUT, 1);
+		ps[C_OUT] = new Port(-x0+HSTEP, -y0, Port.OUTPUT, 1);
+		ps[ZERO] = new Port(-x0+2*HSTEP, -y0, Port.OUTPUT, 1);
+		ps[NEG] = new Port(-x0+3*HSTEP, -y0, Port.OUTPUT, 1);
+		ps[OP] = new Port(-x0+3*HSTEP, y0, Port.INPUT, 3);
 		
 		
-		ps[IN0].setToolTip(Strings.getter("adderInputTip"));
-		ps[IN1].setToolTip(Strings.getter("adderInputTip"));
-		ps[OUT].setToolTip(Strings.getter("adderOutputTip"));
-		ps[C_IN].setToolTip(Strings.getter("adderCarryInTip"));
-		ps[C_OUT].setToolTip(Strings.getter("adderCarryOutTip"));
+		ps[IN0].setToolTip(Strings.getter("aluInputTip"));
+		ps[IN1].setToolTip(Strings.getter("aluInputTip"));
+		ps[OUT].setToolTip(Strings.getter("aluOutputTip"));
+		ps[C_IN].setToolTip(Strings.getter("aluCarryInTip"));
+		ps[C_OUT].setToolTip(Strings.getter("aluCarryOutTip"));
 		setPorts(ps);
 	}
 
@@ -156,26 +170,71 @@ public class ALU extends InstanceFactory {
 	@Override
 	public void paintInstance(InstancePainter painter) {
 		Graphics g = painter.getGraphics();
-		painter.drawBounds();
-
-		g.setColor(Color.GRAY);
-		painter.drawPort(IN0);
-		painter.drawPort(IN1);
-		painter.drawPort(OP);
-		
-		painter.drawPort(OUT);
-
-		painter.drawPort(C_IN, "c in", Direction.NORTH);
-		painter.drawPort(C_OUT, "c out", Direction.SOUTH);
-		painter.drawPort(ZERO, "z", Direction.SOUTH);
+		//painter.drawBounds();
 
 		Location loc = painter.getLocation();
-		int x = loc.getX();
-		int y = loc.getY();
+		
+		int x = loc.getX()-ALU_W/2 ;	
+		int y = loc.getY()-ALU_H/2 ;
+	
+		
 		GraphicsUtil.switchToWidth(g, 2);
+		//g.drawLine(x-40, y+30, x -20, y+30);
+		
+		painter.drawPort(IN0);//,"_I0", Direction.EAST);
+		drawText(g, "I0", x+5, y+ALU_H/2-SPAN,H_LEFT,V_CENTER);
+		//g.drawLine(x-40, y+70, x -20, y+70);
+		
+		painter.drawPort(IN1);//, "_I1", Direction.EAST);
+		drawText(g, "I1", x+5, y+ALU_H/2+SPAN,H_LEFT,V_CENTER);
+
+		
+		//g.drawLine(x+20, y+50, x +40, y+50);
+		painter.drawPort(OUT);//, "_R", Direction.WEST);
+		drawText(g, "R", x+ALU_W-5, y+ALU_H/2,H_RIGHT,V_CENTER);
+
+		
+		painter.drawPort(OP);//, "_Op", Direction.SOUTH);
+		drawText(g, "Op", x+3*HSTEP, y+ALU_H-20,H_CENTER,V_BOTTOM);
+		g.drawLine(x+3*HSTEP,y+ALU_H, x+3*HSTEP, y+ALU_H-15);
+
+		painter.drawPort(C_IN);//, "_Ci", Direction.SOUTH);
+		drawText(g, "Ci", x+HSTEP, y+ALU_H-5,H_CENTER,V_BOTTOM);
+		g.drawLine(x+HSTEP,y+ALU_H, x+HSTEP, y+ALU_H-5);
+
+		//g.drawLine(x-10, y+7, x-10, y);
+		painter.drawPort(C_OUT);//, "_Co", Direction.NORTH);
+		drawText(g, "Co", x+HSTEP, y+5,H_CENTER,V_TOP);
+		g.drawLine(x+HSTEP,y, x+HSTEP, y+5);
+		
+		//g.drawLine(x, y+10, x, y);
+		painter.drawPort(ZERO);//, "_Z", Direction.NORTH);
+		drawText(g, "Z", x+2*HSTEP, y+10,H_CENTER,V_TOP);
+		g.drawLine(x+2*HSTEP,y, x+2*HSTEP, y+10);
+		
+		//g.drawLine(x+10, y+13, x+10, y);
+		painter.drawPort(NEG);//, "_N", Direction.NORTH);
+		drawText(g, "N", x+3*HSTEP, y+15,H_CENTER,V_TOP);
+		g.drawLine(x+3*HSTEP,y, x+3*HSTEP, y+16);
+	
+		x = loc.getX();
+		y = loc.getY();
+	
 		g.setColor(Color.BLACK);
-		g.drawLine(x - 15, y, x - 5, y);
-		g.drawLine(x - 10, y - 5, x - 10, y + 5);
+		Font oldFont = g.getFont();
+		g.setFont(oldFont.deriveFont(32).deriveFont(Font.BOLD));
+		g.drawString("ALU", x-10, y+5);
+		g.setFont(oldFont);
+		// Shape
+		g.drawString("ALU", x-10, y+5);
+		g.drawString("ALU", x-10, y+5);
+		
+
+		g.drawLine(x - ALU_W/2, y-ALU_H/2, x +ALU_W/2, y-(ALU_H/2-SLOPE));
+		g.drawLine(x - ALU_W/2, y+ALU_H/2, x +ALU_W/2, y+(ALU_H/2-SLOPE));
+		g.drawLine(x -ALU_W/2, y-ALU_H/2, x -ALU_W/2 , y+ALU_H/2);
+		g.drawLine(x +ALU_W/2, y-(ALU_H/2-SLOPE), x +ALU_W/2 , y+(ALU_H/2-SLOPE));
+		
 		GraphicsUtil.switchToWidth(g, 1);
 	}
 
@@ -189,12 +248,65 @@ public class ALU extends InstanceFactory {
 		Value b = state.getPortValue(IN1);
 		Value c_in = state.getPortValue(C_IN);
 		Value op = state.getPortValue(OP);
-		Value[] outs = ALU.computeSum(dataWidth, a, b, c_in);
-
+		int in0 = a.toIntValue();
+		int in1 = b.toIntValue();
+		int carry = c_in.toIntValue();
+		long res = 0; 
+		switch (op.toIntValue()) {
+		case 0: {
+			res = in0+in1+carry;
+			break;
+		}
+		case 1: {
+			res = in0-in1-carry;
+			break;
+		}
+		case 2: {
+			res = ( in0 & in1); 
+			break;
+		}
+		case 3: {
+			res = ( in0 | in1); 
+			break;
+		}
+		case 4: {
+			res = ( in0 ^ in1); 
+			break;
+			
+		}
+		case 5: {
+			res = ~( in0 & in1); 
+			break;
+		}
+		case 6: {
+			res = in0>>in1;
+			break;
+		}
+		case 7: {
+			res = in0+(int)((short)(in1));
+			break;
+		}
+		
+		
+		}
+		if(res<0) {
+			//state.setPort(NEG, outs[2], delay);
+			state.setPort(NEG, Value.TRUE, PER_DELAY);
+			System.out.println("neg! "+res);
+		} else {
+			state.setPort(NEG, Value.FALSE, PER_DELAY);
+		}
+		if(res==0) {
+			state.setPort(ZERO, Value.TRUE, PER_DELAY);
+		} else {
+			state.setPort(ZERO, Value.FALSE, PER_DELAY);
+			
+		}
+			
 		// propagate them
-		int delay = (dataWidth.getWidth() + 2) * PER_DELAY;
-		state.setPort(OUT, outs[0], delay);
-		state.setPort(C_OUT, outs[1], delay);
+		int delay = PER_DELAY;
+		state.setPort(OUT, Value.createKnown(dataWidth, (int) res), delay);
+	
 	}
 
 }

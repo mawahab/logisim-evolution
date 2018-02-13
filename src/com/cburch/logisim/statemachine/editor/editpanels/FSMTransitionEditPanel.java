@@ -48,7 +48,7 @@ public class FSMTransitionEditPanel extends JPanel{
 				res= (PredicateStmt) FSMSerializer.parsePredicate(fsm, txt);
 				BoolExpr predicate = res.getPredicate();
 				if (!(predicate instanceof DefaultPredicate)) {
-					PortReferenceFix fixer = new PortReferenceFix(fsm);
+					UpdateCrossReferences fixer = new UpdateCrossReferences(fsm);
 					fixer.replaceRef(predicate);
 					BDDOptimizer optimizer = new BDDOptimizer(predicate);
 					if (optimizer.isAlwaysFalse()) {
@@ -72,6 +72,7 @@ public class FSMTransitionEditPanel extends JPanel{
 			int dialog = JOptionPane.showConfirmDialog(null, 
 					this, 
 					"FSM transition configuration",JOptionPane.OK_CANCEL_OPTION);
+			if(dialog==JOptionPane.CANCEL_OPTION) return;
 			condition = checkInput(dialog);
 		}
 		t.setPredicate(condition);

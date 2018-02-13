@@ -159,7 +159,7 @@ public class PriorityEncoder extends InstanceFactory {
 		int out = -1;
 		Value outDefault;
 		if (enabled) {
-			outDefault = Value.createUnknown(select);
+			outDefault = Value.createKnown(select, 0);
 			for (int i = n - 1; i >= 0; i--) {
 				if (state.getPortValue(i) == Value.TRUE) {
 					out = i;
