@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<LogisimGoesFPGABoardMapInformation>
+<GlobalMapInformation BoardName="TERASIC_DE0_CV" ToplevelCircuitName="SYSTEME"/>
+<MAPPEDCOMPONENT_1 Height="225" Key="KEYPAD: /clav" LocationX="495" LocationY="110" Width="30"/>
+<MAPPEDCOMPONENT_2 Height="29" Key="PIN: /reset_asynchrone#Button0" LocationX="340" LocationY="355" Width="14"/>
+<MAPPEDCOMPONENT_3 Height="49" Key="SEVENSEGMENT: /Hex1" LocationX="322" LocationY="274" Width="28"/>
+<MAPPEDCOMPONENT_4 Height="49" Key="SEVENSEGMENT: /Hex2" LocationX="292" LocationY="274" Width="28"/>
+<MAPPEDCOMPONENT_5 Height="49" Key="SEVENSEGMENT: /Hex3" LocationX="258" LocationY="274" Width="28"/>
+<MAPPEDCOMPONENT_6 Height="49" Key="SEVENSEGMENT: /Hex4" LocationX="227" LocationY="274" Width="28"/>
+</LogisimGoesFPGABoardMapInformation>
