@@ -5,10 +5,52 @@
 
        	<
         		classpath="libs/colorpicker.jar:libs/fontchooser.jar:libs/jh.jar:libs/MRJAdapter.jar:libs/nimrodlf.jar:libs/rsyntaxtextarea.jar:libs/logback-classic-1.1.2.jar:libs/logback-core-1.1.2.jar:libs/slf4j-api-1.7.8.jar:libs/junit-4.12.jar:libs/hamcrest-core-1.3.jar" />
+    	     			classpath="libs/MRJAdapter.jar:libs/colorpicker.jar:libs/com.google.guava_21.0.0.v20170206-1425.jar:libs/com.google.inject_3.0.0.v201312141243.jar:libs/com.ibm.icu_58.2.0.v20170418-1837.jar:libs/fontchooser.jar:libs/hamcrest-core-1.3.jar:libs/javax.inject_1.0.0.v20091030.jar:libs/javax.xml_1.3.4.v201005080400.jar:libs/jdd_105.jar:libs/jfxrt.jar:libs/jh.jar:libs/junit-4.12.jar:libs/junit.jar:libs/logback-classic-1.1.2.jar:libs/logback-core-1.1.2.jar:libs/nimrodlf.jar:libs/org.antlr.runtime_3.2.0.v201101311130.jar:libs/org.antlr.runtime_4.3.0.v201502022030.jar:libs/org.apache.commons.cli_1.2.0.v201404270220.jar:libs/org.apache.commons.logging_1.1.1.v201101211721.jar:libs/org.apache.log4j_1.2.15.v201012070815.jar:libs/org.eclipse.core.runtime_3.14.0.v20180417-0825.jar:libs/org.eclipse.emf.common_2.14.0.v20180527-1134.jar:libs/org.eclipse.emf.ecore.xmi_2.14.0.v20180129-1548.jar:libs/org.eclipse.emf.ecore_2.14.0.v20180529-1144.jar:libs/org.eclipse.equinox.common_3.10.0.v20180412-1130.jar:libs/org.eclipse.xtend.lib.macro_2.14.0.v20180522-1629.jar:libs/org.eclipse.xtend.lib_2.14.0.v20180522-1629.jar:libs/org.eclipse.xtext.util_2.14.0.v20180522-1821.jar:libs/org.eclipse.xtext.xbase.lib_2.14.0.v20180522-1629.jar:libs/org.eclipse.xtext_2.14.0.v20180522-1821.jar:libs/org.hamcrest.core_1.3.0.v201303031735.jar:libs/org.objectweb.asm_6.1.1.v20180414-0329.jar:libs/org.slf4j.api_1.7.2.v20121108-1250.jar:libs/rsyntaxtextarea.jar:libs/slf4j-api-1.7.8.jar:libs/slf4j-simple-1.7.8.jar:libs/"/>
     		-
 -->
 
 <project name="logisim-evolution">
+
+	<classpath>
+	<pathelement path="libs/MRJAdapter.jar"/>
+	<pathelement path="libs/colorpicker.jar"/>
+	<pathelement path="libs/com.google.guava_21.0.0.v20170206-1425.jar"/>
+	<pathelement path="libs/com.google.inject_3.0.0.v201312141243.jar"/>
+	<pathelement path="libs/com.ibm.icu_58.2.0.v20170418-1837.jar"/>
+	<pathelement path="libs/fontchooser.jar"/>
+	<pathelement path="libs/hamcrest-core-1.3.jar"/>
+	<pathelement path="libs/javax.inject_1.0.0.v20091030.jar"/>
+	<pathelement path="libs/javax.xml_1.3.4.v201005080400.jar"/>
+	<pathelement path="libs/jdd_105.jar"/>
+	<pathelement path="libs/jfxrt.jar"/>
+	<pathelement path="libs/jh.jar"/>
+	<pathelement path="libs/junit-4.12.jar"/>
+	<pathelement path="libs/junit.jar"/>
+	<pathelement path="libs/logback-classic-1.1.2.jar"/>
+	<pathelement path="libs/logback-core-1.1.2.jar"/>
+	<pathelement path="libs/nimrodlf.jar"/>
+	<pathelement path="libs/org.antlr.runtime_3.2.0.v201101311130.jar"/>
+	<pathelement path="libs/org.antlr.runtime_4.3.0.v201502022030.jar"/>
+	<pathelement path="libs/org.apache.commons.cli_1.2.0.v201404270220.jar"/>
+	<pathelement path="libs/org.apache.commons.logging_1.1.1.v201101211721.jar"/>
+	<pathelement path="libs/org.apache.log4j_1.2.15.v201012070815.jar"/>
+	<pathelement path="libs/org.eclipse.core.runtime_3.14.0.v20180417-0825.jar"/>
+	<pathelement path="libs/org.eclipse.emf.common_2.14.0.v20180527-1134.jar"/>
+	<pathelement path="libs/org.eclipse.emf.ecore.xmi_2.14.0.v20180129-1548.jar"/>
+	<pathelement path="libs/org.eclipse.emf.ecore_2.14.0.v20180529-1144.jar"/>
+	<pathelement path="libs/org.eclipse.equinox.common_3.10.0.v20180412-1130.jar"/>
+	<pathelement path="libs/org.eclipse.xtend.lib.macro_2.14.0.v20180522-1629.jar"/>
+	<pathelement path="libs/org.eclipse.xtend.lib_2.14.0.v20180522-1629.jar"/>
+	<pathelement path="libs/org.eclipse.xtext.util_2.14.0.v20180522-1821.jar"/>
+	<pathelement path="libs/org.eclipse.xtext.xbase.lib_2.14.0.v20180522-1629.jar"/>
+	<pathelement path="libs/org.eclipse.xtext_2.14.0.v20180522-1821.jar"/>
+	<pathelement path="libs/org.hamcrest.core_1.3.0.v201303031735.jar"/>
+	<pathelement path="libs/org.objectweb.asm_6.1.1.v20180414-0329.jar"/>
+	<pathelement path="libs/org.slf4j.api_1.7.2.v20121108-1250.jar"/>
+	<pathelement path="libs/rsyntaxtextarea.jar"/>
+	<pathelement path="libs/slf4j-api-1.7.8.jar"/>
+	<pathelement path="libs/slf4j-simple-1.7.8.jar"/>
+    </classpath>
 
     <target name="cleanall" depends="clean">
         <delete dir="bin/com/bfh/"/>
@@ -24,8 +66,7 @@
     <target name="compile" depends="clean">
         <mkdir dir="bin"/>
         <javac srcdir="src;src-gen;xtend-gen" includeantruntime="false" destdir="bin" source="1.8" target="1.8" 
-        	
-     			classpath="libs/MRJAdapter.jar:libs/colorpicker.jar:libs/com.google.guava_21.0.0.v20170206-1425.jar:libs/com.google.inject_3.0.0.v201312141243.jar:libs/com.ibm.icu_58.2.0.v20170418-1837.jar:libs/fontchooser.jar:libs/hamcrest-core-1.3.jar:libs/javax.inject_1.0.0.v20091030.jar:libs/javax.xml_1.3.4.v201005080400.jar:libs/jdd_105.jar:libs/jfxrt.jar:libs/jh.jar:libs/junit-4.12.jar:libs/junit.jar:libs/logback-classic-1.1.2.jar:libs/logback-core-1.1.2.jar:libs/nimrodlf.jar:libs/org.antlr.runtime_3.2.0.v201101311130.jar:libs/org.antlr.runtime_4.3.0.v201502022030.jar:libs/org.apache.commons.cli_1.2.0.v201404270220.jar:libs/org.apache.commons.logging_1.1.1.v201101211721.jar:libs/org.apache.log4j_1.2.15.v201012070815.jar:libs/org.eclipse.core.runtime_3.14.0.v20180417-0825.jar:libs/org.eclipse.emf.common_2.14.0.v20180527-1134.jar:libs/org.eclipse.emf.ecore.xmi_2.14.0.v20180129-1548.jar:libs/org.eclipse.emf.ecore_2.14.0.v20180529-1144.jar:libs/org.eclipse.equinox.common_3.10.0.v20180412-1130.jar:libs/org.eclipse.xtend.lib.macro_2.14.0.v20180522-1629.jar:libs/org.eclipse.xtend.lib_2.14.0.v20180522-1629.jar:libs/org.eclipse.xtext.util_2.14.0.v20180522-1821.jar:libs/org.eclipse.xtext.xbase.lib_2.14.0.v20180522-1629.jar:libs/org.eclipse.xtext_2.14.0.v20180522-1821.jar:libs/org.hamcrest.core_1.3.0.v201303031735.jar:libs/org.objectweb.asm_6.1.1.v20180414-0329.jar:libs/org.slf4j.api_1.7.2.v20121108-1250.jar:libs/rsyntaxtextarea.jar:libs/slf4j-api-1.7.8.jar:libs/slf4j-simple-1.7.8.jar:libs/"/>
+    	/>
     </target>
 	
     <target name="jar" depends="compile">
