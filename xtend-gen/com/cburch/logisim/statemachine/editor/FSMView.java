@@ -23,7 +23,7 @@ import org.eclipse.xtext.xbase.lib.InputOutput;
 
 @SuppressWarnings("all")
 public class FSMView extends JPanel implements MouseListener, MouseMotionListener {
-  private final static long serialVersionUID = 0;
+  private static final long serialVersionUID = 0;
   
   private FSMEditorController controller;
   

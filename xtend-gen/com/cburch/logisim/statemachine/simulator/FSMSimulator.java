@@ -44,9 +44,9 @@ public class FSMSimulator extends ClockState implements InstanceData {
   
   private HashMap<Port, String> outputs;
   
-  private final static char ONE_C = '1';
+  private static final char ONE_C = '1';
   
-  private final static char ZERO_C = '0';
+  private static final char ZERO_C = '0';
   
   public FSMSimulator(final FSM fsm) {
     boolean _notEquals = (!Objects.equal(fsm, null));
@@ -104,9 +104,9 @@ public class FSMSimulator extends ClockState implements InstanceData {
     return _xblockexpression;
   }
   
-  private final static String ZERO = "\"0\"";
+  private static final String ZERO = "\"0\"";
   
-  private final static String ONE = "\"1\"";
+  private static final String ONE = "\"1\"";
   
   private final boolean VERBOSE = true;
   

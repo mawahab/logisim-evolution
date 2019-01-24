@@ -54,17 +54,17 @@ import org.eclipse.xtext.xbase.lib.IntegerRange;
 
 @SuppressWarnings("all")
 public class CPUCodeMemory extends InstanceFactory {
-  public final static int ROW_HEIGHT = 18;
+  public static final int ROW_HEIGHT = 18;
   
-  public final static int COL_WIDTH = 130;
+  public static final int COL_WIDTH = 130;
   
-  public final static int HEIGHT = 360;
+  public static final int HEIGHT = 360;
   
-  public final static int WIDTH = 360;
+  public static final int WIDTH = 360;
   
-  public final static int OFFX_VAL = 50;
+  public static final int OFFX_VAL = 50;
   
-  public final static int OFFY_VAL = 40;
+  public static final int OFFY_VAL = 40;
   
   Port[] ps = new Port[6];
   
@@ -125,30 +125,30 @@ public class CPUCodeMemory extends InstanceFactory {
     }
   }
   
-  public final static int CLK = 0;
+  public static final int CLK = 0;
   
-  public final static int RST = 1;
+  public static final int RST = 1;
   
-  public final static int WE = 2;
+  public static final int WE = 2;
   
-  public final static int AD = 3;
+  public static final int AD = 3;
   
-  public final static int DI = 4;
+  public static final int DI = 4;
   
-  public final static int DO = 5;
+  public static final int DO = 5;
   
-  final static int DELAY = 8;
+  static final int DELAY = 8;
   
-  final static int Xsize = 60;
+  static final int Xsize = 60;
   
-  final static int Ysize = 90;
+  static final int Ysize = 90;
   
-  public final static Attribute<Boolean> ATTR_SHOW_IN_TAB = Attributes.forBoolean("showInTab", 
+  public static final Attribute<Boolean> ATTR_SHOW_IN_TAB = Attributes.forBoolean("showInTab", 
     Strings.getter("registerShowInTab"));
   
-  private final static int ADDR_WIDTH = 7;
+  private static final int ADDR_WIDTH = 7;
   
-  private final static int CELL_WIDTH = 30;
+  private static final int CELL_WIDTH = 30;
   
   public CPUCodeMemory() {
     super("CPU memory", Strings.getter("cpuMemoryComponent"));

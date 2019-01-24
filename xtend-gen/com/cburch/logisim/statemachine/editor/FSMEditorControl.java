@@ -46,7 +46,7 @@ public class FSMEditorControl {
   
   public FSMEditorControl.CtrlState state = FSMEditorControl.CtrlState.IDLE;
   
-  public final static boolean DEBUG = true;
+  public static final boolean DEBUG = true;
   
   private SelectionZone zone = new SelectionZone();
   

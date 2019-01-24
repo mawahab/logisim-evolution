@@ -17,7 +17,7 @@ public class InputVectorGenerator {
   
   private List<Integer> widths = new ArrayList<Integer>();
   
-  private final static boolean QUOTE = false;
+  private static final boolean QUOTE = false;
   
   public InputVectorGenerator(final FSM fsm) {
     final Function1<Port, Integer> _function = (Port p) -> {

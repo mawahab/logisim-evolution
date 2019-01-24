@@ -56,7 +56,7 @@ public class FSMSelectionZone {
   
   private int ymax;
   
-  private final static boolean VERBOSE = true;
+  private static final boolean VERBOSE = true;
   
   public int updateBoundingBox(final FSMElement e) {
     int _xblockexpression = (int) 0;

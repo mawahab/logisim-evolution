@@ -135,7 +135,7 @@ public class FSMContent implements Cloneable {
     }
   }
   
-  public final static String TEMPLATE = new Function0<String>() {
+  public static final String TEMPLATE = new Function0<String>() {
     public String apply() {
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("fsm example @[ 50 , 50 , 800 , 500 ] { ");
@@ -248,11 +248,11 @@ public class FSMContent implements Cloneable {
     }
   }.apply();
   
-  final static int CLK = 0;
+  static final int CLK = 0;
   
-  final static int RST = 1;
+  static final int RST = 1;
   
-  final static int EN = 2;
+  static final int EN = 2;
   
   protected Port[] inputs;
   

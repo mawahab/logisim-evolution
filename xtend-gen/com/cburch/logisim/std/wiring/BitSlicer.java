@@ -51,16 +51,16 @@ import org.eclipse.xtend2.lib.StringConcatenation;
 
 @SuppressWarnings("all")
 public class BitSlicer extends InstanceFactory {
-  final static Attribute<BitWidth> ATTR_IN_WIDTH = Attributes.forBitWidth("in_width", 
+  static final Attribute<BitWidth> ATTR_IN_WIDTH = Attributes.forBitWidth("in_width", 
     Strings.getter("slicerInAttr"));
   
-  final static Attribute<BitWidth> ATTR_OUT_WIDTH = Attributes.forBitWidth("lsb_index", 
+  static final Attribute<BitWidth> ATTR_OUT_WIDTH = Attributes.forBitWidth("lsb_index", 
     Strings.getter("slicerOutAttr"));
   
-  final static Attribute<Integer> ATTR_OFFSET_WIDTH = Attributes.forInteger("msb_index", 
+  static final Attribute<Integer> ATTR_OFFSET_WIDTH = Attributes.forInteger("msb_index", 
     Strings.getter("slicerOffsetAttr"));
   
-  public final static BitSlicer FACTORY = new BitSlicer();
+  public static final BitSlicer FACTORY = new BitSlicer();
   
   public BitSlicer() {
     super("Bit Slicer", Strings.getter("slicerComponent"));

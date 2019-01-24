@@ -79,7 +79,7 @@ public class FSMEditorController {
   
   public FSMEditorController.CtrlState state = FSMEditorController.CtrlState.IDLE;
   
-  public final static boolean DEBUG = true;
+  public static final boolean DEBUG = true;
   
   private Point copyStart;
   

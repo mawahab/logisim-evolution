@@ -53,7 +53,7 @@ public class FSMValidation {
   
   private static HashSet<String> keywords = new HashSet<String>(Collections.<String>unmodifiableList(CollectionLiterals.<String>newArrayList("CLK", "RST", "EN", "if", "then", "while", "for", "do", "end", "begin", "entity", "component")));
   
-  private final static Pattern FQCN = Pattern.compile("(?:\\b[_a-zA-Z]|\\B\\$)[_$a-zA-Z0-9]*+");
+  private static final Pattern FQCN = Pattern.compile("(?:\\b[_a-zA-Z]|\\B\\$)[_$a-zA-Z0-9]*+");
   
   public FSMValidation(final FSM fsm) {
     this.fsm = fsm;

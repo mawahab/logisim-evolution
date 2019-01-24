@@ -31,7 +31,7 @@ import org.eclipse.xtext.xbase.lib.ListExtensions;
 
 @SuppressWarnings("all")
 public class RemoveBitVectors {
-  private final static boolean VERBOSE = true;
+  private static final boolean VERBOSE = true;
   
   private BitWidthAnalyzer analyzer = new BitWidthAnalyzer();
   

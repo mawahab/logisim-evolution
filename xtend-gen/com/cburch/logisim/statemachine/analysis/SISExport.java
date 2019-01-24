@@ -225,7 +225,7 @@ public class SISExport {
     return _xblockexpression;
   }
   
-  private final static String ex = new Function0<String>() {
+  private static final String ex = new Function0<String>() {
     public String apply() {
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("fsm example  { ");
