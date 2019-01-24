@@ -1,5 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="libs/com.google.guava_21.0.0.v20170206-1425.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/com.google.inject_3.0.0.v201312141243.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/com.ibm.icu_58.2.0.v20170418-1837.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/javax.inject_1.0.0.v20091030.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/javax.xml_1.3.4.v201005080400.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/jfxrt.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/junit.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.antlr.runtime_3.2.0.v201101311130.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.antlr.runtime_4.3.0.v201502022030.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.apache.commons.cli_1.2.0.v201404270220.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.apache.commons.logging_1.1.1.v201101211721.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.apache.log4j_1.2.15.v201012070815.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.eclipse.core.runtime_3.14.0.v20180417-0825.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.eclipse.emf.common_2.14.0.v20180527-1134.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.eclipse.emf.ecore_2.14.0.v20180529-1144.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.eclipse.emf.ecore.xmi_2.14.0.v20180129-1548.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.eclipse.equinox.common_3.10.0.v20180412-1130.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.eclipse.xtend.lib_2.14.0.v20180522-1629.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.eclipse.xtend.lib.macro_2.14.0.v20180522-1629.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.eclipse.xtext_2.14.0.v20180522-1821.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.eclipse.xtext.util_2.14.0.v20180522-1821.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.eclipse.xtext.xbase.lib_2.14.0.v20180522-1629.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.hamcrest.core_1.3.0.v201303031735.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.objectweb.asm_6.1.1.v20180414-0329.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/org.slf4j.api_1.7.2.v20121108-1250.jar"/>
+	<classpathentry exported="true" kind="lib" path="libs/slf4j-simple-1.7.8.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
@@ -17,5 +43,6 @@
 	<classpathentry exported="true" kind="lib" path="libs/nimrodlf.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/rsyntaxtextarea.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/slf4j-api-1.7.8.jar"/>
+	<classpathentry kind="con" path="org.eclipse.xtend.XTEND_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
