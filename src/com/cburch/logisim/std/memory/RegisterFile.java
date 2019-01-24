@@ -33,14 +33,11 @@ package com.cburch.logisim.std.memory;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Polygon;
 
-import org.eclipse.xpand2.XpandExecutionContextImpl.DefinitionOperationAdapter;
 
 import com.bfh.logisim.designrulecheck.CorrectLabel;
 import com.cburch.logisim.data.Attribute;
-import com.cburch.logisim.data.AttributeOption;
 import com.cburch.logisim.data.AttributeSet;
 import com.cburch.logisim.data.Attributes;
 import com.cburch.logisim.data.BitWidth;
@@ -55,7 +52,6 @@ import com.cburch.logisim.instance.Port;
 import com.cburch.logisim.instance.StdAttr;
 import com.cburch.logisim.tools.key.BitWidthConfigurator;
 import com.cburch.logisim.util.GraphicsUtil;
-import com.cburch.logisim.util.StringUtil;
 
 public class RegisterFile extends InstanceFactory {
 	
