@@ -4,7 +4,6 @@ import com.cburch.logisim.statemachine.fSMDSL.AndExpr;
 import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
-import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
 import com.cburch.logisim.statemachine.fSMDSL.ConstRef;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
@@ -14,7 +13,6 @@ import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.LayoutInfo;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
-import com.cburch.logisim.statemachine.fSMDSL.OutputPort;
 import com.cburch.logisim.statemachine.fSMDSL.Port;
 import com.cburch.logisim.statemachine.fSMDSL.PortRef;
 import com.cburch.logisim.statemachine.fSMDSL.Range;
@@ -34,11 +32,10 @@ public class FSMTextSave {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("state_machine ");
     String _name = f.getName();
-    _builder.append(_name, "");
+    _builder.append(_name);
     _builder.append(" ");
-    LayoutInfo _layout = f.getLayout();
-    String _pp = FSMTextSave.pp(_layout);
-    _builder.append(_pp, "");
+    String _pp = FSMTextSave.pp(f.getLayout());
+    _builder.append(_pp);
     _builder.append("{");
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
@@ -78,8 +75,7 @@ public class FSMTextSave {
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
     _builder.append("reset = ");
-    State _start = f.getStart();
-    String _name_1 = _start.getName();
+    String _name_1 = f.getStart().getName();
     _builder.append(_name_1, "\t");
     _builder.append(";");
     _builder.newLineIfNotEmpty();
@@ -103,10 +99,10 @@ public class FSMTextSave {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("state ");
     String _name = b.getName();
-    _builder.append(_name, "");
+    _builder.append(_name);
     _builder.append("[");
     String _code = b.getCode();
-    _builder.append(_code, "");
+    _builder.append(_code);
     _builder.append("]:");
     _builder.newLineIfNotEmpty();
     _builder.append(" \t");
@@ -114,39 +110,24 @@ public class FSMTextSave {
       LayoutInfo _layout = b.getLayout();
       boolean _tripleNotEquals = (_layout != null);
       if (_tripleNotEquals) {
-        LayoutInfo _layout_1 = b.getLayout();
-        String _pp = FSMTextSave.pp(_layout_1);
+        String _pp = FSMTextSave.pp(b.getLayout());
         _builder.append(_pp, " \t");
       }
     }
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
     {
-      boolean _and = false;
-      CommandList _commandList = b.getCommandList();
-      boolean _tripleNotEquals_1 = (_commandList != null);
-      if (!_tripleNotEquals_1) {
-        _and = false;
-      } else {
-        CommandList _commandList_1 = b.getCommandList();
-        EList<Command> _commands = _commandList_1.getCommands();
-        int _size = _commands.size();
-        boolean _greaterThan = (_size > 0);
-        _and = _greaterThan;
-      }
-      if (_and) {
+      if (((b.getCommandList() != null) && (b.getCommandList().getCommands().size() > 0))) {
         _builder.append("set ");
         {
-          CommandList _commandList_2 = b.getCommandList();
-          EList<Command> _commands_1 = _commandList_2.getCommands();
-          for(final Command c : _commands_1) {
+          EList<Command> _commands = b.getCommandList().getCommands();
+          for(final Command c : _commands) {
             String _pp_1 = FSMTextSave.pp(c);
             _builder.append(_pp_1, "\t");
           }
         }
         _builder.append("  ");
-        LayoutInfo _layout_2 = b.getLayout();
-        String _pp_2 = FSMTextSave.pp(_layout_2);
+        String _pp_2 = FSMTextSave.pp(b.getLayout());
         _builder.append(_pp_2, "\t");
       }
     }
@@ -154,12 +135,11 @@ public class FSMTextSave {
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
     {
-      EList<Transition> _transition = b.getTransition();
       final Function1<Transition, Boolean> _function = (Transition t) -> {
         BoolExpr _predicate = t.getPredicate();
         return Boolean.valueOf((!(_predicate instanceof DefaultPredicate)));
       };
-      Iterable<Transition> _filter = IterableExtensions.<Transition>filter(_transition, _function);
+      Iterable<Transition> _filter = IterableExtensions.<Transition>filter(b.getTransition(), _function);
       for(final Transition t : _filter) {
         String _pp_3 = FSMTextSave.pp(t);
         _builder.append(_pp_3, "\t");
@@ -169,12 +149,11 @@ public class FSMTextSave {
     _builder.newLineIfNotEmpty();
     _builder.append("\t");
     {
-      EList<Transition> _transition_1 = b.getTransition();
       final Function1<Transition, Boolean> _function_1 = (Transition t_1) -> {
         BoolExpr _predicate = t_1.getPredicate();
         return Boolean.valueOf((_predicate instanceof DefaultPredicate));
       };
-      Iterable<Transition> _filter_1 = IterableExtensions.<Transition>filter(_transition_1, _function_1);
+      Iterable<Transition> _filter_1 = IterableExtensions.<Transition>filter(b.getTransition(), _function_1);
       for(final Transition t_1 : _filter_1) {
         String _pp_4 = FSMTextSave.pp(t_1);
         _builder.append(_pp_4, "\t");
@@ -188,19 +167,18 @@ public class FSMTextSave {
   protected static String _pp(final Port b) {
     StringConcatenation _builder = new StringConcatenation();
     String _name = b.getName();
-    _builder.append(_name, "");
+    _builder.append(_name);
     _builder.append("[");
     int _width = b.getWidth();
-    _builder.append(_width, "");
+    _builder.append(_width);
     _builder.append("] ");
     {
       LayoutInfo _layout = b.getLayout();
       boolean _tripleNotEquals = (_layout != null);
       if (_tripleNotEquals) {
         _builder.append("  ");
-        LayoutInfo _layout_1 = b.getLayout();
-        String _pp = FSMTextSave.pp(_layout_1);
-        _builder.append(_pp, "");
+        String _pp = FSMTextSave.pp(b.getLayout());
+        _builder.append(_pp);
       }
     }
     _builder.append(";");
@@ -211,7 +189,7 @@ public class FSMTextSave {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("@");
     String _layout = FSMTextSave.layout(l);
-    _builder.append(_layout, "");
+    _builder.append(_layout);
     return _builder.toString();
   }
   
@@ -222,16 +200,16 @@ public class FSMTextSave {
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("[");
       int _x = l.getX();
-      _builder.append(_x, "");
+      _builder.append(_x);
       _builder.append(",");
       int _y = l.getY();
-      _builder.append(_y, "");
+      _builder.append(_y);
       _builder.append(",");
       int _width = l.getWidth();
-      _builder.append(_width, "");
+      _builder.append(_width);
       _builder.append(",");
       int _height = l.getHeight();
-      _builder.append(_height, "");
+      _builder.append(_height);
       _builder.append("]");
       _xifexpression = _builder.toString();
     } else {
@@ -245,22 +223,19 @@ public class FSMTextSave {
   protected static String _pp(final Transition b) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("goto ");
-    State _dst = b.getDst();
-    String _name = _dst.getName();
-    _builder.append(_name, "");
+    String _name = b.getDst().getName();
+    _builder.append(_name);
     _builder.append("  when ");
-    BoolExpr _predicate = b.getPredicate();
-    String _pp = FSMTextSave.pp(_predicate);
-    _builder.append(_pp, "");
+    String _pp = FSMTextSave.pp(b.getPredicate());
+    _builder.append(_pp);
     _builder.append(" ");
     {
       LayoutInfo _layout = b.getLayout();
       boolean _tripleNotEquals = (_layout != null);
       if (_tripleNotEquals) {
         _builder.append("  ");
-        LayoutInfo _layout_1 = b.getLayout();
-        String _pp_1 = FSMTextSave.pp(_layout_1);
-        _builder.append(_pp_1, "");
+        String _pp_1 = FSMTextSave.pp(b.getLayout());
+        _builder.append(_pp_1);
       }
     }
     _builder.append("; ");
@@ -272,11 +247,9 @@ public class FSMTextSave {
   }
   
   protected static String _pp(final Command c) {
-    OutputPort _name = c.getName();
-    String _name_1 = _name.getName();
-    String _plus = (_name_1 + "=");
-    BoolExpr _value = c.getValue();
-    String _pp = FSMTextSave.pp(_value);
+    String _name = c.getName().getName();
+    String _plus = (_name + "=");
+    String _pp = FSMTextSave.pp(c.getValue());
     String _plus_1 = (_plus + _pp);
     return (_plus_1 + ";");
   }
@@ -294,7 +267,7 @@ public class FSMTextSave {
           _builder.appendImmediate("+", "");
         }
         Object _pp = FSMTextSave.pp(i);
-        _builder.append(_pp, "");
+        _builder.append(_pp);
       }
     }
     _builder.append(")");
@@ -314,7 +287,7 @@ public class FSMTextSave {
           _builder.appendImmediate(",", "");
         }
         Object _pp = FSMTextSave.pp(i);
-        _builder.append(_pp, "");
+        _builder.append(_pp);
       }
     }
     _builder.append("}");
@@ -334,7 +307,7 @@ public class FSMTextSave {
           _builder.appendImmediate(".", "");
         }
         Object _pp = FSMTextSave.pp(i);
-        _builder.append(_pp, "");
+        _builder.append(_pp);
       }
     }
     _builder.append(")");
@@ -344,42 +317,36 @@ public class FSMTextSave {
   protected static String _pp(final CmpExpr b) {
     String _switchResult = null;
     String _op = b.getOp();
-    switch (_op) {
-      case "==":
-        EList<BoolExpr> _args = b.getArgs();
-        BoolExpr _get = _args.get(0);
-        Object _pp = FSMTextSave.pp(_get);
-        String _plus = ("(" + _pp);
-        String _plus_1 = (_plus + "==");
-        EList<BoolExpr> _args_1 = b.getArgs();
-        BoolExpr _get_1 = _args_1.get(1);
-        Object _pp_1 = FSMTextSave.pp(_get_1);
-        String _plus_2 = (_plus_1 + _pp_1);
-        _switchResult = (_plus_2 + ")");
-        break;
-      case "/=":
-        EList<BoolExpr> _args_2 = b.getArgs();
-        BoolExpr _get_2 = _args_2.get(0);
-        Object _pp_2 = FSMTextSave.pp(_get_2);
-        String _plus_3 = ("(" + _pp_2);
-        String _plus_4 = (_plus_3 + "/=");
-        EList<BoolExpr> _args_3 = b.getArgs();
-        BoolExpr _get_3 = _args_3.get(1);
-        Object _pp_3 = FSMTextSave.pp(_get_3);
-        String _plus_5 = (_plus_4 + _pp_3);
-        _switchResult = (_plus_5 + ")");
-        break;
-      default:
-        _switchResult = "????";
-        break;
+    if (_op != null) {
+      switch (_op) {
+        case "==":
+          Object _pp = FSMTextSave.pp(b.getArgs().get(0));
+          String _plus = ("(" + _pp);
+          String _plus_1 = (_plus + "==");
+          Object _pp_1 = FSMTextSave.pp(b.getArgs().get(1));
+          String _plus_2 = (_plus_1 + _pp_1);
+          _switchResult = (_plus_2 + ")");
+          break;
+        case "/=":
+          Object _pp_2 = FSMTextSave.pp(b.getArgs().get(0));
+          String _plus_3 = ("(" + _pp_2);
+          String _plus_4 = (_plus_3 + "/=");
+          Object _pp_3 = FSMTextSave.pp(b.getArgs().get(1));
+          String _plus_5 = (_plus_4 + _pp_3);
+          _switchResult = (_plus_5 + ")");
+          break;
+        default:
+          _switchResult = "????";
+          break;
+      }
+    } else {
+      _switchResult = "????";
     }
     return _switchResult;
   }
   
   protected static String _pp(final NotExpr b) {
-    EList<BoolExpr> _args = b.getArgs();
-    BoolExpr _get = _args.get(0);
-    Object _pp = FSMTextSave.pp(_get);
+    Object _pp = FSMTextSave.pp(b.getArgs().get(0));
     String _plus = ("(/" + _pp);
     return (_plus + ")");
   }
@@ -390,41 +357,33 @@ public class FSMTextSave {
     boolean _notEquals = (!Objects.equal(_range, null));
     if (_notEquals) {
       String _xifexpression_1 = null;
-      Range _range_1 = b.getRange();
-      int _ub = _range_1.getUb();
+      int _ub = b.getRange().getUb();
       boolean _notEquals_1 = (_ub != (-1));
       if (_notEquals_1) {
-        Port _port = b.getPort();
-        String _name = _port.getName();
+        String _name = b.getPort().getName();
         String _plus = (_name + "[");
-        Range _range_2 = b.getRange();
-        int _ub_1 = _range_2.getUb();
+        int _ub_1 = b.getRange().getUb();
         String _plus_1 = (_plus + Integer.valueOf(_ub_1));
         String _plus_2 = (_plus_1 + ":");
-        Range _range_3 = b.getRange();
-        int _lb = _range_3.getLb();
+        int _lb = b.getRange().getLb();
         String _plus_3 = (_plus_2 + Integer.valueOf(_lb));
         _xifexpression_1 = (_plus_3 + "]");
       } else {
-        Port _port_1 = b.getPort();
-        String _name_1 = _port_1.getName();
+        String _name_1 = b.getPort().getName();
         String _plus_4 = (_name_1 + "[");
-        Range _range_4 = b.getRange();
-        int _lb_1 = _range_4.getLb();
+        int _lb_1 = b.getRange().getLb();
         String _plus_5 = (_plus_4 + Integer.valueOf(_lb_1));
         _xifexpression_1 = (_plus_5 + "]");
       }
       _xifexpression = _xifexpression_1;
     } else {
-      Port _port_2 = b.getPort();
-      _xifexpression = _port_2.getName();
+      _xifexpression = b.getPort().getName();
     }
     return _xifexpression;
   }
   
   protected static String _pp(final ConstRef b) {
-    ConstantDef _const = b.getConst();
-    String _name = _const.getName();
+    String _name = b.getConst().getName();
     return ("#" + _name);
   }
   
@@ -440,11 +399,10 @@ public class FSMTextSave {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("define ");
     String _name = b.getName();
-    _builder.append(_name, "");
+    _builder.append(_name);
     _builder.append("=");
-    BoolExpr _value = b.getValue();
-    Object _pp = FSMTextSave.pp(_value);
-    _builder.append(_pp, "");
+    Object _pp = FSMTextSave.pp(b.getValue());
+    _builder.append(_pp);
     _builder.append(" ;");
     String _string = _builder.toString();
     return (_string + "\n");

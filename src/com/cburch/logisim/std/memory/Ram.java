@@ -47,6 +47,7 @@ import com.bfh.logisim.designrulecheck.CorrectLabel;
 import com.cburch.logisim.circuit.CircuitState;
 import com.cburch.logisim.data.Attribute;
 import com.cburch.logisim.data.AttributeSet;
+import com.cburch.logisim.data.Attributes;
 import com.cburch.logisim.data.BitWidth;
 import com.cburch.logisim.data.Bounds;
 import com.cburch.logisim.data.Location;
@@ -61,6 +62,7 @@ import com.cburch.logisim.instance.InstanceState;
 import com.cburch.logisim.instance.Port;
 import com.cburch.logisim.instance.StdAttr;
 import com.cburch.logisim.proj.Project;
+
 import com.cburch.logisim.util.GraphicsUtil;
 
 import static  com.cburch.logisim.util.GraphicsUtil.*;
@@ -224,11 +226,6 @@ public class Ram extends Mem {
 		Object be = Attrs.getValue(RamAttributes.ATTR_ByteEnables);
 		boolean byteEnables = be == null ? false : be
 				.equals(RamAttributes.BUS_WITH_BYTEENABLES);
-		if (byteEnables) {
-			int ByteEnableIndex = (asynch) ? (separate) ? AByEnSep : AByEnBiDir
-					: (separate) ? SByEnSep : SByEnBiDir;
-			return ByteEnableIndex;
-		}
 		return -1;
 	}
 
@@ -238,18 +235,40 @@ public class Ram extends Mem {
 	}
 
 	public static Attribute<MemContents> CONTENTS_ATTR = new ContentsAttribute();
+	public static Attribute<Boolean> DISASSEMBLE = Attributes.forBoolean(
+			"disassembly", Strings.getter("disassemblyASM")); ;
+
 	static final int WE = MEM_INPUTS + 0;
 	public static final int CLK = MEM_INPUTS + 1;
 	static final int SDIN = MEM_INPUTS + 2;
 	static final int ADIN = MEM_INPUTS + 1;
+	static final int BWE = MEM_INPUTS + 3;
 
-	static final int AByEnBiDir = MEM_INPUTS + 2;
-	static final int AByEnSep = MEM_INPUTS + 3;
-	static final int SByEnBiDir = MEM_INPUTS + 3;
-	static final int SByEnSep = MEM_INPUTS + 4;
+//	static final int AByEnBiDir = MEM_INPUTS + 2;
+//	static final int AByEnSep = MEM_INPUTS + 3;
+//	static final int SByEnBiDir = MEM_INPUTS + 3;
+//	static final int SByEnSep = MEM_INPUTS + 4;
 	
 	private static final int CONTROL_HEIGHT = 0;
 	private static final int ADDR_OFFSET = 40;
+	private static final int[] BWELUT = {
+			0x00000000,
+			0x000000FF,
+			0x0000FF00,
+			0x0000FFFF,
+			0x00FF0000,
+			0x00FF00FF,
+			0x00FFFF00,
+			0x00FFFFFF,
+			0xFF000000,
+			0xFF0000FF,
+			0xFF00FF00,
+			0xFF00FFFF,
+			0xFFFF0000,
+			0xFFFF00FF,
+			0xFFFFFF00,
+			0xFFFFFFFF,
+	};
 
 	private static Object[][] logOptions = new Object[9][];
 
@@ -261,6 +280,7 @@ public class Ram extends Mem {
 		setIconName("ram.gif");
 		setInstanceLogger(Logger.class);
 		setInstancePoker(RamPoker.class);
+		
 
 	}
 
@@ -268,14 +288,17 @@ public class Ram extends Mem {
 	protected void configureNewInstance(Instance instance) {
 		super.configureNewInstance(instance);
 		instance.addAttributeListener();
+	//	instance.
 	}
 
 	@Override
 	void configurePorts(Instance instance) {
 
-		Port[] ps = new Port[5];
+		Port[] ps = new Port[6];
 		ps[ADDR] = new Port(0, 40, Port.INPUT, ADDR_ATTR);
 		ps[ADDR].setToolTip(Strings.getter("memAddrTip"));
+		ps[BWE] = new Port(0, WE_OFFSET-20, Port.INPUT, 4);
+		ps[BWE].setToolTip(Strings.getter("ramBWETip"));
 		ps[WE] = new Port(0, WE_OFFSET, Port.INPUT, 1);
 		ps[WE].setToolTip(Strings.getter("ramWETip"));
 		ps[CLK] = new Port(0, CLK_OFFSET, Port.INPUT, 1);
@@ -443,6 +466,10 @@ public class Ram extends Mem {
 		painter.drawPort(CLK);
 	
 		switchToWidth(g, 2);
+		g.drawLine(x, y + WE_OFFSET-20, x+20, y + WE_OFFSET-20);
+		drawText(g, "BWE", x + 23, y + WE_OFFSET-20, H_LEFT, V_CENTER);
+		painter.drawPort(BWE);
+
 		g.drawLine(x, y + WE_OFFSET, x+20, y + WE_OFFSET);
 		drawText(g, "WE", x + 23, y + WE_OFFSET, H_LEFT, V_CENTER);
 		painter.drawPort(WE);
@@ -483,16 +510,9 @@ public class Ram extends Mem {
 		BitWidth dataBits = state.getAttributeValue(DATA_ATTR);
 		/* Set the outputs in tri-state in case of combined bus */
 		if (!triggered) {
-			state.setPort(DATA,
-					Value.createKnown(dataBits, myState.GetCurrentData()),
-					DELAY);
-		}
+			state.setPort(DATA,Value.createKnown(dataBits, myState.GetCurrentData()),DELAY);
+		} 
 		if (triggered) {
-			Object be = state.getAttributeValue(RamAttributes.ATTR_ByteEnables);
-			boolean byteEnables = be == null ? false : be
-					.equals(RamAttributes.BUS_WITH_BYTEENABLES);
-			int NrOfByteEnables = GetNrOfByteEnables(state.getAttributeSet());
-			int ByteEnableIndex = ByteEnableIndex(state.getAttributeSet());
 			boolean shouldStore =  state.getPortValue(WE) != Value.FALSE;
 			Value addrValue = state.getPortValue(ADDR);
 			int addr = addrValue.toIntValue();
@@ -504,42 +524,20 @@ public class Ram extends Mem {
 				myState.scrollToShow(addr);
 			}
 
+			int bew = state.getPortValue(BWE).toIntValue();
+			int mask=((bew>=0)?BWELUT[bew]:0x000);
 			if (shouldStore) {
 				int dataValue = state.getPortValue(SDIN).toIntValue();
 				int memValue = myState.getContents().get(addr);
-				if (byteEnables) {
-					int mask = 0xFF << (NrOfByteEnables - 1) * 8;
-					for (int i = 0; i < NrOfByteEnables; i++) {
-						Value bitvalue = state
-								.getPortValue(ByteEnableIndex + i);
-						boolean disabled = bitvalue == null ? false : bitvalue
-								.equals(Value.FALSE);
-						if (disabled) {
-							dataValue &= ~mask;
-							dataValue |= (memValue & mask);
-						}
-						mask >>= 8;
-					}
-				}
+				dataValue &= mask;
+				dataValue |= (memValue & ~mask);
 				myState.getContents().set(addr, dataValue);
 			}
 			int val = myState.getContents().get(addr);
-			int currentValue = myState.GetCurrentData();
-			if (byteEnables) {
-				int mask = 0xFF << (NrOfByteEnables - 1) * 8;
-				for (int i = 0; i < NrOfByteEnables; i++) {
-					Value bitvalue = state.getPortValue(ByteEnableIndex + i);
-					boolean disabled = bitvalue == null ? false : bitvalue
-							.equals(Value.FALSE);
-					if (disabled) {
-						val &= ~mask;
-						val |= (currentValue & mask);
-					}
-					mask >>= 8;
-				}
-			}
+			
+			val &= mask;
 			myState.SetCurrentData(val);
-				state.setPort(DATA, Value.createKnown(dataBits, val), DELAY);
+			state.setPort(DATA, Value.createKnown(dataBits, val), DELAY);
 		}
 	}
 

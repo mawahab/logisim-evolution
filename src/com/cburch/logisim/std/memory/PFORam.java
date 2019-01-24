@@ -34,6 +34,7 @@ import java.awt.Graphics;
 import java.awt.Window;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -77,29 +78,54 @@ public class PFORam extends Mem {
 			return ret;
 		}
 
+		
+
+
+		private String getFileExtension(File file) {
+		    String name = file.getName();
+		    try {
+		        return name.substring(name.lastIndexOf(".") + 1);
+		    } catch (Exception e) {
+		        return "";
+		    }
+		}
+		
+
 		public MemContents parse(String value) {
 			int lineBreak = value.indexOf('\n');
 			String first = lineBreak < 0 ? value : value
 					.substring(0, lineBreak);
 			String rest = lineBreak < 0 ? "" : value.substring(lineBreak + 1);
-			StringTokenizer toks = new StringTokenizer(first);
-			try {
-				String header = toks.nextToken();
-				if (!header.equals("addr/data:")) {
+			if (getFileExtension(new File(rest)).equals(".hex")) {
+				StringTokenizer toks = new StringTokenizer(first);
+				try {
+					String header = toks.nextToken();
+					if (!header.equals("addr/data:")) {
+						return null;
+					}
+					int addr = Integer.parseInt(toks.nextToken());
+					int data = Integer.parseInt(toks.nextToken());
+					MemContents ret = MemContents.create(addr, data);
+					//StringReader filename = new StringReader(rest);
+						HexFile.open(ret, new File(rest));
+					return ret;
+				} catch (IOException e) {
+					return null;
+				} catch (NumberFormatException e) {
+					return null;
+				} catch (NoSuchElementException e) {
 					return null;
 				}
-				int addr = Integer.parseInt(toks.nextToken());
-				int data = Integer.parseInt(toks.nextToken());
-				MemContents ret = MemContents.create(addr, data);
-				HexFile.open(ret, new StringReader(rest));
-				return ret;
-			} catch (IOException e) {
-				return null;
-			} catch (NumberFormatException e) {
-				return null;
-			} catch (NoSuchElementException e) {
-				return null;
-			}
+			} else if (getFileExtension(new File(rest)).equals(".bin")) {
+				try {
+					MemContents ret = MemContents.create(16, 32);
+					NiosIIAsmFile.open(ret, new File(rest));
+					return ret;
+				} catch (Exception e) {
+					return null;
+				}
+			} 
+			return null;
 		}
 
 		@Override

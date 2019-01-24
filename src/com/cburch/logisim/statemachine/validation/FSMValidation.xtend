@@ -84,23 +84,7 @@ class FSMValidation{
 	}
 	
 	def public static isValidBinaryString(String s, int width) {
-			var txt =s;
-			val first = txt.charAt(0);
-			val last = txt.charAt(txt.length()-1);
-			if(first=='"'&& last=='"') {
-				txt=txt.substring(1, txt.length()-1);
-				for (char c : txt.toCharArray()) {
-					if (c != '0' && c != '1') {
-						return false;
-					}
-				}
-				if ((txt.length())!=width) {
-					return false
-				}
-			}  else {
-				return false
-			}
-			return true
+			s.matches("\"[0-1]+\"") && (s.length()==width+2);
 	}
 
 	def public static boolean isValidIdentifier(String identifier) {

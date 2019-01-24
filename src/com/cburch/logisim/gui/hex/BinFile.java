@@ -41,36 +41,28 @@ import java.util.Arrays;
 import java.util.StringTokenizer;
 
 import com.cburch.hex.HexModel;
-
+import java.io.*;
 public class BinFile {
 
-	public static void open(HexModel dst, File src) throws IOException {
-		BufferedReader in;
-		try {
-			in = new BufferedReader(new FileReader(src));
-		} catch (IOException e) {
-			throw new IOException(Strings.get("hexFileOpenError"));
-		}
-		try {
-			String header = in.readLine();
-			if (!header.equals(RAW_IMAGE_HEADER)) {
-				throw new IOException(Strings.get("hexHeaderFormatError"));
-			}
-			open(dst, in);
-			try {
-				BufferedReader oldIn = in;
-				in = null;
-				oldIn.close();
-			} catch (IOException e) {
-				throw new IOException(Strings.get("hexFileReadError"));
-			}
-		} finally {
-			try {
-				if (in != null)
-					in.close();
-			} catch (IOException e) {
-			}
-		}
+	public static void open(HexModel dst, File file) throws IOException {
+
+		byte[] fileData = new byte[(int) file.length()];
+	    DataInputStream dis = new DataInputStream(new FileInputStream(file));
+	    dis.readFully(fileData);
+	    dis.close();
+	    
+	     int off=0;
+	        int value=0;
+	        for (int addr=0;addr<fileData.length;addr++) {
+	        	int b = Byte.toUnsignedInt(fileData[addr]);
+	        	value = value|(b<<(off*8));
+	        	if (off==3) {
+	        		dst.set(addr/4, value);
+	        		value=0;
+	        	}
+	        	off=(off+1)%4;
+	        }
+	        
 	}
 
 	public static void open(HexModel dst, Reader in) throws IOException {

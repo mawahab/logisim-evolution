@@ -93,29 +93,25 @@ public class CPUCodeMemory extends InstanceFactory {
           int locX = (x + CPUCodeMemory.OFFX_VAL);
           int locY = ((y + CPUCodeMemory.OFFY_VAL) + (CPUCodeMemory.ROW_HEIGHT * r));
           int address = r;
-          String _hexString = Integer.toHexString(address);
-          String code = _hexString.toUpperCase();
+          String code = Integer.toHexString(address).toUpperCase();
           while ((code.length() < (CPUCodeMemory.ADDR_WIDTH / 4))) {
             StringConcatenation _builder = new StringConcatenation();
             _builder.append("0");
-            _builder.append(code, "");
+            _builder.append(code);
             code = _builder.toString();
           }
           StringConcatenation _builder = new StringConcatenation();
-          _builder.append(code, "");
+          _builder.append(code);
           g.drawString(_builder.toString(), locX, locY);
           IntegerRange _upTo_1 = new IntegerRange(0, 3);
           for (final Integer i_1 : _upTo_1) {
             {
               g.drawRect(((locX + 35) + (CPUCodeMemory.CELL_WIDTH * (i_1).intValue())), locY, CPUCodeMemory.CELL_WIDTH, (CPUCodeMemory.ROW_HEIGHT - 3));
-              int _value = data.getValue(address);
-              String _hexString_1 = Integer.toHexString(_value);
-              String _upperCase = _hexString_1.toUpperCase();
-              code = _upperCase;
+              code = Integer.toHexString(data.getValue(address)).toUpperCase();
               while ((code.length() < 2)) {
                 StringConcatenation _builder_1 = new StringConcatenation();
                 _builder_1.append("0");
-                _builder_1.append(code, "");
+                _builder_1.append(code);
                 code = _builder_1.toString();
               }
               GraphicsUtil.drawCenteredText(g, code, (((locX + 35) + (CPUCodeMemory.CELL_WIDTH / 2)) + (CPUCodeMemory.CELL_WIDTH * (i_1).intValue())), (locY + (CPUCodeMemory.ROW_HEIGHT / 2)));
@@ -161,8 +157,7 @@ public class CPUCodeMemory extends InstanceFactory {
       new Object[] { _create, StdAttr.TRIG_RISING, "", StdAttr.DEFAULT_LABEL_FONT, Boolean.valueOf(false) });
     BitWidthConfigurator _bitWidthConfigurator = new BitWidthConfigurator(StdAttr.WIDTH);
     this.setKeyConfigurator(_bitWidthConfigurator);
-    Bounds _create_1 = Bounds.create(0, 0, CPUCodeMemory.WIDTH, CPUCodeMemory.HEIGHT);
-    this.setOffsetBounds(_create_1);
+    this.setOffsetBounds(Bounds.create(0, 0, CPUCodeMemory.WIDTH, CPUCodeMemory.HEIGHT));
     this.setIconName("register.gif");
     this.setInstancePoker(RegisterFilePoker.class);
     this.setInstanceLogger(RegisterFileLogger.class);
@@ -197,10 +192,7 @@ public class CPUCodeMemory extends InstanceFactory {
   @Override
   public String getHDLName(final AttributeSet attrs) {
     StringBuffer CompleteName = new StringBuffer();
-    String _name = this.getName();
-    String _correctLabel = CorrectLabel.getCorrectLabel(_name);
-    String _upperCase = _correctLabel.toUpperCase();
-    CompleteName.append(_upperCase);
+    CompleteName.append(CorrectLabel.getCorrectLabel(this.getName()).toUpperCase());
     return CompleteName.toString();
   }
   
@@ -246,39 +238,26 @@ public class CPUCodeMemory extends InstanceFactory {
     }
     BitWidth dataWidth = state.<BitWidth>getAttributeValue(StdAttr.WIDTH);
     Object triggerType = state.<AttributeOption>getAttributeValue(StdAttr.TRIGGER);
-    Value _portValue = state.getPortValue(CPUCodeMemory.CLK);
-    boolean triggered = data.updateClock(_portValue, triggerType);
-    Value _portValue_1 = state.getPortValue(CPUCodeMemory.RST);
-    boolean _tripleEquals = (_portValue_1 == Value.TRUE);
+    boolean triggered = data.updateClock(state.getPortValue(CPUCodeMemory.CLK), triggerType);
+    Value _portValue = state.getPortValue(CPUCodeMemory.RST);
+    boolean _tripleEquals = (_portValue == Value.TRUE);
     if (_tripleEquals) {
       data.clear();
     } else {
-      boolean _and = false;
-      if (!triggered) {
-        _and = false;
-      } else {
-        Value _portValue_2 = state.getPortValue(CPUCodeMemory.WE);
-        boolean _tripleNotEquals = (_portValue_2 != Value.FALSE);
-        _and = _tripleNotEquals;
-      }
-      if (_and) {
+      if ((triggered && (state.getPortValue(CPUCodeMemory.WE) != Value.FALSE))) {
         Value in = state.getPortValue(CPUCodeMemory.DI);
         Value addr = state.getPortValue(CPUCodeMemory.AD);
         boolean _isFullyDefined = in.isFullyDefined();
         if (_isFullyDefined) {
-          int _intValue = addr.toIntValue();
-          int _intValue_1 = in.toIntValue();
-          data.setValue(_intValue, ((byte) _intValue_1));
+          int _intValue = in.toIntValue();
+          data.setValue(addr.toIntValue(), ((byte) _intValue));
         }
       }
     }
     Value addr0 = state.getPortValue(CPUCodeMemory.AD);
     boolean _isFullyDefined_1 = addr0.isFullyDefined();
     if (_isFullyDefined_1) {
-      int _intValue_2 = addr0.toIntValue();
-      int _value = data.getValue(_intValue_2);
-      Value _createKnown = Value.createKnown(dataWidth, _value);
-      state.setPort(CPUCodeMemory.DO, _createKnown, CPUCodeMemory.DELAY);
+      state.setPort(CPUCodeMemory.DO, Value.createKnown(dataWidth, data.getValue(addr0.toIntValue())), CPUCodeMemory.DELAY);
     }
   }
 }

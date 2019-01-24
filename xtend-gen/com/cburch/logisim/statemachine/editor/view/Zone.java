@@ -34,15 +34,7 @@ public class Zone {
   }
   
   public boolean isSinglePoint() {
-    boolean _and = false;
-    boolean _equals = Objects.equal(this.x1, this.x0);
-    if (!_equals) {
-      _and = false;
-    } else {
-      boolean _notEquals = (!Objects.equal(this.x0, null));
-      _and = _notEquals;
-    }
-    return _and;
+    return (Objects.equal(this.x1, this.x0) && (!Objects.equal(this.x0, null)));
   }
   
   public Zone(final int xa, final int ya, final int xb, final int yb) {
@@ -84,15 +76,7 @@ public class Zone {
     if (_isSinglePoint) {
       _xifexpression = false;
     } else {
-      boolean _and = false;
-      boolean _contains = this.contains(p.x0);
-      if (!_contains) {
-        _and = false;
-      } else {
-        boolean _contains_1 = this.contains(p.x1);
-        _and = _contains_1;
-      }
-      _xifexpression = _and;
+      _xifexpression = (this.contains(p.x0) && this.contains(p.x1));
     }
     return _xifexpression;
   }
@@ -109,13 +93,13 @@ public class Zone {
   public String toString() {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("(");
-    _builder.append(this.x0.x, "");
+    _builder.append(this.x0.x);
     _builder.append(",");
-    _builder.append(this.x0.y, "");
+    _builder.append(this.x0.y);
     _builder.append(")->(");
-    _builder.append(this.x1.x, "");
+    _builder.append(this.x1.x);
     _builder.append(",");
-    _builder.append(this.x1.y, "");
+    _builder.append(this.x1.y);
     _builder.append("))");
     return _builder.toString();
   }

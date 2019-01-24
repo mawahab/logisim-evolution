@@ -35,9 +35,10 @@ import java.awt.Graphics;
 
 import com.bfh.logisim.fpgaboardeditor.FPGAIOInformationContainer;
 import com.bfh.logisim.hdlgenerator.IOComponentInformationContainer;
-import com.cburch.logisim.cpu.Instr;
+import com.cburch.logisim.cpu.NIOS2Instr;
 import com.cburch.logisim.data.Attribute;
 import com.cburch.logisim.data.AttributeSet;
+import com.cburch.logisim.data.Attributes;
 import com.cburch.logisim.data.Bounds;
 import com.cburch.logisim.data.Direction;
 import com.cburch.logisim.data.Value;
@@ -49,10 +50,14 @@ import com.cburch.logisim.instance.InstancePainter;
 import com.cburch.logisim.instance.InstanceState;
 import com.cburch.logisim.instance.Port;
 import com.cburch.logisim.instance.StdAttr;
+
 import com.cburch.logisim.util.GraphicsUtil;
 
 public class NiosIIDisassembly extends InstanceFactory {
 
+	public static final Attribute<Boolean> MACHINE = Attributes.forBoolean(
+			"machineCode", Strings.getter("machine_ASM")); ;
+	
 	public static class Logger extends InstanceLogger {
 		@Override
 		public String getLogName(InstanceState state, Object option) {
@@ -71,12 +76,28 @@ public class NiosIIDisassembly extends InstanceFactory {
 
 	public NiosIIDisassembly() {
 		super("NiosIIDisassembly", Strings.getter("NiosIIDisassembly"));
-		setAttributes(new Attribute[] { StdAttr.FACING, Io.ATTR_ON_COLOR,
-				Io.ATTR_OFF_COLOR, Io.ATTR_ACTIVE, StdAttr.LABEL,
-				Io.ATTR_LABEL_LOC, StdAttr.LABEL_FONT, StdAttr.LABEL_COLOR, StdAttr.LABEL_VISIBILITY },
-				new Object[] { Direction.WEST, new Color(240, 0, 0),
-						Color.DARK_GRAY, Boolean.TRUE, "", Direction.EAST,
-						StdAttr.DEFAULT_LABEL_FONT, StdAttr.DEFAULT_LABEL_COLOR, true });
+		setAttributes(
+				new Attribute[] { 
+					StdAttr.FACING, 
+					Io.ATTR_ON_COLOR,
+					Io.ATTR_OFF_COLOR, 
+					Io.ATTR_ACTIVE, 
+					StdAttr.LABEL,
+					Io.ATTR_LABEL_LOC, 
+					StdAttr.LABEL_FONT, 
+					StdAttr.LABEL_COLOR, 
+					StdAttr.LABEL_VISIBILITY, 
+					MACHINE},
+				new Object[] { 
+					Direction.WEST, 
+					new Color(240, 0, 0),
+					Color.DARK_GRAY, 
+					Boolean.TRUE, "", 
+					Direction.EAST,
+					StdAttr.DEFAULT_LABEL_FONT, 
+					StdAttr.DEFAULT_LABEL_COLOR, 
+					true,true });
+
 		setFacingAttribute(StdAttr.FACING);
 		setIconName("NiosIIDisassembly.gif");
 		setPorts(new Port[] { new Port(0, 0, Port.INPUT, 32) });
@@ -181,7 +202,15 @@ public class NiosIIDisassembly extends InstanceFactory {
 //			g.setColor(val == desired ? onColor : offColor);
 //			g.fillOval(bds.getX(), bds.getY(), bds.getWidth(), bds.getHeight());
 //		}
-		String txt =new Instr((long) val.toIntValue()).toString();
+		Boolean ams= painter.getAttributeValue(MACHINE);
+		NIOS2Instr instr = new NIOS2Instr((long) val.toIntValue());
+		String txt ="";
+		if (ams) {
+			txt =instr.toString();
+		} else {
+			txt =instr.toASMString();
+		}
+		
 		g.setColor(Color.BLACK);
 		int width =(int) g.getFontMetrics().getStringBounds(txt, g).getWidth();
 		g.drawString(txt,bds.getX()+8, bds.getY()+bds.getHeight()/2+g.getFontMetrics().getHeight()/3);

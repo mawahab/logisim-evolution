@@ -1,7 +1,6 @@
 package com.cburch.logisim.statemachine.editor;
 
 import com.cburch.logisim.statemachine.editor.FSMEditorController;
-import com.cburch.logisim.statemachine.editor.FSMView;
 import com.cburch.logisim.statemachine.editor.SelectionZone;
 import com.cburch.logisim.statemachine.fSMDSL.FSMElement;
 import com.google.common.base.Objects;
@@ -51,12 +50,7 @@ public class FSMEditorControl {
   
   private SelectionZone zone = new SelectionZone();
   
-  private FSMEditorController ctrl;
-  
-  private FSMView view;
-  
   public FSMEditorControl(final FSMEditorController ctrl) {
-    this.ctrl = ctrl;
   }
   
   public void configureElement(final FSMElement element) {
@@ -108,8 +102,7 @@ public class FSMEditorControl {
             switch (e) {
               case LEFT_DCLICK:
                 final FSMElement target = this.getObjectAt(p);
-                boolean _notEquals = (!Objects.equal(target, null));
-                if (_notEquals) {
+                if ((target != null)) {
                   this.configureElement(target);
                 }
                 break;

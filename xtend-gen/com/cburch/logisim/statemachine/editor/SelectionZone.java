@@ -13,22 +13,7 @@ public class SelectionZone {
   }
   
   public boolean isSinglePoint() {
-    boolean _or = false;
-    boolean _and = false;
-    boolean _notEquals = (!Objects.equal(this.start, null));
-    if (!_notEquals) {
-      _and = false;
-    } else {
-      boolean _equals = Objects.equal(this.end, null);
-      _and = _equals;
-    }
-    if (_and) {
-      _or = true;
-    } else {
-      boolean _equals_1 = this.end.equals(this.start);
-      _or = _equals_1;
-    }
-    return _or;
+    return (((!Objects.equal(this.start, null)) && Objects.equal(this.end, null)) || this.end.equals(this.start));
   }
   
   public Point start(final Point point) {

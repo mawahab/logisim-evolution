@@ -43,6 +43,9 @@ class TtyState implements InstanceData, Cloneable {
 	private StringBuffer lastRow;
 	private int row;
 	private boolean sendStdout;
+	private State state;
+	
+	public enum State {IDLE, SENDACK}
 
 	public TtyState(int rows, int cols) {
 		lastClock = Value.UNKNOWN;
@@ -50,7 +53,16 @@ class TtyState implements InstanceData, Cloneable {
 		colCount = cols;
 		lastRow = new StringBuffer(cols);
 		sendStdout = false;
+		state=State.IDLE;
 		clear();
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public void setState(State state) {
+		this.state = state;
 	}
 
 	public void add(char c) {
@@ -84,6 +96,7 @@ class TtyState implements InstanceData, Cloneable {
 
 	public void clear() {
 		Arrays.fill(rowData, "");
+		state=State.IDLE;
 		lastRow.delete(0, lastRow.length());
 		row = 0;
 	}

@@ -61,28 +61,16 @@ public class FSMSelectionZone {
   public int updateBoundingBox(final FSMElement e) {
     int _xblockexpression = (int) 0;
     {
-      LayoutInfo _layout = e.getLayout();
-      int _x = _layout.getX();
-      int _min = Math.min(this.xmin, _x);
-      this.xmin = _min;
-      LayoutInfo _layout_1 = e.getLayout();
-      int _y = _layout_1.getY();
-      int _min_1 = Math.min(this.ymin, _y);
-      this.ymin = _min_1;
-      LayoutInfo _layout_2 = e.getLayout();
-      int _x_1 = _layout_2.getX();
-      LayoutInfo _layout_3 = e.getLayout();
-      int _width = _layout_3.getWidth();
-      int _plus = (_x_1 + _width);
-      int _max = Math.max(this.xmax, _plus);
-      this.xmax = _max;
-      LayoutInfo _layout_4 = e.getLayout();
-      int _y_1 = _layout_4.getY();
-      LayoutInfo _layout_5 = e.getLayout();
-      int _height = _layout_5.getHeight();
-      int _plus_1 = (_y_1 + _height);
-      int _max_1 = Math.max(this.ymax, _plus_1);
-      _xblockexpression = this.ymax = _max_1;
+      this.xmin = Math.min(this.xmin, e.getLayout().getX());
+      this.ymin = Math.min(this.ymin, e.getLayout().getY());
+      int _x = e.getLayout().getX();
+      int _width = e.getLayout().getWidth();
+      int _plus = (_x + _width);
+      this.xmax = Math.max(this.xmax, _plus);
+      int _y = e.getLayout().getY();
+      int _height = e.getLayout().getHeight();
+      int _plus_1 = (_y + _height);
+      _xblockexpression = this.ymax = Math.max(this.ymax, _plus_1);
     }
     return _xblockexpression;
   }
@@ -107,15 +95,7 @@ public class FSMSelectionZone {
   
   public void detectElement(final Point p, final FSMElement o, final List<FSMElement> l) {
     final boolean isWithinElement = this.isWithinElement(p, o);
-    boolean _and = false;
-    if (!((isWithinElement && (o != null)) && (l != null))) {
-      _and = false;
-    } else {
-      int _size = l.size();
-      boolean _equals = (_size == 0);
-      _and = _equals;
-    }
-    if (_and) {
+    if ((((isWithinElement && (o != null)) && (l != null)) && (l.size() == 0))) {
       l.add(o);
     }
   }
@@ -142,8 +122,7 @@ public class FSMSelectionZone {
     for (final State s : _states) {
       {
         this.detectElement(z, s, candidates);
-        CommandList _commandList = s.getCommandList();
-        this.detectElement(z, _commandList, candidates);
+        this.detectElement(z, s.getCommandList(), candidates);
         EList<Transition> _transition = s.getTransition();
         for (final Transition t : _transition) {
           this.detectElement(z, t, candidates);
@@ -177,8 +156,7 @@ public class FSMSelectionZone {
     for (final State s : _states) {
       {
         this.detectElement(p, s, candidates);
-        CommandList _commandList = s.getCommandList();
-        this.detectElement(p, _commandList, candidates);
+        this.detectElement(p, s.getCommandList(), candidates);
         EList<Transition> _transition = s.getTransition();
         for (final Transition t : _transition) {
           this.detectElement(p, t, candidates);
@@ -243,8 +221,7 @@ public class FSMSelectionZone {
       String _plus_10 = (_plus_8 + Integer.valueOf(_plus_9));
       String _plus_11 = (_plus_10 + "]");
       this.debug(_plus_11);
-      LayoutInfo _layout = e.getLayout();
-      boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, _layout);
+      boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, e.getLayout());
       if (_inRectangle) {
         InputOutput.<String>println("\tYES !");
         return true;
@@ -266,69 +243,9 @@ public class FSMSelectionZone {
     int _height = l.getHeight();
     boolean _greaterThan = (_height > 0);
     if (_greaterThan) {
-      boolean _and = false;
-      boolean _and_1 = false;
-      boolean _and_2 = false;
-      int _x = l.getX();
-      boolean _greaterEqualsThan = (x >= _x);
-      if (!_greaterEqualsThan) {
-        _and_2 = false;
-      } else {
-        int _x_1 = l.getX();
-        int _width = l.getWidth();
-        int _plus = (_x_1 + _width);
-        boolean _lessEqualsThan = (x <= _plus);
-        _and_2 = _lessEqualsThan;
-      }
-      if (!_and_2) {
-        _and_1 = false;
-      } else {
-        int _y = l.getY();
-        boolean _greaterEqualsThan_1 = (y >= _y);
-        _and_1 = _greaterEqualsThan_1;
-      }
-      if (!_and_1) {
-        _and = false;
-      } else {
-        int _y_1 = l.getY();
-        int _height_1 = l.getHeight();
-        int _plus_1 = (_y_1 + _height_1);
-        boolean _lessEqualsThan_1 = (y <= _plus_1);
-        _and = _lessEqualsThan_1;
-      }
-      return _and;
+      return ((((x >= l.getX()) && (x <= (l.getX() + l.getWidth()))) && (y >= l.getY())) && (y <= (l.getY() + l.getHeight())));
     } else {
-      boolean _and_3 = false;
-      boolean _and_4 = false;
-      boolean _and_5 = false;
-      int _x_2 = l.getX();
-      boolean _greaterEqualsThan_2 = (x >= _x_2);
-      if (!_greaterEqualsThan_2) {
-        _and_5 = false;
-      } else {
-        int _x_3 = l.getX();
-        int _width_1 = l.getWidth();
-        int _plus_2 = (_x_3 + _width_1);
-        boolean _lessEqualsThan_2 = (x <= _plus_2);
-        _and_5 = _lessEqualsThan_2;
-      }
-      if (!_and_5) {
-        _and_4 = false;
-      } else {
-        int _y_2 = l.getY();
-        int _height_2 = l.getHeight();
-        int _plus_3 = (_y_2 + _height_2);
-        boolean _greaterEqualsThan_3 = (y >= _plus_3);
-        _and_4 = _greaterEqualsThan_3;
-      }
-      if (!_and_4) {
-        _and_3 = false;
-      } else {
-        int _y_3 = l.getY();
-        boolean _lessEqualsThan_3 = (y <= _y_3);
-        _and_3 = _lessEqualsThan_3;
-      }
-      return _and_3;
+      return ((((x >= l.getX()) && (x <= (l.getX() + l.getWidth()))) && (y >= (l.getY() + l.getHeight()))) && (y <= l.getY()));
     }
   }
   
@@ -353,8 +270,7 @@ public class FSMSelectionZone {
       String _plus_8 = (_plus_6 + Integer.valueOf(_plus_7));
       String _plus_9 = (_plus_8 + "]");
       this.debug(_plus_9);
-      LayoutInfo _layout = e.getLayout();
-      boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, _layout);
+      boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, e.getLayout());
       if (_inRectangle) {
         this.debug("\tYES !");
         return true;
@@ -385,31 +301,8 @@ public class FSMSelectionZone {
       String _plus_9 = (_plus_7 + Integer.valueOf(_plus_8));
       String _plus_10 = (_plus_9 + "]");
       this.debug(_plus_10);
-      boolean _and = false;
-      int _x_2 = l.getX();
-      boolean _greaterThan = (p.x > _x_2);
-      if (!_greaterThan) {
-        _and = false;
-      } else {
-        int _x_3 = l.getX();
-        int _width_1 = l.getWidth();
-        int _plus_11 = (_x_3 + _width_1);
-        boolean _lessThan = (p.x < _plus_11);
-        _and = _lessThan;
-      }
-      if (_and) {
-        boolean _and_1 = false;
-        int _y_2 = l.getY();
-        boolean _greaterThan_1 = (p.y > _y_2);
-        if (!_greaterThan_1) {
-          _and_1 = false;
-        } else {
-          int _y_3 = l.getY();
-          int _plus_12 = (_y_3 + FSMDrawing.FSM_TITLE_HEIGHT);
-          boolean _lessThan_1 = (p.y < _plus_12);
-          _and_1 = _lessThan_1;
-        }
-        if (_and_1) {
+      if (((p.x > l.getX()) && (p.x < (l.getX() + l.getWidth())))) {
+        if (((p.y > l.getY()) && (p.y < (l.getY() + FSMDrawing.FSM_TITLE_HEIGHT)))) {
           this.debug("\tYES !");
           return true;
         }
@@ -470,17 +363,7 @@ public class FSMSelectionZone {
       String _plus_6 = (_plus_5 + Integer.valueOf(_height));
       String _plus_7 = (_plus_6 + ",]   ");
       this.debug(_plus_7);
-      boolean _and = false;
-      LayoutInfo _layout = e.getLayout();
-      boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, _layout);
-      if (!_inRectangle) {
-        _and = false;
-      } else {
-        State _dst = e.getDst();
-        boolean _notEquals = (!Objects.equal(_dst, null));
-        _and = _notEquals;
-      }
-      if (_and) {
+      if ((FSMSelectionZone.inRectangle(p.x, p.y, e.getLayout()) && (!Objects.equal(e.getDst(), null)))) {
         this.debug("\tYES !");
         return true;
       }
@@ -510,8 +393,7 @@ public class FSMSelectionZone {
       String _plus_8 = (_plus_6 + Integer.valueOf(_plus_7));
       String _plus_9 = (_plus_8 + "]");
       this.debug(_plus_9);
-      LayoutInfo _layout = e.getLayout();
-      boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, _layout);
+      boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, e.getLayout());
       if (_inRectangle) {
         this.debug("\tYES !");
         return true;
@@ -542,8 +424,7 @@ public class FSMSelectionZone {
       String _plus_8 = (_plus_6 + Integer.valueOf(_plus_7));
       String _plus_9 = (_plus_8 + "]");
       this.debug(_plus_9);
-      LayoutInfo _layout = e.getLayout();
-      boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, _layout);
+      boolean _inRectangle = FSMSelectionZone.inRectangle(p.x, p.y, e.getLayout());
       if (_inRectangle) {
         this.debug("\tYES !");
         return true;
@@ -597,18 +478,7 @@ public class FSMSelectionZone {
   }
   
   protected boolean _isWithinZone(final Zone p, final Transition e) {
-    boolean _and = false;
-    LayoutInfo _layout = e.getLayout();
-    Zone _zone = new Zone(_layout);
-    boolean _contains = p.contains(_zone);
-    if (!_contains) {
-      _and = false;
-    } else {
-      State _dst = e.getDst();
-      boolean _notEquals = (!Objects.equal(_dst, null));
-      _and = _notEquals;
-    }
-    return _and;
+    return (p.contains(new Zone(e.getLayout())) && (!Objects.equal(e.getDst(), null)));
   }
   
   public boolean isWithinElement(final Point p, final FSMElement e) {

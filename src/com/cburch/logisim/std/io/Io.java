@@ -99,7 +99,9 @@ public class Io extends Library {
 					Strings.getter("NiosIIDisassembly"), "NiosIIDisassembly.gif",
 					"NiosIIDisassembly"),
 			new FactoryDescription("TTY", Strings.getter("ttyComponent"),
-					"tty.gif", "Tty"), };
+					"tty.gif", "Tty"),
+			new FactoryDescription("TTYPFO", Strings.getter("ttyPFOComponent"),
+					"tty.gif", "Tty") };
 
 	private List<Tool> tools = null;
 

@@ -11,7 +11,6 @@ import com.google.common.base.Objects;
 import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Exceptions;
@@ -45,38 +44,34 @@ public class SISExport {
   public CharSequence genSIS(final FSM fsm) {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append(".i ");
-    EList<Port> _in = fsm.getIn();
     final Function1<Port, Integer> _function = (Port ip) -> {
       return Integer.valueOf(ip.getWidth());
     };
-    List<Integer> _map = ListExtensions.<Port, Integer>map(_in, _function);
     final Function2<Integer, Integer, Integer> _function_1 = (Integer p1, Integer p2) -> {
       return Integer.valueOf(((p1).intValue() + (p2).intValue()));
     };
-    Integer _reduce = IterableExtensions.<Integer>reduce(_map, _function_1);
+    Integer _reduce = IterableExtensions.<Integer>reduce(ListExtensions.<Port, Integer>map(fsm.getIn(), _function), _function_1);
     int _width = fsm.getWidth();
     int _plus = ((_reduce).intValue() + _width);
-    _builder.append(_plus, "");
+    _builder.append(_plus);
     _builder.newLineIfNotEmpty();
     _builder.append(".o ");
-    EList<Port> _out = fsm.getOut();
     final Function1<Port, Integer> _function_2 = (Port op) -> {
       return Integer.valueOf(op.getWidth());
     };
-    List<Integer> _map_1 = ListExtensions.<Port, Integer>map(_out, _function_2);
     final Function2<Integer, Integer, Integer> _function_3 = (Integer p1, Integer p2) -> {
       return Integer.valueOf(((p1).intValue() + (p2).intValue()));
     };
-    Integer _reduce_1 = IterableExtensions.<Integer>reduce(_map_1, _function_3);
+    Integer _reduce_1 = IterableExtensions.<Integer>reduce(ListExtensions.<Port, Integer>map(fsm.getOut(), _function_2), _function_3);
     int _width_1 = fsm.getWidth();
     int _plus_1 = ((_reduce_1).intValue() + _width_1);
-    _builder.append(_plus_1, "");
+    _builder.append(_plus_1);
     _builder.newLineIfNotEmpty();
     _builder.append(".ilb ");
     {
-      EList<Port> _in_1 = fsm.getIn();
+      EList<Port> _in = fsm.getIn();
       boolean _hasElements = false;
-      for(final Port ip : _in_1) {
+      for(final Port ip : _in) {
         if (!_hasElements) {
           _hasElements = true;
         } else {
@@ -91,7 +86,7 @@ public class SISExport {
             } else {
               _builder.appendImmediate(" ", "");
             }
-            _builder.append(n, "");
+            _builder.append(n);
           }
         }
       }
@@ -108,15 +103,15 @@ public class SISExport {
           _builder.appendImmediate(" ", "");
         }
         _builder.append("cs_");
-        _builder.append(i, "");
+        _builder.append(i);
       }
     }
     _builder.newLineIfNotEmpty();
     _builder.append(".ob ");
     {
-      EList<Port> _out_1 = fsm.getOut();
+      EList<Port> _out = fsm.getOut();
       boolean _hasElements_3 = false;
-      for(final Port op : _out_1) {
+      for(final Port op : _out) {
         if (!_hasElements_3) {
           _hasElements_3 = true;
         } else {
@@ -131,7 +126,7 @@ public class SISExport {
             } else {
               _builder.appendImmediate(" ", "");
             }
-            _builder.append(n_1, "");
+            _builder.append(n_1);
           }
         }
       }
@@ -148,14 +143,14 @@ public class SISExport {
           _builder.appendImmediate(" ", "");
         }
         _builder.append("ns_");
-        _builder.append(i_1, "");
+        _builder.append(i_1);
       }
     }
     _builder.newLineIfNotEmpty();
     {
       ArrayList<String> _buildTruthTable = this.buildTruthTable(fsm);
       for(final String l : _buildTruthTable) {
-        _builder.append(l, "");
+        _builder.append(l);
         _builder.newLineIfNotEmpty();
       }
     }
@@ -173,22 +168,17 @@ public class SISExport {
       sim.refreshInputPorts();
       do {
         {
-          EList<Port> _in = fsm.getIn();
-          int _size = _in.size();
+          int _size = fsm.getIn().size();
           int _minus = (_size - 1);
           IntegerRange _upTo = new IntegerRange(0, _minus);
           for (final int i : _upTo) {
             {
-              EList<Port> _in_1 = fsm.getIn();
-              Port _get = _in_1.get(i);
+              Port _get = fsm.getIn().get(i);
               final InputPort ip = ((InputPort) _get);
-              String _quotedBinaryValue = ic.getQuotedBinaryValue(i);
-              sim.updateInput(ip, _quotedBinaryValue);
+              sim.updateInput(ip, ic.getQuotedBinaryValue(i));
             }
           }
-          EList<Port> _in_1 = fsm.getIn();
-          int _size_1 = _in_1.size();
-          final String currentCode = ic.getQuotedBinaryValue(_size_1);
+          final String currentCode = ic.getQuotedBinaryValue(fsm.getIn().size());
           sim.setCurrentState(null);
           EList<State> _states = fsm.getStates();
           for (final State s : _states) {
@@ -199,13 +189,13 @@ public class SISExport {
             }
           }
           State _currentState = sim.getCurrentState();
-          boolean _equals_1 = Objects.equal(_currentState, null);
-          if (_equals_1) {
+          boolean _tripleEquals = (_currentState == null);
+          if (_tripleEquals) {
             throw new RuntimeException("Error not matching state in FSM");
           }
           String line = "";
-          int _size_2 = ic.getSize();
-          int _minus_1 = (_size_2 - 1);
+          int _size_1 = ic.getSize();
+          int _minus_1 = (_size_1 - 1);
           IntegerRange _upTo_1 = new IntegerRange(0, _minus_1);
           for (final int i_1 : _upTo_1) {
             String _line = line;
@@ -217,18 +207,14 @@ public class SISExport {
           sim.updateState();
           sim.updateCommands();
           String _line_2 = line;
-          State _currentState_1 = sim.getCurrentState();
-          String _code_1 = _currentState_1.getCode();
-          String _replace = _code_1.replace("\"", "");
+          String _replace = sim.getCurrentState().getCode().replace("\"", "");
           line = (_line_2 + _replace);
-          EList<Port> _out = fsm.getOut();
-          int _size_3 = _out.size();
-          int _minus_2 = (_size_3 - 1);
+          int _size_2 = fsm.getOut().size();
+          int _minus_2 = (_size_2 - 1);
           IntegerRange _upTo_2 = new IntegerRange(0, _minus_2);
           for (final Integer i_2 : _upTo_2) {
             String _line_3 = line;
-            String _output = sim.getOutput((i_2).intValue());
-            String _replace_1 = _output.replace("\"", "");
+            String _replace_1 = sim.getOutput((i_2).intValue()).replace("\"", "");
             line = (_line_3 + _replace_1);
           }
           buffer.add(line);
@@ -348,8 +334,7 @@ public class SISExport {
       String _plus = (_name + ".pla");
       File _file = new File(_plus);
       final PrintStream ps = new PrintStream(_file);
-      CharSequence _genSIS = tt.genSIS(fsm);
-      ps.append(_genSIS);
+      ps.append(tt.genSIS(fsm));
       ps.close();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

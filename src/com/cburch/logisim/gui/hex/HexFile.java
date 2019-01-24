@@ -273,6 +273,6 @@ public class HexFile {
 
 	private static final String COMMENT_MARKER = "#";
 
-	private HexFile() {
+	protected HexFile() {
 	}
 }

@@ -73,10 +73,9 @@ public class BitSlicer extends InstanceFactory {
     BitWidthConfigurator _bitWidthConfigurator_1 = new BitWidthConfigurator(BitSlicer.ATTR_OUT_WIDTH, 0, 7, 0);
     JoinedConfigurator _create_2 = JoinedConfigurator.create(_bitWidthConfigurator, _bitWidthConfigurator_1);
     IntegerConfigurator _integerConfigurator = new IntegerConfigurator(BitSlicer.ATTR_OFFSET_WIDTH, 0, 7, 0);
-    JoinedConfigurator _create_3 = JoinedConfigurator.create(_create_2, _integerConfigurator);
-    this.setKeyConfigurator(_create_3);
-    Bounds _create_4 = Bounds.create((-50), (-15), 50, 30);
-    this.setOffsetBounds(_create_4);
+    this.setKeyConfigurator(
+      JoinedConfigurator.create(_create_2, _integerConfigurator));
+    this.setOffsetBounds(Bounds.create((-50), (-15), 50, 30));
   }
   
   @Override
@@ -127,9 +126,9 @@ public class BitSlicer extends InstanceFactory {
     int _width = w0.getWidth();
     int _minus = (_width - 1);
     int _plus = (offset + _minus);
-    _builder.append(_plus, "");
+    _builder.append(_plus);
     _builder.append(":");
-    _builder.append(offset, "");
+    _builder.append(offset);
     _builder.append("]");
     String s1 = _builder.toString();
     Bounds bds = painter.getBounds();
@@ -138,14 +137,14 @@ public class BitSlicer extends InstanceFactory {
     int _width_1 = w0.getWidth();
     int _minus_1 = (_width_1 - 1);
     int _plus_1 = (offset + _minus_1);
-    _builder_1.append(_plus_1, "");
+    _builder_1.append(_plus_1);
     _builder_1.append(":");
-    _builder_1.append(offset, "");
+    _builder_1.append(offset);
     _builder_1.append("]");
     painter.drawPort(0, _builder_1.toString(), Direction.WEST);
     StringConcatenation _builder_2 = new StringConcatenation();
     int _width_2 = w1.getWidth();
-    _builder_2.append(_width_2, "");
+    _builder_2.append(_width_2);
     painter.drawPort(1, _builder_2.toString(), Direction.EAST);
   }
   

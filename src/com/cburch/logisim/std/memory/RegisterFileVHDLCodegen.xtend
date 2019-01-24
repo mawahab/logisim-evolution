@@ -15,7 +15,7 @@ import com.cburch.logisim.statemachine.fSMDSL.State
 import com.cburch.logisim.statemachine.fSMDSL.Constant
 import com.cburch.logisim.statemachine.fSMDSL.Command
 import com.cburch.logisim.statemachine.fSMDSL.DefaultPredicate
-import javafx.animation.Transition
+
 import java.io.PrintStream
 import java.io.File
 import java.util.ArrayList

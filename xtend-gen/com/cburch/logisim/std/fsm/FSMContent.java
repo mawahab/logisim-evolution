@@ -34,7 +34,6 @@ import com.cburch.logisim.std.fsm.FSMEntity;
 import com.cburch.logisim.std.fsm.FSMModelListener;
 import com.cburch.logisim.std.fsm.Strings;
 import com.cburch.logisim.util.EventSourceWeakSupport;
-import com.cburch.logisim.util.StringGetter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -53,9 +52,7 @@ public class FSMContent implements Cloneable {
     int _length_1 = second.length;
     int _plus = (_length + _length_1);
     T[] result = Arrays.<T>copyOf(first, _plus);
-    int _length_2 = first.length;
-    int _length_3 = second.length;
-    System.arraycopy(second, 0, result, _length_2, _length_3);
+    System.arraycopy(second, 0, result, first.length, second.length);
     return result;
   }
   
@@ -91,13 +88,11 @@ public class FSMContent implements Cloneable {
     try {
       Object _clone = super.clone();
       FSMContent ret = ((FSMContent) _clone);
-      FSM _copy = EcoreUtil.<FSM>copy(this.fsm);
-      ret.fsm = _copy;
+      ret.fsm = EcoreUtil.<FSM>copy(this.fsm);
       ret.listeners = null;
       return ret;
     } catch (final Throwable _t) {
       if (_t instanceof CloneNotSupportedException) {
-        final CloneNotSupportedException ex = (CloneNotSupportedException)_t;
         return this;
       } else {
         throw Exceptions.sneakyThrow(_t);
@@ -313,8 +308,7 @@ public class FSMContent implements Cloneable {
   }
   
   public Port[] getPorts() {
-    Port[] _concat = FSMContent.<Port>concat(this.inputs, this.outputs);
-    return FSMContent.<Port>concat(this.ctrl, _concat);
+    return FSMContent.<Port>concat(this.ctrl, FSMContent.<Port>concat(this.inputs, this.outputs));
   }
   
   public Port[] getAllInPorts() {
@@ -335,38 +329,25 @@ public class FSMContent implements Cloneable {
   private boolean parseContent(final String content) {
     FSMSerializer parser = new FSMSerializer();
     try {
-      String _string = content.toString();
-      FSM _load = FSMSerializer.load(_string);
+      FSM _load = FSMSerializer.load(content.toString());
       this.fsm = ((FSM) _load);
-      String _name = this.fsm.getName();
-      this.name = _name;
+      this.name = this.fsm.getName();
       EList<com.cburch.logisim.statemachine.fSMDSL.Port> _in = this.fsm.getIn();
       List<InputPort> inputsDesc = ((List) _in);
       EList<com.cburch.logisim.statemachine.fSMDSL.Port> _out = this.fsm.getOut();
       List<OutputPort> outputsDesc = ((List) _out);
-      Port[] _newArrayOfSize = new Port[3];
-      this.ctrl = _newArrayOfSize;
-      int _size = inputsDesc.size();
-      Port[] _newArrayOfSize_1 = new Port[_size];
-      this.inputs = _newArrayOfSize_1;
-      int _size_1 = outputsDesc.size();
-      Port[] _newArrayOfSize_2 = new Port[_size_1];
-      this.outputs = _newArrayOfSize_2;
+      this.ctrl = new Port[3];
+      this.inputs = new Port[inputsDesc.size()];
+      this.outputs = new Port[outputsDesc.size()];
       Port _port = new Port(0, FSMEntity.HEIGHT, Port.INPUT, 1);
       this.ctrl[FSMContent.CLK] = _port;
       Port _port_1 = new Port(0, (FSMEntity.HEIGHT + FSMEntity.PORT_GAP), Port.INPUT, 1);
       this.ctrl[FSMContent.RST] = _port_1;
       Port _port_2 = new Port(0, (FSMEntity.HEIGHT + (2 * FSMEntity.PORT_GAP)), Port.INPUT, 1);
       this.ctrl[FSMContent.EN] = _port_2;
-      Port _get = this.ctrl[FSMContent.CLK];
-      StringGetter _ter = Strings.getter("registerClkTip");
-      _get.setToolTip(_ter);
-      Port _get_1 = this.ctrl[FSMContent.RST];
-      StringGetter _ter_1 = Strings.getter("registerRstTip");
-      _get_1.setToolTip(_ter_1);
-      Port _get_2 = this.ctrl[FSMContent.EN];
-      StringGetter _ter_2 = Strings.getter("registerEnableTip");
-      _get_2.setToolTip(_ter_2);
+      this.ctrl[FSMContent.CLK].setToolTip(Strings.getter("registerClkTip"));
+      this.ctrl[FSMContent.RST].setToolTip(Strings.getter("registerRstTip"));
+      this.ctrl[FSMContent.EN].setToolTip(Strings.getter("registerEnableTip"));
       this.inMap.clear();
       for (int i = 0; (i < inputsDesc.size()); i++) {
         {
@@ -378,12 +359,8 @@ public class FSMContent implements Cloneable {
           int _width = desc.getWidth();
           Port _port_3 = new Port(0, _plus_1, Port.INPUT, _width);
           this.inputs[i] = _port_3;
-          Port _get_3 = this.inputs[i];
-          String _name_1 = desc.getName();
-          StringGetter _ter_3 = Strings.getter(_name_1);
-          _get_3.setToolTip(_ter_3);
-          Port _get_4 = this.inputs[i];
-          this.inMap.put(_get_4, desc);
+          this.inputs[i].setToolTip(Strings.getter(desc.getName()));
+          this.inMap.put(this.inputs[i], desc);
         }
       }
       this.outMap.clear();
@@ -407,9 +384,7 @@ public class FSMContent implements Cloneable {
             final int _rdIndx_outputs = i;
             _xblockexpression = this.outputs[_rdIndx_outputs];
           }
-          String _name_1 = desc.getName();
-          StringGetter _ter_3 = Strings.getter(_name_1);
-          _xblockexpression.setToolTip(_ter_3);
+          _xblockexpression.setToolTip(Strings.getter(desc.getName()));
           Port _xblockexpression_1 = null;
           {
             final int _rdIndx_outputs = i;
@@ -424,9 +399,7 @@ public class FSMContent implements Cloneable {
       if (_t instanceof Exception) {
         final Exception ex = (Exception)_t;
         ex.printStackTrace();
-        String _message = ex.getMessage();
-        String _get_3 = Strings.get("validationParseError");
-        JOptionPane.showMessageDialog(null, _message, _get_3, 
+        JOptionPane.showMessageDialog(null, ex.getMessage(), Strings.get("validationParseError"), 
           JOptionPane.ERROR_MESSAGE);
         return false;
       } else {

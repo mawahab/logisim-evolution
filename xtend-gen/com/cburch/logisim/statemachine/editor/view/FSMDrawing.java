@@ -3,7 +3,6 @@ package com.cburch.logisim.statemachine.editor.view;
 import com.cburch.logisim.statemachine.PrettyPrinter;
 import com.cburch.logisim.statemachine.editor.view.DrawUtils;
 import com.cburch.logisim.statemachine.editor.view.FSMCustomFactory;
-import com.cburch.logisim.statemachine.fSMDSL.BoolExpr;
 import com.cburch.logisim.statemachine.fSMDSL.Command;
 import com.cburch.logisim.statemachine.fSMDSL.CommandList;
 import com.cburch.logisim.statemachine.fSMDSL.ConstantDef;
@@ -19,7 +18,6 @@ import com.cburch.logisim.statemachine.fSMDSL.Transition;
 import com.google.common.base.Objects;
 import java.awt.BasicStroke;
 import java.awt.Color;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
@@ -69,8 +67,7 @@ public class FSMDrawing {
       LayoutInfo _layout = e.getLayout();
       boolean _equals = Objects.equal(_layout, null);
       if (_equals) {
-        LayoutInfo _createLayoutInfo = FSMDSLFactory.eINSTANCE.createLayoutInfo();
-        e.setLayout(_createLayoutInfo);
+        e.setLayout(FSMDSLFactory.eINSTANCE.createLayoutInfo());
       }
       _xblockexpression = e.getLayout();
     }
@@ -86,11 +83,7 @@ public class FSMDrawing {
     int w = FSMCustomFactory.CMD_WIDTH;
     EList<Command> _commands = e.getCommands();
     for (final Command c : _commands) {
-      FontMetrics _fontMetrics = g.getFontMetrics();
-      String _pp = PrettyPrinter.pp(c);
-      int _stringWidth = _fontMetrics.stringWidth(_pp);
-      int _max = Math.max(w, _stringWidth);
-      w = _max;
+      w = Math.max(w, g.getFontMetrics().stringWidth(PrettyPrinter.pp(c)));
     }
     l.setWidth(w);
   }
@@ -99,20 +92,15 @@ public class FSMDrawing {
     Pair<Integer, Integer> _xblockexpression = null;
     {
       LayoutInfo l = e.getLayout();
-      FontMetrics _fontMetrics = g.getFontMetrics();
-      final int lineHeight = _fontMetrics.getHeight();
-      EList<Command> _commands = e.getCommands();
-      final int nbCommands = _commands.size();
+      final int lineHeight = g.getFontMetrics().getHeight();
+      final int nbCommands = e.getCommands().size();
       int height = Math.max(FSMCustomFactory.CMD_HEIGHT, (6 + (lineHeight * nbCommands)));
       int width = FSMCustomFactory.CMD_WIDTH;
-      EList<Command> _commands_1 = e.getCommands();
-      for (final Command c : _commands_1) {
-        FontMetrics _fontMetrics_1 = g.getFontMetrics();
-        String _pp = PrettyPrinter.pp(c);
-        int _stringWidth = _fontMetrics_1.stringWidth(_pp);
+      EList<Command> _commands = e.getCommands();
+      for (final Command c : _commands) {
+        int _stringWidth = g.getFontMetrics().stringWidth(PrettyPrinter.pp(c));
         int _plus = (8 + _stringWidth);
-        int _max = Math.max(width, _plus);
-        width = _max;
+        width = Math.max(width, _plus);
       }
       _xblockexpression = new Pair<Integer, Integer>(Integer.valueOf(width), Integer.valueOf(height));
     }
@@ -141,36 +129,26 @@ public class FSMDrawing {
       l.setX(_minus);
       l.setWidth(newW);
     }
-    FontMetrics _fontMetrics = g.getFontMetrics();
-    final int lineHeight = _fontMetrics.getHeight();
+    final int lineHeight = g.getFontMetrics().getHeight();
     g.setColor(Color.white);
-    int _x_2 = l.getX();
-    int _y = l.getY();
-    int _width = l.getWidth();
-    int _height_3 = l.getHeight();
-    g.fillRoundRect(_x_2, _y, _width, _height_3, 5, 5);
+    g.fillRoundRect(l.getX(), l.getY(), l.getWidth(), l.getHeight(), 5, 5);
     g.setColor(Color.black);
-    int _x_3 = l.getX();
-    int _y_1 = l.getY();
-    int _width_1 = l.getWidth();
-    int _height_4 = l.getHeight();
-    g.drawRoundRect(_x_3, _y_1, _width_1, _height_4, 5, 5);
+    g.drawRoundRect(l.getX(), l.getY(), l.getWidth(), l.getHeight(), 5, 5);
     int line = 1;
     EList<Command> _commands = e.getCommands();
     for (final Command c : _commands) {
       {
         String _pp = PrettyPrinter.pp(c);
-        int _x_4 = l.getX();
-        int _plus_1 = (_x_4 + 4);
-        int _y_2 = l.getY();
-        int _plus_2 = (_y_2 + (line * lineHeight));
+        int _x_2 = l.getX();
+        int _plus_1 = (_x_2 + 4);
+        int _y = l.getY();
+        int _plus_2 = (_y + (line * lineHeight));
         int _plus_3 = (_plus_2 + 1);
         g.drawString(_pp, _plus_1, _plus_3);
         line++;
       }
     }
-    LayoutInfo _layout = e.getLayout();
-    this.showZone(_layout, g);
+    this.showZone(e.getLayout(), g);
     return null;
   }
   
@@ -197,37 +175,31 @@ public class FSMDrawing {
     if (_equals_3) {
       l.setHeight(FSMCustomFactory.FSM_HEIGHT);
     }
-    FontMetrics _fontMetrics = g.getFontMetrics();
-    final int lineHeight = _fontMetrics.getHeight();
+    final int lineHeight = g.getFontMetrics().getHeight();
     int _width_1 = e.getWidth();
     String _plus = (Integer.valueOf(_width_1) + "-bit FSM : ");
     String _name = e.getName();
     String _plus_1 = (_plus + _name);
     final String label = (_plus_1 + " ");
-    FontMetrics _fontMetrics_1 = g.getFontMetrics();
-    final int lblWidth = _fontMetrics_1.stringWidth(label);
+    final int lblWidth = g.getFontMetrics().stringWidth(label);
+    g.drawRoundRect(l.getX(), l.getY(), l.getWidth(), l.getHeight(), 15, 15);
     int _x_1 = l.getX();
-    int _y_1 = l.getY();
     int _width_2 = l.getWidth();
-    int _height_1 = l.getHeight();
-    g.drawRoundRect(_x_1, _y_1, _width_2, _height_1, 15, 15);
-    int _x_2 = l.getX();
-    int _width_3 = l.getWidth();
-    int _divide = (_width_3 / 2);
-    int _plus_2 = (_x_2 + _divide);
+    int _divide = (_width_2 / 2);
+    int _plus_2 = (_x_1 + _divide);
     int _minus = (_plus_2 - (lblWidth / 2));
-    int _y_2 = l.getY();
-    int _plus_3 = (_y_2 + ((FSMDrawing.FSM_TITLE_HEIGHT + lineHeight) / 2));
+    int _y_1 = l.getY();
+    int _plus_3 = (_y_1 + ((FSMDrawing.FSM_TITLE_HEIGHT + lineHeight) / 2));
     g.drawString(label, _minus, _plus_3);
+    int _x_2 = l.getX();
+    int _y_2 = l.getY();
+    int _plus_4 = (_y_2 + FSMDrawing.FSM_TITLE_HEIGHT);
     int _x_3 = l.getX();
+    int _width_3 = l.getWidth();
+    int _plus_5 = (_x_3 + _width_3);
     int _y_3 = l.getY();
-    int _plus_4 = (_y_3 + FSMDrawing.FSM_TITLE_HEIGHT);
-    int _x_4 = l.getX();
-    int _width_4 = l.getWidth();
-    int _plus_5 = (_x_4 + _width_4);
-    int _y_4 = l.getY();
-    int _plus_6 = (_y_4 + FSMDrawing.FSM_TITLE_HEIGHT);
-    g.drawLine(_x_3, _plus_4, _plus_5, _plus_6);
+    int _plus_6 = (_y_3 + FSMDrawing.FSM_TITLE_HEIGHT);
+    g.drawLine(_x_2, _plus_4, _plus_5, _plus_6);
     EList<Port> _in = e.getIn();
     for (final Port p : _in) {
       this.drawElement(p, g, selection);
@@ -236,31 +208,31 @@ public class FSMDrawing {
     EList<ConstantDef> _constants = e.getConstants();
     for (final ConstantDef cst : _constants) {
       {
-        int _x_5 = l.getX();
-        boolean _equals_4 = (_x_5 == 0);
+        int _x_4 = l.getX();
+        boolean _equals_4 = (_x_4 == 0);
         if (_equals_4) {
           l.setX(FSMDrawing.FSM_BORDER_X);
         }
-        int _y_5 = l.getY();
-        boolean _equals_5 = (_y_5 == 0);
+        int _y_4 = l.getY();
+        boolean _equals_5 = (_y_4 == 0);
         if (_equals_5) {
           l.setY(FSMDrawing.FSM_BORDER_Y);
         }
-        int _width_5 = l.getWidth();
-        boolean _equals_6 = (_width_5 == 0);
+        int _width_4 = l.getWidth();
+        boolean _equals_6 = (_width_4 == 0);
         if (_equals_6) {
           l.setWidth(FSMCustomFactory.FSM_WIDTH);
         }
-        int _height_2 = l.getHeight();
-        boolean _equals_7 = (_height_2 == 0);
+        int _height_1 = l.getHeight();
+        boolean _equals_7 = (_height_1 == 0);
         if (_equals_7) {
           l.setHeight(FSMCustomFactory.FSM_HEIGHT);
         }
         String _pp = PrettyPrinter.pp(cst);
-        int _x_6 = l.getX();
-        int _plus_7 = (_x_6 + 10);
-        int _y_6 = l.getY();
-        int _plus_8 = (_y_6 + offset);
+        int _x_5 = l.getX();
+        int _plus_7 = (_x_5 + 10);
+        int _y_5 = l.getY();
+        int _plus_8 = (_y_5 + offset);
         g.drawString(_pp, _plus_7, _plus_8);
         int _offset = offset;
         offset = (_offset + (lineHeight + 3));
@@ -283,8 +255,7 @@ public class FSMDrawing {
     }
     EList<State> _states_2 = e.getStates();
     for (final State s_2 : _states_2) {
-      CommandList _commandList = s_2.getCommandList();
-      this.drawElement(_commandList, g, selection);
+      this.drawElement(s_2.getCommandList(), g, selection);
     }
     return null;
   }
@@ -300,56 +271,38 @@ public class FSMDrawing {
     }
     final int radius = l.getWidth();
     g.setColor(Color.white);
-    int _x = l.getX();
-    int _y = l.getY();
-    g.fillOval(_x, _y, (2 * radius), (2 * radius));
+    g.fillOval(l.getX(), l.getY(), (2 * radius), (2 * radius));
     g.setColor(Color.black);
     g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    FontMetrics _fontMetrics = g.getFontMetrics();
+    int labelWidth = g.getFontMetrics().stringWidth(e.getName());
     String _name = e.getName();
-    int labelWidth = _fontMetrics.stringWidth(_name);
-    String _name_1 = e.getName();
-    int _x_1 = l.getX();
-    int _plus = (_x_1 + radius);
+    int _x = l.getX();
+    int _plus = (_x + radius);
     int _minus = (_plus - (labelWidth / 2));
-    int _y_1 = l.getY();
-    int _plus_1 = (_y_1 + radius);
+    int _y = l.getY();
+    int _plus_1 = (_y + radius);
     int _minus_1 = (_plus_1 - 3);
-    g.drawString(_name_1, _minus, _minus_1);
-    FontMetrics _fontMetrics_1 = g.getFontMetrics();
+    g.drawString(_name, _minus, _minus_1);
+    labelWidth = g.getFontMetrics().stringWidth(e.getCode());
     String _code = e.getCode();
-    int _stringWidth = _fontMetrics_1.stringWidth(_code);
-    labelWidth = _stringWidth;
-    String _code_1 = e.getCode();
-    int _x_2 = l.getX();
-    int _plus_2 = (_x_2 + radius);
+    int _x_1 = l.getX();
+    int _plus_2 = (_x_1 + radius);
     int _minus_2 = (_plus_2 - (labelWidth / 2));
-    int _y_2 = l.getY();
-    int _plus_3 = (_y_2 + radius);
+    int _y_1 = l.getY();
+    int _plus_3 = (_y_1 + radius);
     int _plus_4 = (_plus_3 + 13);
-    g.drawString(_code_1, _minus_2, _plus_4);
-    int _x_3 = l.getX();
-    int _y_3 = l.getY();
-    g.drawOval(_x_3, _y_3, (2 * radius), (2 * radius));
-    boolean _and = false;
-    EObject _eContainer = e.eContainer();
-    boolean _notEquals = (!Objects.equal(_eContainer, null));
-    if (!_notEquals) {
-      _and = false;
-    } else {
-      EObject _eContainer_1 = e.eContainer();
-      _and = (_eContainer_1 instanceof FSM);
-    }
-    if (_and) {
-      EObject _eContainer_2 = e.eContainer();
-      final FSM fsm = ((FSM) _eContainer_2);
+    g.drawString(_code, _minus_2, _plus_4);
+    g.drawOval(l.getX(), l.getY(), (2 * radius), (2 * radius));
+    if (((!Objects.equal(e.eContainer(), null)) && (e.eContainer() instanceof FSM))) {
+      EObject _eContainer = e.eContainer();
+      final FSM fsm = ((FSM) _eContainer);
       State _start = fsm.getStart();
       boolean _equals_1 = Objects.equal(_start, e);
       if (_equals_1) {
-        int _x_4 = l.getX();
-        int _minus_3 = (_x_4 - 3);
-        int _y_4 = l.getY();
-        int _minus_4 = (_y_4 - 3);
+        int _x_2 = l.getX();
+        int _minus_3 = (_x_2 - 3);
+        int _y_2 = l.getY();
+        int _minus_4 = (_y_2 - 3);
         g.drawOval(_minus_3, _minus_4, ((2 * radius) + 6), ((2 * radius) + 6));
       }
     }
@@ -372,8 +325,7 @@ public class FSMDrawing {
     {
       Point p = null;
       if ((dx != 0)) {
-        double _abs = Math.abs((((double) dy) / ((double) dx)));
-        final double angle = Math.atan(_abs);
+        final double angle = Math.atan(Math.abs((((double) dy) / ((double) dx))));
         double _cos = Math.cos(angle);
         double _multiply = (radius * _cos);
         int cosx = ((int) _multiply);
@@ -414,13 +366,10 @@ public class FSMDrawing {
     final LayoutInfo sl = src.getLayout();
     final LayoutInfo l = e.getLayout();
     final int radius = sl.getWidth();
-    BoolExpr _predicate = e.getPredicate();
-    final String pp = PrettyPrinter.pp(_predicate);
-    FontMetrics _fontMetrics = g.getFontMetrics();
-    int _height = _fontMetrics.getHeight();
+    final String pp = PrettyPrinter.pp(e.getPredicate());
+    int _height = g.getFontMetrics().getHeight();
     final int ph = (_height + 6);
-    FontMetrics _fontMetrics_1 = g.getFontMetrics();
-    int _stringWidth = _fontMetrics_1.stringWidth(pp);
+    int _stringWidth = g.getFontMetrics().stringWidth(pp);
     final int pw = (_stringWidth + 6);
     int _x = l.getX();
     int _plus = (_x + (pw / 2));
@@ -443,8 +392,7 @@ public class FSMDrawing {
     boolean _notEquals_1 = (!Objects.equal(_dst, null));
     if (_notEquals_1) {
       g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-      State _dst_1 = e.getDst();
-      final LayoutInfo dl = _dst_1.getLayout();
+      final LayoutInfo dl = e.getDst().getLayout();
       int _x_3 = dl.getX();
       int _x_4 = l.getX();
       int _minus_4 = (_x_3 - _x_4);
@@ -495,27 +443,20 @@ public class FSMDrawing {
       Rectangle2D.Double _double = new Rectangle2D.Double(_x_8, _y_8, pw, ph);
       g.fill(_double);
       g.setColor(Color.GRAY);
-      int _x_9 = l.getX();
-      int _y_9 = l.getY();
-      g.drawRect(_x_9, _y_9, pw, ph);
-      int _x_10 = l.getX();
-      int _y_10 = l.getY();
-      g.drawRect(_x_10, _y_10, pw, ph);
+      g.drawRect(l.getX(), l.getY(), pw, ph);
+      g.drawRect(l.getX(), l.getY(), pw, ph);
       l.setWidth(pw);
       l.setHeight(ph);
       g.setColor(Color.BLACK);
-      int _x_11 = l.getX();
-      int _y_11 = l.getY();
-      int _plus_10 = (_y_11 + ph);
+      int _x_9 = l.getX();
+      int _y_9 = l.getY();
+      int _plus_10 = (_y_9 + ph);
       int _minus_8 = (_plus_10 - 3);
-      g.drawString(pp, _x_11, _minus_8);
+      g.drawString(pp, _x_9, _minus_8);
     } else {
-      int _x_12 = l.getX();
-      int _y_12 = l.getY();
-      g.drawLine(srcx, srcy, _x_12, _y_12);
+      g.drawLine(srcx, srcy, l.getX(), l.getY());
     }
-    LayoutInfo _layout = e.getLayout();
-    this.showZone(_layout, g);
+    this.showZone(e.getLayout(), g);
     return null;
   }
   
@@ -525,30 +466,26 @@ public class FSMDrawing {
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("[");
       int _x = l.getX();
-      _builder.append(_x, "");
+      _builder.append(_x);
       _builder.append(",");
       int _y = l.getY();
-      _builder.append(_y, "");
+      _builder.append(_y);
       _builder.append("-");
       int _x_1 = l.getX();
       int _width = l.getWidth();
       int _plus = (_x_1 + _width);
-      _builder.append(_plus, "");
+      _builder.append(_plus);
       _builder.append(",");
       int _y_1 = l.getY();
       int _height = l.getHeight();
       int _plus_1 = (_y_1 + _height);
-      _builder.append(_plus_1, "");
+      _builder.append(_plus_1);
       _builder.append("]");
       int _x_2 = l.getX();
       int _y_2 = l.getY();
       int _minus = (_y_2 - 8);
       g.drawString(_builder.toString(), _x_2, _minus);
-      int _x_3 = l.getX();
-      int _y_3 = l.getY();
-      int _width_1 = l.getWidth();
-      int _height_1 = l.getHeight();
-      g.drawRect(_x_3, _y_3, _width_1, _height_1);
+      g.drawRect(l.getX(), l.getY(), l.getWidth(), l.getHeight());
       g.setColor(Color.black);
     }
   }
@@ -574,64 +511,61 @@ public class FSMDrawing {
       String _plus_1 = (_plus + ":0]");
       label = (_label + _plus_1);
     }
-    FontMetrics _fontMetrics = page.getFontMetrics();
-    int _stringWidth = _fontMetrics.stringWidth(label);
+    int _stringWidth = page.getFontMetrics().stringWidth(label);
     int _plus_2 = (6 + _stringWidth);
     l.setWidth(_plus_2);
     if (left) {
       EObject _eContainer_1 = e.eContainer();
-      LayoutInfo _layout = ((FSM) _eContainer_1).getLayout();
-      int _x = _layout.getX();
-      l.setX(_x);
+      l.setX(((FSM) _eContainer_1).getLayout().getX());
       l.setHeight(FSMDrawing.PORT_HEIGHT);
-      int _x_1 = l.getX();
+      int _x = l.getX();
       int _y = l.getY();
       int _width_2 = l.getWidth();
       int _height = l.getHeight();
       int _plus_3 = (_height + 4);
-      page.drawRect(_x_1, _y, _width_2, _plus_3);
-      int _x_2 = l.getX();
-      int _plus_4 = (_x_2 + 3);
+      page.drawRect(_x, _y, _width_2, _plus_3);
+      int _x_1 = l.getX();
+      int _plus_4 = (_x_1 + 3);
       int _y_1 = l.getY();
       int _height_1 = l.getHeight();
       int _plus_5 = (_y_1 + _height_1);
       page.drawString(label, _plus_4, _plus_5);
-      int _x_3 = l.getX();
-      int _minus_1 = (_x_3 - (FSMDrawing.INPUT_X / 2));
+      int _x_2 = l.getX();
+      int _minus_1 = (_x_2 - (FSMDrawing.INPUT_X / 2));
       int _y_2 = l.getY();
       int _plus_6 = (_y_2 + (FSMDrawing.PORT_HEIGHT / 2));
-      int _x_4 = l.getX();
+      int _x_3 = l.getX();
       int _y_3 = l.getY();
       int _plus_7 = (_y_3 + (FSMDrawing.PORT_HEIGHT / 2));
-      DrawUtils.drawArrowLine(page, _minus_1, _plus_6, _x_4, _plus_7, 8, 8, false);
+      DrawUtils.drawArrowLine(page, _minus_1, _plus_6, _x_3, _plus_7, 8, 8, false);
     } else {
-      int _x_5 = fsmLayout.getX();
+      int _x_4 = fsmLayout.getX();
       int _width_3 = fsmLayout.getWidth();
-      int _plus_8 = (_x_5 + _width_3);
+      int _plus_8 = (_x_4 + _width_3);
       int _width_4 = l.getWidth();
       int _minus_2 = (_plus_8 - _width_4);
       l.setX(_minus_2);
       l.setHeight(FSMDrawing.PORT_HEIGHT);
-      int _x_6 = l.getX();
+      int _x_5 = l.getX();
       int _y_4 = l.getY();
       int _width_5 = l.getWidth();
       int _height_2 = l.getHeight();
       int _plus_9 = (_height_2 + 4);
-      page.drawRect(_x_6, _y_4, _width_5, _plus_9);
-      int _x_7 = l.getX();
-      int _plus_10 = (_x_7 + 3);
+      page.drawRect(_x_5, _y_4, _width_5, _plus_9);
+      int _x_6 = l.getX();
+      int _plus_10 = (_x_6 + 3);
       int _y_5 = l.getY();
       int _height_3 = l.getHeight();
       int _plus_11 = (_y_5 + _height_3);
       page.drawString(label, _plus_10, _plus_11);
-      int _x_8 = l.getX();
+      int _x_7 = l.getX();
       int _width_6 = l.getWidth();
-      int _plus_12 = (_x_8 + _width_6);
+      int _plus_12 = (_x_7 + _width_6);
       int _y_6 = l.getY();
       int _plus_13 = (_y_6 + (FSMDrawing.PORT_HEIGHT / 2));
-      int _x_9 = l.getX();
+      int _x_8 = l.getX();
       int _width_7 = l.getWidth();
-      int _plus_14 = (_x_9 + _width_7);
+      int _plus_14 = (_x_8 + _width_7);
       int _plus_15 = (_plus_14 + (FSMDrawing.INPUT_X / 2));
       int _y_7 = l.getY();
       int _plus_16 = (_y_7 + (FSMDrawing.PORT_HEIGHT / 2));
@@ -641,8 +575,7 @@ public class FSMDrawing {
   
   protected Object _drawElement(final OutputPort e, final Graphics2D page, final List<FSMElement> selection) {
     this.highlightSelection(e, page, selection);
-    LayoutInfo _layout = e.getLayout();
-    this.showZone(_layout, page);
+    this.showZone(e.getLayout(), page);
     this.drawPort(e, page, false);
     return null;
   }

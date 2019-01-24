@@ -49,12 +49,14 @@ public class FSMStateEditPanel extends JPanel{
 	private boolean checkInput(int result) {
 		FSM fsm = (FSM)(state.eContainer());
 		if (result == JOptionPane.OK_OPTION) {
-			String txt = codeField.getText();
+			
 			if(initialState.isSelected()) {
 				fsm.setStart(state);
 			}
-			if (!FSMValidation.isValidBinaryString(codeField.getText(), fsm.getWidth())) {
-				JOptionPane.showMessageDialog(null, "Error: Please enter a binary code (instead of "+codeField.getText()+")", "Error Message",
+			String text = codeField.getText();
+			int width2 = fsm.getWidth();
+			if (!FSMValidation.isValidBinaryString(text, width2)) {
+				JOptionPane.showMessageDialog(null, "Error: Please enter a binary code (instead of "+text+")", "Error Message",
 						JOptionPane.ERROR_MESSAGE);
 				return true;
 			}

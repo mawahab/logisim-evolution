@@ -33,14 +33,12 @@ package com.cburch.logisim.std.memory;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Polygon;
 
-import org.eclipse.xpand2.XpandExecutionContextImpl.DefinitionOperationAdapter;
 
 import com.bfh.logisim.designrulecheck.CorrectLabel;
+import com.cburch.logisim.cpu.NIOS2Instr;
 import com.cburch.logisim.data.Attribute;
-import com.cburch.logisim.data.AttributeOption;
 import com.cburch.logisim.data.AttributeSet;
 import com.cburch.logisim.data.Attributes;
 import com.cburch.logisim.data.BitWidth;
@@ -53,35 +51,25 @@ import com.cburch.logisim.instance.InstancePainter;
 import com.cburch.logisim.instance.InstanceState;
 import com.cburch.logisim.instance.Port;
 import com.cburch.logisim.instance.StdAttr;
-import com.cburch.logisim.tools.key.BitWidthConfigurator;
 import com.cburch.logisim.util.GraphicsUtil;
-import com.cburch.logisim.util.StringUtil;
 
 public class Nios2Simulator extends InstanceFactory {
 	
 	public static final int ROW_HEIGHT = 18;
-
 	public static final int COL_WIDTH = 130;
-
-	public  static final int HEIGHT = 220;
-
-	public  static final int WIDTH = 240;
-	
-	public  static final int OFFX_VAL = 30;
-	public  static final int OFFY_VAL = 35;
-
-	public  static final int UP_X = OFFX_VAL+25;
+	public  static final int HEIGHT = 230;
+	public  static final int WIDTH = 320;
+	public  static final int OFFX_VAL = 100;
+	public  static final int OFFY_VAL = 40;
+	public  static final int UP_X = OFFX_VAL-20;
 	public  static final int UP_Y = OFFY_VAL;
-
 	public  static final int DOWN_X = UP_X;
-
 	private static final int NB_ROW = 8;
 	public  static final int DOWN_Y = UP_Y+(NB_ROW-1)*ROW_HEIGHT+5;
-
 	
-	Port[] ps = new Port[9];
+	Port[] ps = new Port[13];
 	
-	public static void DrawRegister(InstancePainter painter, int x, int y, int nr_of_bits, boolean has_we,
+	public static void drawNiosII(InstancePainter painter, int x, int y,  boolean has_we,
 			Nios2Data data) {
 
 		Graphics g = painter.getGraphics();
@@ -89,24 +77,30 @@ public class Nios2Simulator extends InstanceFactory {
 		g.drawRect(x, y , WIDTH, HEIGHT);
 		GraphicsUtil.switchToWidth(g, 1);
 		
-		GraphicsUtil.drawCenteredText(g,"Nios II ISS",x+WIDTH/2, y+10);
+		GraphicsUtil.drawCenteredText(g,"NIOS II SIMULATOR",x+WIDTH/2, y+8);
+		GraphicsUtil.drawCenteredText(g,"("+data.currentState.name()+")",x+WIDTH/2, y+25);
 
-		GraphicsUtil.drawCenteredText(g,"CLK",x+15, y+30);
-		GraphicsUtil.drawCenteredText(g,"RST",x+15, y+60);
+		GraphicsUtil.drawText(g,"CLK",x+5, y+20, GraphicsUtil.H_LEFT,GraphicsUtil.V_CENTER);
+		GraphicsUtil.drawText(g,"RST",x+5, y+40, GraphicsUtil.H_LEFT,GraphicsUtil.V_CENTER);
 
-		GraphicsUtil.drawCenteredText(g,"DI",x+15, y+120 );
-		GraphicsUtil.drawCenteredText(g,"WE",x+15, y+160);
+		GraphicsUtil.drawText(g,"IO_ACK",x+5, y+60, GraphicsUtil.H_LEFT,GraphicsUtil.V_CENTER);
+		GraphicsUtil.drawText(g,"BRKPT",x+5, y+80, GraphicsUtil.H_LEFT,GraphicsUtil.V_CENTER);
+		GraphicsUtil.drawText(g,"DEBUG",x+5, y+100, GraphicsUtil.H_LEFT,GraphicsUtil.V_CENTER);
+		GraphicsUtil.drawText(g,"CPU_DIN",x+WIDTH-5, y+20 , GraphicsUtil.H_RIGHT,GraphicsUtil.V_CENTER);
+		GraphicsUtil.drawText(g,"CPU_DOUT",x+WIDTH-5, y+40, GraphicsUtil.H_RIGHT,GraphicsUtil.V_CENTER);
+		GraphicsUtil.drawText(g,"CPU_ADDR",x+WIDTH-5, y+60, GraphicsUtil.H_RIGHT,GraphicsUtil.V_CENTER);
+		GraphicsUtil.drawText(g,"CPU_IOWR",x+WIDTH-5, y+80, GraphicsUtil.H_RIGHT,GraphicsUtil.V_CENTER);
+		GraphicsUtil.drawText(g,"CPU_IORD",x+WIDTH-5, y+100, GraphicsUtil.H_RIGHT,GraphicsUtil.V_CENTER);
+		GraphicsUtil.drawText(g,"CPU_MEMWR",x+WIDTH-5, y+120, GraphicsUtil.H_RIGHT,GraphicsUtil.V_CENTER);
+		GraphicsUtil.drawText(g,"CPU_MEMRD",x+WIDTH-5, y+140, GraphicsUtil.H_RIGHT,GraphicsUtil.V_CENTER);
+		GraphicsUtil.drawText(g,"CPU_BWE",x+WIDTH-5, y+160, GraphicsUtil.H_RIGHT,GraphicsUtil.V_CENTER);
 
-		GraphicsUtil.drawCenteredText(g,"DO0",x+WIDTH-20, y+80 );
-		GraphicsUtil.drawCenteredText(g,"DO1",x+WIDTH-20, y+HEIGHT-80);
-
-		GraphicsUtil.drawCenteredText(g,"WAD" ,x+40,  y+HEIGHT-15);
-		GraphicsUtil.drawCenteredText(g,"RAD0",x+120, y+HEIGHT-15);
-		GraphicsUtil.drawCenteredText(g,"RAD1",x+180, y+HEIGHT-15);
-
+		NIOS2Instr i = new NIOS2Instr(data.getIR());
+		GraphicsUtil.drawText(g,i.toString().toUpperCase(),x+OFFX_VAL, y+HEIGHT-20, GraphicsUtil.H_LEFT,GraphicsUtil.V_TOP);
+		GraphicsUtil.drawText(g,"PC="+String.format("%08X",data.getPC()),x+OFFX_VAL, y+HEIGHT-40, GraphicsUtil.H_LEFT,GraphicsUtil.V_TOP);
 		
 		
-		drawRegValues(g, x+OFFX_VAL+40, y+OFFY_VAL, data.getOffset(), NB_ROW, nr_of_bits, has_we, data);
+		drawRegValues(g, x+OFFX_VAL, y+OFFY_VAL, data.getOffset(), NB_ROW,  has_we, data);
 		drawTriangle(g, x + UP_X, y +UP_Y, 15, 15, false);
 		drawTriangle(g, x + DOWN_X, y +DOWN_Y, 15, 15, true);
 		g.fillRect(x+ UP_X+5, y+UP_Y+9, 4, DOWN_Y-UP_Y-5);
@@ -114,15 +108,15 @@ public class Nios2Simulator extends InstanceFactory {
 		
 	}
 	
-	static void  drawRegValues(Graphics g,  int x, int y,int offset, int nvalues, int nr_of_bits, boolean has_we,
+	static void  drawRegValues(Graphics g,  int x, int y,int offset, int nvalues, boolean has_we,
 			Nios2Data data) {
 		g.setColor(Color.LIGHT_GRAY);
 		g.fillRect(x-20, y-4, 140, nvalues*ROW_HEIGHT+8);
 		g.setColor(Color.black);
-		for (int r = offset; r < Math.min(offset+nvalues, data.regs.length-1); r += 1) {
+		for (int r = offset; r < Math.min(offset+nvalues, data.R.length-1); r += 1) {
 			int locY = y + ROW_HEIGHT * (r-offset);
 			int address = r;
-			String code = getPaddedBinary(nr_of_bits, data, address);
+			String code = getPaddedBinary(32, data, address);
 			if(data.lastRegEvent!=r) {
 				g.drawRect(x+30, locY, 80, ROW_HEIGHT-3);
 				g.drawString("R" + address, x+5, locY+13);
@@ -166,9 +160,13 @@ public class Nios2Simulator extends InstanceFactory {
 	public static final int CPU_ADDR = 6;
 	public static final int MEM_WR = 7;
 	public static final int MEM_RD = 8;
-	public static final int WAIT_REQ= 9;
+	public static final int IO_ACK= 9;
+	public static final int BE= 10;
+
+	public static final int BKPT= 11;
+	public static final int DEBUG= 12;
 	
-	static final int DELAY = 8;
+	static final int DELAY = 1;
 
 	static final int Xsize = 60;
 	static final int Ysize = 90;
@@ -179,38 +177,35 @@ public class Nios2Simulator extends InstanceFactory {
 
 	public Nios2Simulator() {
 		super("Nios2Simulator", Strings.getter("Nios2Simulator"));
-		setAttributes(new Attribute[] { StdAttr.WIDTH, StdAttr.TRIGGER,
+		setAttributes(new Attribute[] { 
 				StdAttr.LABEL, StdAttr.LABEL_FONT, ATTR_SHOW_IN_TAB, },
-				new Object[] { BitWidth.create(32), StdAttr.TRIG_RISING, "",
-						StdAttr.DEFAULT_LABEL_FONT, false, });
-		setKeyConfigurator(new BitWidthConfigurator(StdAttr.WIDTH));
+				new Object[] { "",StdAttr.DEFAULT_LABEL_FONT, false, });
+		
 		
 		setOffsetBounds(Bounds.create(0, 0, WIDTH, HEIGHT));
 		
 		setIconName("Nios2Simulator.gif");
-		setInstancePoker(RegisterFilePoker.class);
-		setInstanceLogger(RegisterFileLogger.class);
+		setInstancePoker(NIOS2SimPoker.class);
+		//setInstanceLogger(RegisterFileLogger.class);
 
-		ps[CLK]= new Port(0, 30, Port.INPUT, 1);
-		ps[RST]= new Port(0, 60, Port.INPUT, 1);
+		ps[CLK]= new Port(0, 20, Port.INPUT, 1);
+		ps[RST]= new Port(0, 40, Port.INPUT, 1);
+		ps[IO_ACK]= new Port(0, 60, Port.INPUT, 1);
+		ps[BKPT]= new Port(0, 80, Port.INPUT, 32);
+		ps[DEBUG]= new Port(0, 100, Port.INPUT, 1);
+
 
 		ps[CPU_DIN]= new Port(WIDTH, 20, Port.INPUT, 32);
 		ps[CPU_DOUT]= new Port(WIDTH, 40, Port.OUTPUT, 32);
 		ps[CPU_ADDR]= new Port(WIDTH, 60, Port.OUTPUT, 32);
 
-		ps[MEM_WR]= new Port(WIDTH, 80, Port.OUTPUT, 1);
-		ps[MEM_RD]= new Port(WIDTH, 100, Port.OUTPUT, 1);
-		ps[IO_RD]= new Port(WIDTH, 120, Port.OUTPUT, 1);
-		ps[IO_WR]= new Port(WIDTH, 140, Port.OUTPUT, 1);
-		ps[WAIT_REQ]= new Port(WIDTH, 160, Port.INPUT, 1);
-	
+		ps[IO_WR]= new Port(WIDTH, 80, Port.OUTPUT, 1);
+		ps[IO_RD]= new Port(WIDTH, 100, Port.OUTPUT, 1);
+		
+		ps[MEM_WR]= new Port(WIDTH, 120, Port.OUTPUT, 1);
+		ps[MEM_RD]= new Port(WIDTH, 140, Port.OUTPUT, 1);	
 
-//		ps[MEM_WR].setToolTip(Strings.getter("registerQTip"));
-//		ps[CPU_DOUT].setToolTip(Strings.getter("registerQTip"));
-//		ps[CPU_DIN].setToolTip(Strings.getter("registerDTip"));
-//		ps[CLK].setToolTip(Strings.getter("registerClkTip"));
-//		ps[RST].setToolTip(Strings.getter("registerClrTip"));
-//		ps[IO_RD].setToolTip(Strings.getter("registerEnableTip"));
+		ps[BE]= new Port(WIDTH, 160, Port.OUTPUT, 4);	
 		setPorts(ps);
 	}
 
@@ -242,16 +237,13 @@ public class Nios2Simulator extends InstanceFactory {
 	@Override
 	public void paintInstance(InstancePainter painter) {
 		Nios2Data state = (Nios2Data) painter.getData();
-		BitWidth widthVal = painter.getAttributeValue(StdAttr.WIDTH);
-		int width = widthVal == null ? 8 : widthVal.getWidth();
 		Location loc = painter.getLocation();
 		int x = loc.getX();
 		int y = loc.getY();
 
 		// determine text to draw in label
-		DrawRegister(painter, x, y, width, true, state);
+		drawNiosII(painter, x, y,  true, state);
 		painter.drawLabel();
-
 		// draw input and output ports
 		for(int i=0;i<ps.length;i++)
 			painter.drawPort(i);
@@ -272,55 +264,166 @@ public class Nios2Simulator extends InstanceFactory {
 		if (state.getPortValue(RST) == Value.TRUE) {
 			data.clear();
 		} else if (triggered) {
-			//&& state.getPortValue(IO_RD) != Value.FALSE) {
-			switch(data.state) {
+			data.currentState = data.nextState;
+			switch(data.currentState) {
 				case IDLE :{
-					
+					data.setNextState(Nios2Data.CPUState.FETCH);
+					break;
 				}
 				case FETCH:{
-					state.setPort(CPU_ADDR, Value.createKnown(BitWidth.create(32), data.getPC()),DELAY);
-					state.setPort(MEM_RD, Value.createKnown(BitWidth.create(1), 1),DELAY);
-					data.setState(Nios2Data.CPUState.DECODE);
+					state.setPort(BE, Value.createKnown(BitWidth.create(4), 0xF),DELAY);
+					Value valPC = Value.createKnown(BitWidth.create(32), data.getPC());
+					state.setPort(CPU_ADDR, valPC,DELAY);
+					state.setPort(MEM_WR, Value.FALSE,DELAY);
+					state.setPort(MEM_RD, Value.TRUE,DELAY);
+					state.setPort(IO_RD, Value.FALSE,DELAY);
+					state.setPort(IO_WR, Value.FALSE,DELAY);
+					data.setNextState(Nios2Data.CPUState.DECODE);
+					break;
+
 				}
 				case DECODE :{
+					data.setNextState(Nios2Data.CPUState.EXECUTE);
 					Value IR = state.getPortValue(CPU_DIN);
 					if(IR.isFullyDefined()) {
 						data.setIR(IR.toIntValue());
-						data.execute();
-						data.setState(Nios2Data.CPUState.EXECUTE);
-						state.setPort(CPU_ADDR, Value.createKnown(BitWidth.create(32), data.getCPUAddress()),DELAY);
-						state.setPort(CPU_DOUT, Value.createKnown(BitWidth.create(32), data.getCPUDout()),DELAY);
-//						if (data.isIO()) {
-//							
-//						}
-						state.setPort(MEM_RD, Value.createKnown(BitWidth.create(1), 1),DELAY);
-					} else {
-						data.setState(Nios2Data.CPUState.ILLEGAL_INSTR);
 					}
+					Value valPC = Value.createKnown(BitWidth.create(32), data.getPC());
+					if (state.getPortValue(DEBUG)==Value.TRUE) {
+						if (state.getPortValue(BKPT).equals(valPC)) {
+							data.setNextState(Nios2Data.CPUState.DECODE);
+						}
+					}
+					break;
 				}
 				case EXECUTE :{
+					Value IR = state.getPortValue(CPU_DIN);
+					state.setPort(MEM_RD, Value.FALSE,DELAY);
+					if(IR.isFullyDefined()) {
+						data.setIR(IR.toIntValue());
+					} else {
+						data.setNextState(Nios2Data.CPUState.ILLEGAL_INSTR);
+					}
+					data.setNextState(Nios2Data.CPUState.FETCH);
+					data.execute();
+					state.setPort(CPU_ADDR, Value.createKnown(BitWidth.create(32), data.getCPUAddress()),DELAY);
+					state.setPort(CPU_DOUT, Value.createKnown(BitWidth.create(32), data.getCPUDout()),DELAY);
+					state.setPort(MEM_WR, Value.FALSE,DELAY);
+					state.setPort(MEM_RD, Value.FALSE,DELAY);
+					state.setPort(IO_RD, Value.FALSE,DELAY);
+					state.setPort(IO_WR, Value.FALSE,DELAY);
+					data.cpt=2;
+					break;
+
+				}
+				case MEM_READ:{
+					state.setPort(MEM_RD, Value.TRUE,DELAY);
+					Value in = state.getPortValue(CPU_DIN);
+					if (in.isFullyDefined()) {
+						switch (data.instr.op) {
+						case ldw: {
+							data.setReg(data.instr.rb, in.toIntValue());
+							break;
+						}
+						case ldh: {
+							int shift= 8*(data.R[data.instr.ra]&0x2);
+							data.setReg(data.instr.rb, (in.toIntValue()>>shift)&0xFFFF);
+							break;
+						}
+						case ldb: {
+							int shift= 8*(data.R[data.instr.ra]&0x3);
+							data.setReg(data.instr.rb, (in.toIntValue()>>shift)&0xFF);
+							break;
+						}
+						}
+					}
+					if (data.cpt==0) data.setNextState(Nios2Data.CPUState.FETCH);
+					data.cpt--;
+					break;
+				}
+				case IO_READ:{
+					state.setPort(IO_RD, Value.TRUE,DELAY);
+					Value ack = state.getPortValue(IO_ACK);
+					if (ack.isFullyDefined()) {
+						if (ack.toIntValue()==1) {
+							data.setNextState(Nios2Data.CPUState.FETCH);
+							Value in = state.getPortValue(CPU_DIN);
+							if (in.isFullyDefined()) {
+								switch (data.instr.op) {
+								case ldwio: {
+									data.setReg(data.instr.rb, in.toIntValue());
+									break;
+								}
+								case ldhio: {
+									int shift= 8*(data.R[data.instr.ra]&0x2);
+									data.setReg(data.instr.rb, (in.toIntValue()>>shift)&0xFFFF);
+									break;
+								}
+								case ldbio: {
+									int shift= 8*(data.R[data.instr.ra]&0x2);
+									data.setReg(data.instr.rb, (in.toIntValue()>>shift)&0xFF);
+									break;
+								
+								}
+								}
+							}
+						}
+					} else {
+						data.setNextState(Nios2Data.CPUState.BUS_ERROR);
+					}
+					break;
+				}
+				case MEM_WRITE:{
+					
+					state.setPort(MEM_WR, Value.TRUE,DELAY);
+					switch (data.instr.op) {
+					case stw: {
+						state.setPort(BE, Value.createKnown(BitWidth.create(4), 0xF),DELAY);
+						break;
+					}
+					case sth: {
+						int shift= (data.R[data.instr.ra]&0x2)>>1;
+						state.setPort(BE, Value.createKnown(BitWidth.create(4), 3<<shift),DELAY);
+						break;
+					}
+					case stb: {
+						int shift= data.R[data.instr.ra]&0x3;
+						state.setPort(BE, Value.createKnown(BitWidth.create(4), 1<<shift),DELAY);
+						break;
+					}
+					}
+					if (data.cpt==0) data.setNextState(Nios2Data.CPUState.FETCH);
+					data.cpt--;
+					break;
+				}
+				case IO_WRITE:{
+					state.setPort(IO_WR, Value.TRUE,DELAY);
+					switch (data.instr.op) {
+					case stwio: {
+						state.setPort(BE, Value.createKnown(BitWidth.create(4), 0xF),DELAY);
+						break;
+					}
+					case sthio: {
+						int shift= (data.R[data.instr.ra]&0x2)>>1;
+						state.setPort(BE, Value.createKnown(BitWidth.create(4), 3<<shift),DELAY);
+						break;
+					}
+					case stbio: {
+						int shift= data.R[data.instr.ra]&0x3;
+						state.setPort(BE, Value.createKnown(BitWidth.create(4), 1<<shift),DELAY);
+						break;
+					}
+					}
+					Value ack = state.getPortValue(IO_ACK);
+					if (ack.isFullyDefined()) {
+						if (ack.toIntValue()==1)
+							data.setNextState(Nios2Data.CPUState.FETCH);
+					} else {
+						data.setNextState(Nios2Data.CPUState.BUS_ERROR);
+					}
+					break;
 				}
 			}
-//		}
-//			data.lastRegEvent=-1;
-//			
-//			
-//			
-//			Value in = state.getPortValue(CPU_DIN);
-//			Value addr = state.getPortValue(IO_WR);
-//			if (in.isFullyDefined()) {
-//				int intAddr = addr.toIntValue();
-//				data.lastRegEvent=intAddr;
-//				data.setReg(intAddr, in.toIntValue());
-//			}
-		}
-
-		Value addr0 = state.getPortValue(CPU_ADDR);
-		if (addr0.isFullyDefined()) {
-		}
-		Value addr1 = state.getPortValue(MEM_RD);
-		if (addr1.isFullyDefined()) {
-		//	state.setPort(MEM_WR, Value.createKnown(dataWidth, data.getReg(addr1.toIntValue())), DELAY);
 		}
 	}
 }

@@ -67,12 +67,14 @@ public class Memory extends Library {
 			new FactoryDescription("Shift Register",
 					Strings.getter("shiftRegisterComponent"), "shiftreg.gif",
 					"ShiftRegister"),
+			new FactoryDescription("MysteryMessage", Strings.getter("nysteryMessage"),
+					"random.gif", "MysteryMessage"),
 			new FactoryDescription("Random", Strings.getter("randomComponent"),
 					"random.gif", "Random"),
 			new FactoryDescription("RAM", Strings.getter("ramComponent"),
 					"ram.gif", "Ram"),
-			new FactoryDescription("CPU memory", Strings.getter("cpuMemoryComponent"),
-					"rom.gif", "CPUCodeMemory"),
+			new FactoryDescription("Nios2Simulator", Strings.getter("Nios2Simulator"),
+					"rom.gif", "Nios2Simulator"),
 			new FactoryDescription("ROM", Strings.getter("romComponent"),
 					"rom.gif", "Rom"), };
 

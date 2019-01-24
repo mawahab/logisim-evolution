@@ -64,7 +64,7 @@ class SISExport {
 					sim.currentState=s
 				}
 			}
-			if (sim.currentState==null) {
+			if (sim.currentState===null) {
 				throw new RuntimeException("Error not matching state in FSM")
 			}
 		

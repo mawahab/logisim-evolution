@@ -47,6 +47,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.filechooser.FileFilter;
 
 import com.cburch.hex.HexEditor;
 import com.cburch.hex.HexModel;
@@ -115,6 +116,19 @@ public class HexFrame extends LFrame {
 			Object src = event.getSource();
 			if (src == open) {
 				JFileChooser chooser = JFileChoosers.createSelected(lastFile);
+				   chooser.setFileFilter(new FileFilter() {
+				        public boolean accept(File f) {
+				        	
+				          String lowerCase = f.getName().toLowerCase();
+						return lowerCase.endsWith(".hex") || lowerCase.endsWith(".bin")
+				              || f.isDirectory();
+				        }
+
+				        public String getDescription() {
+				          return "Hex/bin Files";
+				        }
+				      });
+				 
 				chooser.setDialogTitle(Strings.get("openButton"));
 				int choice = chooser.showOpenDialog(HexFrame.this);
 				if (choice == JFileChooser.APPROVE_OPTION) {
@@ -122,6 +136,9 @@ public class HexFrame extends LFrame {
 					try {
 						if (f.getName().endsWith(".hex")) {
 							HexFile.open(model, f);
+							lastFile = f;
+						} else	if (f.getName().endsWith(".bin")) {
+							BinFile.open(model, f);
 							lastFile = f;
 						} else {
 							HexFile.open(model, f);

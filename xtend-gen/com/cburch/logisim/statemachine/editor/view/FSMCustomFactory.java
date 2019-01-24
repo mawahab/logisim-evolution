@@ -53,25 +53,18 @@ public class FSMCustomFactory {
       final State s = FSMCustomFactory.factory.createState();
       s.setName(label);
       s.setCode(code);
-      CommandList _createCommandList = FSMCustomFactory.factory.createCommandList();
-      s.setCommandList(_createCommandList);
+      s.setCommandList(FSMCustomFactory.factory.createCommandList());
       CommandList _commandList = s.getCommandList();
-      LayoutInfo _createLayoutInfo = FSMCustomFactory.factory.createLayoutInfo();
-      _commandList.setLayout(_createLayoutInfo);
-      CommandList _commandList_1 = s.getCommandList();
-      LayoutInfo _layout = _commandList_1.getLayout();
+      _commandList.setLayout(FSMCustomFactory.factory.createLayoutInfo());
+      LayoutInfo _layout = s.getCommandList().getLayout();
       _layout.setX((x + FSMCustomFactory.CMD_OFFSETX));
-      CommandList _commandList_2 = s.getCommandList();
-      LayoutInfo _layout_1 = _commandList_2.getLayout();
+      LayoutInfo _layout_1 = s.getCommandList().getLayout();
       _layout_1.setY((y + FSMCustomFactory.CMD_OFFSETY));
-      CommandList _commandList_3 = s.getCommandList();
-      LayoutInfo _layout_2 = _commandList_3.getLayout();
+      LayoutInfo _layout_2 = s.getCommandList().getLayout();
       _layout_2.setWidth(FSMCustomFactory.CMD_WIDTH);
-      CommandList _commandList_4 = s.getCommandList();
-      LayoutInfo _layout_3 = _commandList_4.getLayout();
+      LayoutInfo _layout_3 = s.getCommandList().getLayout();
       _layout_3.setHeight(FSMCustomFactory.CMD_HEIGHT);
-      LayoutInfo _createLayoutInfo_1 = FSMCustomFactory.factory.createLayoutInfo();
-      s.setLayout(_createLayoutInfo_1);
+      s.setLayout(FSMCustomFactory.factory.createLayoutInfo());
       LayoutInfo _layout_4 = s.getLayout();
       _layout_4.setX(x);
       LayoutInfo _layout_5 = s.getLayout();
@@ -90,8 +83,7 @@ public class FSMCustomFactory {
     {
       final FSM s = FSMCustomFactory.factory.createFSM();
       s.setName(label);
-      LayoutInfo _createLayoutInfo = FSMCustomFactory.factory.createLayoutInfo();
-      s.setLayout(_createLayoutInfo);
+      s.setLayout(FSMCustomFactory.factory.createLayoutInfo());
       LayoutInfo _layout = s.getLayout();
       _layout.setX(15);
       LayoutInfo _layout_1 = s.getLayout();
@@ -112,8 +104,7 @@ public class FSMCustomFactory {
       final Transition t = factory.createTransition();
       t.setDst(dst);
       t.setSrc(src);
-      LayoutInfo _createLayoutInfo = factory.createLayoutInfo();
-      t.setLayout(_createLayoutInfo);
+      t.setLayout(factory.createLayoutInfo());
       LayoutInfo _layout = t.getLayout();
       _layout.setX(x);
       LayoutInfo _layout_1 = t.getLayout();
@@ -122,10 +113,8 @@ public class FSMCustomFactory {
       _layout_2.setWidth(FSMCustomFactory.PRED_WIDTH);
       LayoutInfo _layout_3 = t.getLayout();
       _layout_3.setHeight(FSMCustomFactory.PRED_HEIGHT);
-      EList<Transition> _transition = src.getTransition();
-      _transition.add(t);
-      DefaultPredicate _defaultPred = FSMCustomFactory.defaultPred();
-      t.setPredicate(_defaultPred);
+      src.getTransition().add(t);
+      t.setPredicate(FSMCustomFactory.defaultPred());
       _xblockexpression = t;
     }
     return _xblockexpression;
@@ -148,8 +137,7 @@ public class FSMCustomFactory {
       final InputPort s = factory.createInputPort();
       s.setName(label);
       s.setWidth(width);
-      LayoutInfo _createLayoutInfo = factory.createLayoutInfo();
-      s.setLayout(_createLayoutInfo);
+      s.setLayout(factory.createLayoutInfo());
       LayoutInfo _layout = s.getLayout();
       _layout.setX(x);
       LayoutInfo _layout_1 = s.getLayout();
@@ -170,8 +158,7 @@ public class FSMCustomFactory {
       final OutputPort s = factory.createOutputPort();
       s.setName(label);
       s.setWidth(width);
-      LayoutInfo _createLayoutInfo = factory.createLayoutInfo();
-      s.setLayout(_createLayoutInfo);
+      s.setLayout(factory.createLayoutInfo());
       LayoutInfo _layout = s.getLayout();
       _layout.setWidth(FSMCustomFactory.PORT_WIDTH);
       LayoutInfo _layout_1 = s.getLayout();
@@ -201,8 +188,7 @@ public class FSMCustomFactory {
     {
       final FSMDSLFactory factory = FSMDSLFactory.eINSTANCE;
       final PortRef s = factory.createPortRef();
-      Range _createRange = factory.createRange();
-      s.setRange(_createRange);
+      s.setRange(factory.createRange());
       Range _range = s.getRange();
       _range.setLb(lb);
       Range _range_1 = s.getRange();
@@ -214,8 +200,7 @@ public class FSMCustomFactory {
   }
   
   public static NotExpr negpref(final Port p) {
-    PortRef _pref = FSMCustomFactory.pref(p);
-    return FSMCustomFactory.not(_pref);
+    return FSMCustomFactory.not(FSMCustomFactory.pref(p));
   }
   
   public static AndExpr and(final BoolExpr a, final BoolExpr b) {
@@ -240,8 +225,7 @@ public class FSMCustomFactory {
       for (final BoolExpr bexp : list) {
         boolean _notEquals = (!Objects.equal(bexp, null));
         if (_notEquals) {
-          EList<BoolExpr> _args = s.getArgs();
-          _args.add(bexp);
+          s.getArgs().add(bexp);
         }
       }
       _xblockexpression = s;
@@ -257,8 +241,7 @@ public class FSMCustomFactory {
       for (final BoolExpr bexp : list) {
         boolean _notEquals = (!Objects.equal(bexp, null));
         if (_notEquals) {
-          EList<BoolExpr> _args = s.getArgs();
-          _args.add(bexp);
+          s.getArgs().add(bexp);
         }
       }
       _xblockexpression = s;
@@ -288,8 +271,7 @@ public class FSMCustomFactory {
       for (final BoolExpr bexp : list) {
         boolean _notEquals = (!Objects.equal(bexp, null));
         if (_notEquals) {
-          EList<BoolExpr> _args = s.getArgs();
-          _args.add(bexp);
+          s.getArgs().add(bexp);
         }
       }
       _xblockexpression = s;
@@ -305,8 +287,7 @@ public class FSMCustomFactory {
       for (final BoolExpr bexp : list) {
         boolean _notEquals = (!Objects.equal(bexp, null));
         if (_notEquals) {
-          EList<BoolExpr> _args = s.getArgs();
-          _args.add(bexp);
+          s.getArgs().add(bexp);
         }
       }
       _xblockexpression = s;

@@ -36,7 +36,7 @@ import java.awt.Graphics;
 
 import com.cburch.hex.HexModel;
 import com.cburch.hex.HexModelListener;
-import com.cburch.logisim.cpu.Instr;
+import com.cburch.logisim.cpu.NIOS2Instr;
 import com.cburch.logisim.data.Bounds;
 import com.cburch.logisim.instance.InstanceData;
 import com.cburch.logisim.util.GraphicsUtil;
@@ -285,7 +285,7 @@ class MemState implements InstanceData, Cloneable, HexModelListener {
 									* DataSize, firsty + i * yinc,
 									GraphicsUtil.H_CENTER, GraphicsUtil.V_CENTER);
 						} else {
-							GraphicsUtil.drawText(g, (new Instr((long)value)).toString(), firstx + j
+							GraphicsUtil.drawText(g, (new NIOS2Instr((long)value)).toString(), firstx + j
 									* DataSize, firsty + i * yinc,
 									GraphicsUtil.H_CENTER, GraphicsUtil.V_CENTER);
 						}

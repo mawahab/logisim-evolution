@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -74,8 +73,7 @@ public class FSMValidation {
     if (_equals) {
       this.error("No initial state");
     }
-    EList<State> _states = e.getStates();
-    int _size = _states.size();
+    int _size = e.getStates().size();
     boolean _equals_1 = (_size == 0);
     if (_equals_1) {
       this.error("The FSM has no states !");
@@ -91,57 +89,41 @@ public class FSMValidation {
       this.warning("The FSM has no input pins !");
     }
     final HashMap<String, State> map = new HashMap<String, State>();
-    EList<State> _states_1 = e.getStates();
-    for (final State s : _states_1) {
-      String _code = s.getCode();
-      boolean _containsKey = map.containsKey(_code);
+    EList<State> _states = e.getStates();
+    for (final State s : _states) {
+      boolean _containsKey = map.containsKey(s.getCode());
       if (_containsKey) {
         StringConcatenation _builder = new StringConcatenation();
         _builder.append("The FSM has two states (");
         String _name = s.getName();
-        _builder.append(_name, "");
+        _builder.append(_name);
         _builder.append(", ");
-        String _code_1 = s.getCode();
-        State _get = map.get(_code_1);
-        String _name_1 = _get.getName();
-        _builder.append(_name_1, "");
+        String _name_1 = map.get(s.getCode()).getName();
+        _builder.append(_name_1);
         _builder.append(") with the same encoding");
         this.error(_builder.toString());
       } else {
-        String _code_2 = s.getCode();
-        map.put(_code_2, s);
+        map.put(s.getCode(), s);
       }
     }
     this.checkNames();
-    EList<State> _states_2 = e.getStates();
-    for (final State s_1 : _states_2) {
+    EList<State> _states_1 = e.getStates();
+    for (final State s_1 : _states_1) {
       {
         this.validate(s_1);
         EList<Transition> _transition = s_1.getTransition();
         for (final Transition t : _transition) {
-          State _dst = t.getDst();
-          this.targets.add(_dst);
+          this.targets.add(t.getDst());
         }
       }
     }
-    EList<State> _states_3 = e.getStates();
-    for (final State s_2 : _states_3) {
-      boolean _and = false;
-      State _start_1 = this.fsm.getStart();
-      boolean _notEquals = (!Objects.equal(s_2, _start_1));
-      if (!_notEquals) {
-        _and = false;
-      } else {
-        boolean _contains = this.targets.contains(s_2);
-        boolean _not = (!_contains);
-        _and = _not;
-      }
-      if (_and) {
+    EList<State> _states_2 = e.getStates();
+    for (final State s_2 : _states_2) {
+      if (((!Objects.equal(s_2, this.fsm.getStart())) && (!this.targets.contains(s_2)))) {
         String _pp = PrettyPrinter.pp(s_2);
         String _plus = ("State " + _pp);
         String _plus_1 = (_plus + " is not reachable from initial state ");
-        State _start_2 = e.getStart();
-        String _pp_1 = PrettyPrinter.pp(_start_2);
+        String _pp_1 = PrettyPrinter.pp(e.getStart());
         String _plus_2 = (_plus_1 + _pp_1);
         this.warning(_plus_2);
       }
@@ -150,52 +132,11 @@ public class FSMValidation {
   }
   
   public static boolean isValidBinaryString(final String s, final int width) {
-    String txt = s;
-    final char first = txt.charAt(0);
-    int _length = txt.length();
-    int _minus = (_length - 1);
-    final char last = txt.charAt(_minus);
-    boolean _and = false;
-    boolean _equals = Objects.equal(Character.valueOf(first), "\"");
-    if (!_equals) {
-      _and = false;
-    } else {
-      boolean _equals_1 = Objects.equal(Character.valueOf(last), "\"");
-      _and = _equals_1;
-    }
-    if (_and) {
-      int _length_1 = txt.length();
-      int _minus_1 = (_length_1 - 1);
-      String _substring = txt.substring(1, _minus_1);
-      txt = _substring;
-      char[] _charArray = txt.toCharArray();
-      for (final char c : _charArray) {
-        boolean _and_1 = false;
-        boolean _notEquals = (!Objects.equal(Character.valueOf(c), "0"));
-        if (!_notEquals) {
-          _and_1 = false;
-        } else {
-          boolean _notEquals_1 = (!Objects.equal(Character.valueOf(c), "1"));
-          _and_1 = _notEquals_1;
-        }
-        if (_and_1) {
-          return false;
-        }
-      }
-      int _length_2 = txt.length();
-      boolean _notEquals_2 = (_length_2 != width);
-      if (_notEquals_2) {
-        return false;
-      }
-    } else {
-      return false;
-    }
-    return true;
+    return (s.matches("\"[0-1]+\"") && (s.length() == (width + 2)));
   }
   
   public static boolean isValidIdentifier(final String identifier) {
-    Matcher _matcher = FSMValidation.FQCN.matcher(identifier);
-    return _matcher.matches();
+    return FSMValidation.FQCN.matcher(identifier).matches();
   }
   
   public static boolean isReservedKeyword(final String identifier) {
@@ -209,7 +150,7 @@ public class FSMValidation {
     if (_not) {
       StringConcatenation _builder = new StringConcatenation();
       _builder.append("Ilegal identifier : ");
-      _builder.append(identifier, "");
+      _builder.append(identifier);
       _xifexpression = this.error(_builder.toString());
     } else {
       boolean _xifexpression_1 = false;
@@ -217,7 +158,7 @@ public class FSMValidation {
       if (_isReservedKeyword) {
         StringConcatenation _builder_1 = new StringConcatenation();
         _builder_1.append("Reserved keyword : ");
-        _builder_1.append(identifier, "");
+        _builder_1.append(identifier);
         _xifexpression_1 = this.error(_builder_1.toString());
       }
       _xifexpression = _xifexpression_1;
@@ -230,69 +171,56 @@ public class FSMValidation {
     EList<State> _states = this.fsm.getStates();
     for (final State s : _states) {
       {
-        String _name = s.getName();
-        this.validateIdentifier(_name);
-        String _name_1 = s.getName();
-        boolean _containsKey = nameMap.containsKey(_name_1);
+        this.validateIdentifier(s.getName());
+        boolean _containsKey = nameMap.containsKey(s.getName());
         if (_containsKey) {
           StringConcatenation _builder = new StringConcatenation();
           _builder.append("The FSM has two states with the same Label ");
-          String _name_2 = s.getName();
-          _builder.append(_name_2, "");
+          String _name = s.getName();
+          _builder.append(_name);
           this.error(_builder.toString());
         } else {
-          String _name_3 = s.getName();
-          nameMap.put(_name_3, s);
+          nameMap.put(s.getName(), s);
         }
       }
     }
     EList<Port> _in = this.fsm.getIn();
     for (final Port s_1 : _in) {
       {
-        String _name = s_1.getName();
-        this.validateIdentifier(_name);
-        String _name_1 = s_1.getName();
-        boolean _containsKey = nameMap.containsKey(_name_1);
+        this.validateIdentifier(s_1.getName());
+        boolean _containsKey = nameMap.containsKey(s_1.getName());
         if (_containsKey) {
           StringConcatenation _builder = new StringConcatenation();
           _builder.append("The FSM has two elements using a same identifier (");
           String _pp = PrettyPrinter.pp(s_1);
-          _builder.append(_pp, "");
+          _builder.append(_pp);
           _builder.append(", ");
-          String _name_2 = s_1.getName();
-          FSMElement _get = nameMap.get(_name_2);
-          String _pp_1 = PrettyPrinter.pp(_get);
-          _builder.append(_pp_1, "");
+          String _pp_1 = PrettyPrinter.pp(nameMap.get(s_1.getName()));
+          _builder.append(_pp_1);
           _builder.append(") ");
           this.error(_builder.toString());
         } else {
-          String _name_3 = s_1.getName();
-          nameMap.put(_name_3, s_1);
+          nameMap.put(s_1.getName(), s_1);
         }
       }
     }
     EList<Port> _out = this.fsm.getOut();
     for (final Port s_2 : _out) {
       {
-        String _name = s_2.getName();
-        this.validateIdentifier(_name);
-        String _name_1 = s_2.getName();
-        boolean _containsKey = nameMap.containsKey(_name_1);
+        this.validateIdentifier(s_2.getName());
+        boolean _containsKey = nameMap.containsKey(s_2.getName());
         if (_containsKey) {
           StringConcatenation _builder = new StringConcatenation();
           _builder.append("The FSM has two elements using a same identifier (");
           String _pp = PrettyPrinter.pp(s_2);
-          _builder.append(_pp, "");
+          _builder.append(_pp);
           _builder.append(", ");
-          String _name_2 = s_2.getName();
-          FSMElement _get = nameMap.get(_name_2);
-          String _pp_1 = PrettyPrinter.pp(_get);
-          _builder.append(_pp_1, "");
+          String _pp_1 = PrettyPrinter.pp(nameMap.get(s_2.getName()));
+          _builder.append(_pp_1);
           _builder.append(") ");
           this.error(_builder.toString());
         } else {
-          String _name_3 = s_2.getName();
-          nameMap.put(_name_3, s_2);
+          nameMap.put(s_2.getName(), s_2);
         }
       }
     }
@@ -315,21 +243,18 @@ public class FSMValidation {
     for (final Command c : _commands) {
       {
         try {
-          BoolExpr _value = c.getValue();
-          this.analyzer.computeBitwidth(_value);
+          this.analyzer.computeBitwidth(c.getValue());
         } catch (final Throwable _t) {
           if (_t instanceof RuntimeException) {
             final RuntimeException e = (RuntimeException)_t;
-            String _message = e.getMessage();
-            this.error(_message);
+            this.error(e.getMessage());
           } else {
             throw Exceptions.sneakyThrow(_t);
           }
         }
-        BoolExpr _value_1 = c.getValue();
-        this.validateExpr(_value_1, false);
-        BoolExpr _value_2 = c.getValue();
-        final BDDOptimizer optimizer = new BDDOptimizer(_value_2);
+        this.validateExpr(c.getValue(), false);
+        BoolExpr _value = c.getValue();
+        final BDDOptimizer optimizer = new BDDOptimizer(_value);
         optimizer.simplify();
         boolean _isAlwaysFalse = optimizer.isAlwaysFalse();
         if (_isAlwaysFalse) {
@@ -338,14 +263,7 @@ public class FSMValidation {
           String _plus_1 = (_plus + " is always evaluated to 0");
           this.warning(_plus_1);
         }
-        boolean _and = false;
-        boolean _isAlwaysTrue = optimizer.isAlwaysTrue();
-        if (!_isAlwaysTrue) {
-          _and = false;
-        } else {
-          _and = (!(c instanceof Constant));
-        }
-        if (_and) {
+        if ((optimizer.isAlwaysTrue() && (!(c instanceof Constant)))) {
           String _pp_1 = PrettyPrinter.pp(c);
           String _plus_2 = ("command " + _pp_1);
           String _plus_3 = (_plus_2 + " is always evaluated to 1");
@@ -365,11 +283,10 @@ public class FSMValidation {
       if (_equals) {
         throw new RuntimeException("null Predicate");
       }
-      BoolExpr _predicate_1 = t.getPredicate();
-      this.validateExpr(_predicate_1, true);
+      this.validateExpr(t.getPredicate(), true);
       boolean _xifexpression = false;
-      BoolExpr _predicate_2 = t.getPredicate();
-      boolean _not = (!(_predicate_2 instanceof DefaultPredicate));
+      BoolExpr _predicate_1 = t.getPredicate();
+      boolean _not = (!(_predicate_1 instanceof DefaultPredicate));
       if (_not) {
         boolean _xtrycatchfinallyexpression = false;
         try {
@@ -385,16 +302,7 @@ public class FSMValidation {
               this.error(_plus_1);
             }
             boolean _xifexpression_1 = false;
-            boolean _and = false;
-            boolean _isAlwaysTrue = optimizer.isAlwaysTrue();
-            if (!_isAlwaysTrue) {
-              _and = false;
-            } else {
-              BoolExpr _predicate_3 = t.getPredicate();
-              boolean _not_1 = (!(_predicate_3 instanceof DefaultPredicate));
-              _and = _not_1;
-            }
-            if (_and) {
+            if ((optimizer.isAlwaysTrue() && (!(t.getPredicate() instanceof DefaultPredicate)))) {
               String _pp_1 = PrettyPrinter.pp(t);
               String _plus_2 = ("Transition " + _pp_1);
               String _plus_3 = (_plus_2 + " is always taken (evaluated to 1)");
@@ -433,8 +341,7 @@ public class FSMValidation {
     if ((_eContainer instanceof FSM)) {
       EObject _eContainer_1 = e.eContainer();
       final FSM fsm = ((FSM) _eContainer_1);
-      String _code = e.getCode();
-      int _length = _code.length();
+      int _length = e.getCode().length();
       int _width = fsm.getWidth();
       int _plus = (_width + 2);
       boolean _notEquals = (_length != _plus);
@@ -448,8 +355,7 @@ public class FSMValidation {
         this.error(_plus_4);
       }
     }
-    EList<Transition> _transition = e.getTransition();
-    int _size = _transition.size();
+    int _size = e.getTransition().size();
     boolean _equals = (_size == 0);
     if (_equals) {
       String _pp_1 = PrettyPrinter.pp(e);
@@ -457,15 +363,12 @@ public class FSMValidation {
       String _plus_6 = (_plus_5 + " has no output transition");
       this.warning(_plus_6);
     }
-    EList<Transition> _transition_1 = e.getTransition();
     final Function1<Transition, Boolean> _function = (Transition t) -> {
       BoolExpr _predicate = t.getPredicate();
       return Boolean.valueOf((!(_predicate instanceof DefaultPredicate)));
     };
-    Iterable<Transition> _filter = IterableExtensions.<Transition>filter(_transition_1, _function);
-    final List<Transition> nonDefaultTransitions = IterableExtensions.<Transition>toList(_filter);
-    EList<Transition> _transition_2 = e.getTransition();
-    int _size_1 = _transition_2.size();
+    final List<Transition> nonDefaultTransitions = IterableExtensions.<Transition>toList(IterableExtensions.<Transition>filter(e.getTransition(), _function));
+    int _size_1 = e.getTransition().size();
     int _length_1 = ((Object[])Conversions.unwrapArray(nonDefaultTransitions, Object.class)).length;
     int _minus = (_size_1 - _length_1);
     boolean _greaterThan = (_minus > 1);
@@ -484,9 +387,7 @@ public class FSMValidation {
             if ((i < j)) {
               final BoolExpr pa = a.getPredicate();
               final BoolExpr pb = b.getPredicate();
-              BoolExpr _copy = EcoreUtil.<BoolExpr>copy(pa);
-              BoolExpr _copy_1 = EcoreUtil.<BoolExpr>copy(pb);
-              final AndExpr and = FSMCustomFactory.and(_copy, _copy_1);
+              final AndExpr and = FSMCustomFactory.and(EcoreUtil.<BoolExpr>copy(pa), EcoreUtil.<BoolExpr>copy(pb));
               final BDDOptimizer optimizer = new BDDOptimizer(and);
               boolean _isAlwaysFalse = optimizer.isAlwaysFalse();
               boolean _not = (!_isAlwaysFalse);
@@ -516,17 +417,15 @@ public class FSMValidation {
   }
   
   public Boolean _validateExpr(final OrExpr b, final boolean predicate) {
-    EList<BoolExpr> _args = b.getArgs();
     final Consumer<BoolExpr> _function = (BoolExpr a) -> {
       this.validateExpr(a, predicate);
     };
-    _args.forEach(_function);
+    b.getArgs().forEach(_function);
     return null;
   }
   
   public Boolean _validateExpr(final CmpExpr b, final boolean predicate) {
-    EList<BoolExpr> _args = b.getArgs();
-    int _size = _args.size();
+    int _size = b.getArgs().size();
     boolean _notEquals = (_size != 2);
     if (_notEquals) {
       String _pp = PrettyPrinter.pp(b);
@@ -534,29 +433,26 @@ public class FSMValidation {
       String _plus_1 = (_plus + " ");
       this.error(_plus_1);
     }
-    EList<BoolExpr> _args_1 = b.getArgs();
     final Consumer<BoolExpr> _function = (BoolExpr a) -> {
       this.validateExpr(a, predicate);
     };
-    _args_1.forEach(_function);
+    b.getArgs().forEach(_function);
     return null;
   }
   
   public Boolean _validateExpr(final AndExpr b, final boolean predicate) {
-    EList<BoolExpr> _args = b.getArgs();
     final Consumer<BoolExpr> _function = (BoolExpr a) -> {
       this.validateExpr(a, predicate);
     };
-    _args.forEach(_function);
+    b.getArgs().forEach(_function);
     return null;
   }
   
   public Boolean _validateExpr(final NotExpr b, final boolean predicate) {
-    EList<BoolExpr> _args = b.getArgs();
     final Consumer<BoolExpr> _function = (BoolExpr a) -> {
       this.validateExpr(a, predicate);
     };
-    _args.forEach(_function);
+    b.getArgs().forEach(_function);
     return null;
   }
   
@@ -571,71 +467,55 @@ public class FSMValidation {
     if (_notEquals) {
       boolean _xblockexpression = false;
       {
-        Range _range_1 = b.getRange();
-        int _ub = _range_1.getUb();
-        Port _port = b.getPort();
-        int _width = _port.getWidth();
+        int _ub = b.getRange().getUb();
+        int _width = b.getPort().getWidth();
         int _minus = (_width - 1);
         boolean _greaterThan = (_ub > _minus);
         if (_greaterThan) {
-          Range _range_2 = b.getRange();
-          int _ub_1 = _range_2.getUb();
+          int _ub_1 = b.getRange().getUb();
           String _plus = ("Inconsistent range [" + Integer.valueOf(_ub_1));
           String _plus_1 = (_plus + ":");
-          Range _range_3 = b.getRange();
-          int _lb = _range_3.getLb();
+          int _lb = b.getRange().getLb();
           String _plus_2 = (_plus_1 + Integer.valueOf(_lb));
           String _plus_3 = (_plus_2 + "] for port ");
-          Port _port_1 = b.getPort();
-          String _name = _port_1.getName();
+          String _name = b.getPort().getName();
           String _plus_4 = (_plus_3 + _name);
           String _plus_5 = (_plus_4 + "[");
-          Port _port_2 = b.getPort();
-          int _width_1 = _port_2.getWidth();
+          int _width_1 = b.getPort().getWidth();
           int _minus_1 = (_width_1 - 1);
           String _plus_6 = (_plus_5 + Integer.valueOf(_minus_1));
           String _plus_7 = (_plus_6 + ":0]");
           this.error(_plus_7);
         }
-        Range _range_4 = b.getRange();
-        int _lb_1 = _range_4.getLb();
-        Port _port_3 = b.getPort();
-        int _width_2 = _port_3.getWidth();
+        int _lb_1 = b.getRange().getLb();
+        int _width_2 = b.getPort().getWidth();
         int _minus_2 = (_width_2 - 1);
         boolean _greaterThan_1 = (_lb_1 > _minus_2);
         if (_greaterThan_1) {
-          Range _range_5 = b.getRange();
-          int _ub_2 = _range_5.getUb();
+          int _ub_2 = b.getRange().getUb();
           String _plus_8 = ("Inconsistent range [" + Integer.valueOf(_ub_2));
           String _plus_9 = (_plus_8 + ":");
-          Range _range_6 = b.getRange();
-          int _lb_2 = _range_6.getLb();
+          int _lb_2 = b.getRange().getLb();
           String _plus_10 = (_plus_9 + Integer.valueOf(_lb_2));
           String _plus_11 = (_plus_10 + "] for port ");
-          Port _port_4 = b.getPort();
-          String _name_1 = _port_4.getName();
+          String _name_1 = b.getPort().getName();
           String _plus_12 = (_plus_11 + _name_1);
           String _plus_13 = (_plus_12 + "[");
-          Port _port_5 = b.getPort();
-          int _width_3 = _port_5.getWidth();
+          int _width_3 = b.getPort().getWidth();
           int _minus_3 = (_width_3 - 1);
           String _plus_14 = (_plus_13 + Integer.valueOf(_minus_3));
           String _plus_15 = (_plus_14 + ":0]");
           this.error(_plus_15);
         }
         boolean _xifexpression_1 = false;
-        Range _range_7 = b.getRange();
-        int _lb_3 = _range_7.getLb();
-        Range _range_8 = b.getRange();
-        int _lb_4 = _range_8.getLb();
+        int _lb_3 = b.getRange().getLb();
+        int _lb_4 = b.getRange().getLb();
         boolean _greaterThan_2 = (_lb_3 > _lb_4);
         if (_greaterThan_2) {
-          Range _range_9 = b.getRange();
-          int _ub_3 = _range_9.getUb();
+          int _ub_3 = b.getRange().getUb();
           String _plus_16 = ("Inconsistent range [" + Integer.valueOf(_ub_3));
           String _plus_17 = (_plus_16 + ":");
-          Range _range_10 = b.getRange();
-          int _lb_5 = _range_10.getLb();
+          int _lb_5 = b.getRange().getLb();
           String _plus_18 = (_plus_17 + Integer.valueOf(_lb_5));
           String _plus_19 = (_plus_18 + "] ");
           _xifexpression_1 = this.error(_plus_19);

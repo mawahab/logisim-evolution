@@ -20,7 +20,6 @@ import com.google.common.base.Objects;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 
 @SuppressWarnings("all")
@@ -30,47 +29,36 @@ public class UpdateCrossReferences {
   private HashMap<String, ConstantDef> constMap = new HashMap<String, ConstantDef>();
   
   public UpdateCrossReferences(final FSM fsm) {
-    EList<ConstantDef> _constants = fsm.getConstants();
     final Consumer<ConstantDef> _function = (ConstantDef cst) -> {
-      String _name = cst.getName();
-      this.constMap.put(_name, cst);
+      this.constMap.put(cst.getName(), cst);
     };
-    _constants.forEach(_function);
-    EList<Port> _in = fsm.getIn();
+    fsm.getConstants().forEach(_function);
     final Consumer<Port> _function_1 = (Port ip) -> {
-      String _name = ip.getName();
-      this.portMap.put(_name, ip);
+      this.portMap.put(ip.getName(), ip);
     };
-    _in.forEach(_function_1);
-    EList<Port> _out = fsm.getOut();
+    fsm.getIn().forEach(_function_1);
     final Consumer<Port> _function_2 = (Port op) -> {
-      String _name = op.getName();
-      this.portMap.put(_name, op);
+      this.portMap.put(op.getName(), op);
     };
-    _out.forEach(_function_2);
+    fsm.getOut().forEach(_function_2);
   }
   
   protected void _replaceRef(final Command c) {
     OutputPort _name = c.getName();
     boolean _notEquals = (!Objects.equal(_name, null));
     if (_notEquals) {
-      OutputPort _name_1 = c.getName();
-      String _name_2 = _name_1.getName();
-      Port _get = this.portMap.get(_name_2);
+      Port _get = this.portMap.get(c.getName().getName());
       c.setName(((OutputPort) _get));
     }
-    BoolExpr _value = c.getValue();
-    this.replaceRef(_value);
+    this.replaceRef(c.getValue());
   }
   
   protected void _replaceRef(final Transition t) {
-    BoolExpr _predicate = t.getPredicate();
-    this.replaceRef(_predicate);
+    this.replaceRef(t.getPredicate());
   }
   
   protected void _replaceRef(final BoolExpr b) {
-    Class<? extends BoolExpr> _class = b.getClass();
-    String _simpleName = _class.getSimpleName();
+    String _simpleName = b.getClass().getSimpleName();
     String _plus = ("Support for class " + _simpleName);
     String _plus_1 = (_plus + " NYI");
     throw new UnsupportedOperationException(_plus_1);
@@ -83,74 +71,52 @@ public class UpdateCrossReferences {
   }
   
   protected void _replaceRef(final OrExpr b) {
-    EList<BoolExpr> _args = b.getArgs();
     final Consumer<BoolExpr> _function = (BoolExpr a) -> {
       this.replaceRef(a);
     };
-    _args.forEach(_function);
+    b.getArgs().forEach(_function);
   }
   
   protected void _replaceRef(final AndExpr b) {
-    EList<BoolExpr> _args = b.getArgs();
     final Consumer<BoolExpr> _function = (BoolExpr a) -> {
       this.replaceRef(a);
     };
-    _args.forEach(_function);
+    b.getArgs().forEach(_function);
   }
   
   protected void _replaceRef(final CmpExpr b) {
-    EList<BoolExpr> _args = b.getArgs();
     final Consumer<BoolExpr> _function = (BoolExpr a) -> {
       this.replaceRef(a);
     };
-    _args.forEach(_function);
+    b.getArgs().forEach(_function);
   }
   
   protected void _replaceRef(final ConcatExpr b) {
-    EList<BoolExpr> _args = b.getArgs();
     final Consumer<BoolExpr> _function = (BoolExpr a) -> {
       this.replaceRef(a);
     };
-    _args.forEach(_function);
+    b.getArgs().forEach(_function);
   }
   
   protected void _replaceRef(final NotExpr b) {
-    EList<BoolExpr> _args = b.getArgs();
     final Consumer<BoolExpr> _function = (BoolExpr a) -> {
       this.replaceRef(a);
     };
-    _args.forEach(_function);
+    b.getArgs().forEach(_function);
   }
   
   protected void _replaceRef(final PortRef b) {
     Port _port = b.getPort();
     boolean _notEquals = (!Objects.equal(_port, null));
     if (_notEquals) {
-      Port _port_1 = b.getPort();
-      String _name = _port_1.getName();
-      Port _get = this.portMap.get(_name);
-      b.setPort(_get);
+      b.setPort(this.portMap.get(b.getPort().getName()));
     } else {
     }
   }
   
   protected void _replaceRef(final ConstRef b) {
-    boolean _and = false;
-    ConstantDef _const = b.getConst();
-    boolean _notEquals = (!Objects.equal(_const, null));
-    if (!_notEquals) {
-      _and = false;
-    } else {
-      ConstantDef _const_1 = b.getConst();
-      String _name = _const_1.getName();
-      boolean _containsKey = this.constMap.containsKey(_name);
-      _and = _containsKey;
-    }
-    if (_and) {
-      ConstantDef _const_2 = b.getConst();
-      String _name_1 = _const_2.getName();
-      ConstantDef _get = this.constMap.get(_name_1);
-      b.setConst(_get);
+    if (((!Objects.equal(b.getConst(), null)) && this.constMap.containsKey(b.getConst().getName()))) {
+      b.setConst(this.constMap.get(b.getConst().getName()));
     }
   }
   

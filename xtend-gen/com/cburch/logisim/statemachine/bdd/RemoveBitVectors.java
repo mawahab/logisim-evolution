@@ -8,7 +8,6 @@ import com.cburch.logisim.statemachine.fSMDSL.CmpExpr;
 import com.cburch.logisim.statemachine.fSMDSL.ConcatExpr;
 import com.cburch.logisim.statemachine.fSMDSL.ConstRef;
 import com.cburch.logisim.statemachine.fSMDSL.Constant;
-import com.cburch.logisim.statemachine.fSMDSL.ConstantDef;
 import com.cburch.logisim.statemachine.fSMDSL.FSMDSLFactory;
 import com.cburch.logisim.statemachine.fSMDSL.NotExpr;
 import com.cburch.logisim.statemachine.fSMDSL.OrExpr;
@@ -20,10 +19,8 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Iterators;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.CollectionLiterals;
@@ -45,14 +42,11 @@ public class RemoveBitVectors {
     BoolExpr _xblockexpression = null;
     {
       InputOutput.<String>print((("replace " + e) + " by "));
-      TreeIterator<Object> _allContents = EcoreUtil.<Object>getAllContents(e, false);
-      Iterator<CmpExpr> _filter = Iterators.<CmpExpr>filter(_allContents, CmpExpr.class);
-      final List<CmpExpr> list = IteratorExtensions.<CmpExpr>toList(_filter);
+      final List<CmpExpr> list = IteratorExtensions.<CmpExpr>toList(Iterators.<CmpExpr>filter(EcoreUtil.<Object>getAllContents(e, false), CmpExpr.class));
       for (final CmpExpr n : list) {
         {
           InputOutput.<String>println("");
-          BoolExpr _slice = this.slice(n);
-          EcoreUtil.replace(n, _slice);
+          EcoreUtil.replace(n, this.slice(n));
         }
       }
       String _pp = PrettyPrinter.pp(e);
@@ -70,14 +64,11 @@ public class RemoveBitVectors {
       String _plus = ("replace " + _pp);
       String _plus_1 = (_plus + " by ");
       InputOutput.<String>print(_plus_1);
-      TreeIterator<Object> _allContents = EcoreUtil.<Object>getAllContents(e, false);
-      Iterator<CmpExpr> _filter = Iterators.<CmpExpr>filter(_allContents, CmpExpr.class);
-      final List<CmpExpr> list = IteratorExtensions.<CmpExpr>toList(_filter);
+      final List<CmpExpr> list = IteratorExtensions.<CmpExpr>toList(Iterators.<CmpExpr>filter(EcoreUtil.<Object>getAllContents(e, false), CmpExpr.class));
       for (final CmpExpr n : list) {
         {
           InputOutput.<String>println("Replace ");
-          BoolExpr _slice = this.slice(n);
-          EcoreUtil.replace(n, _slice);
+          EcoreUtil.replace(n, this.slice(n));
         }
       }
       final BoolExpr res = this.slice(e);
@@ -127,26 +118,11 @@ public class RemoveBitVectors {
   }
   
   public BoolExpr equ(final BoolExpr a, final BoolExpr b) {
-    BoolExpr _copy = EcoreUtil.<BoolExpr>copy(a);
-    BoolExpr _copy_1 = EcoreUtil.<BoolExpr>copy(b);
-    BoolExpr _and = this.and(_copy, _copy_1);
-    BoolExpr _copy_2 = EcoreUtil.<BoolExpr>copy(a);
-    BoolExpr _copy_3 = EcoreUtil.<BoolExpr>copy(b);
-    BoolExpr _or = this.or(_copy_2, _copy_3);
-    BoolExpr _not = this.not(_or);
-    return this.or(_and, _not);
+    return this.or(this.and(EcoreUtil.<BoolExpr>copy(a), EcoreUtil.<BoolExpr>copy(b)), this.not(this.or(EcoreUtil.<BoolExpr>copy(a), EcoreUtil.<BoolExpr>copy(b))));
   }
   
   public BoolExpr nequ(final BoolExpr a, final BoolExpr b) {
-    BoolExpr _copy = EcoreUtil.<BoolExpr>copy(a);
-    BoolExpr _not = this.not(_copy);
-    BoolExpr _copy_1 = EcoreUtil.<BoolExpr>copy(b);
-    BoolExpr _and = this.and(_not, _copy_1);
-    BoolExpr _copy_2 = EcoreUtil.<BoolExpr>copy(a);
-    BoolExpr _copy_3 = EcoreUtil.<BoolExpr>copy(b);
-    BoolExpr _not_1 = this.not(_copy_3);
-    BoolExpr _and_1 = this.and(_copy_2, _not_1);
-    return this.or(_and, _and_1);
+    return this.or(this.and(this.not(EcoreUtil.<BoolExpr>copy(a)), EcoreUtil.<BoolExpr>copy(b)), this.and(EcoreUtil.<BoolExpr>copy(a), this.not(EcoreUtil.<BoolExpr>copy(b))));
   }
   
   protected BoolExpr _slice(final CmpExpr e) {
@@ -160,32 +136,32 @@ public class RemoveBitVectors {
       for (i = 0; (i < (bw).intValue()); i++) {
         {
           BoolExpr slice = null;
-          EList<BoolExpr> _args = e.getArgs();
-          BoolExpr _get = _args.get(0);
-          final BoolExpr left = this.slice(_get, i);
-          EList<BoolExpr> _args_1 = e.getArgs();
-          BoolExpr _get_1 = _args_1.get(1);
-          final BoolExpr right = this.slice(_get_1, i);
+          final BoolExpr left = this.slice(e.getArgs().get(0), i);
+          final BoolExpr right = this.slice(e.getArgs().get(1), i);
           String _op = e.getOp();
-          switch (_op) {
-            case "==":
-              BoolExpr _equ = this.equ(left, right);
-              slice = _equ;
-              break;
-            case "/=":
-              BoolExpr _nequ = this.nequ(left, right);
-              slice = _nequ;
-              break;
-            default:
-              String _op_1 = e.getOp();
-              String _plus = ("Invalid compare operator " + _op_1);
-              String _plus_1 = (_plus + " only ==,/= allowed");
-              throw new UnsupportedOperationException(_plus_1);
+          if (_op != null) {
+            switch (_op) {
+              case "==":
+                slice = this.equ(left, right);
+                break;
+              case "/=":
+                slice = this.nequ(left, right);
+                break;
+              default:
+                String _op_1 = e.getOp();
+                String _plus = ("Invalid compare operator " + _op_1);
+                String _plus_1 = (_plus + " only ==,/= allowed");
+                throw new UnsupportedOperationException(_plus_1);
+            }
+          } else {
+            String _op_1 = e.getOp();
+            String _plus = ("Invalid compare operator " + _op_1);
+            String _plus_1 = (_plus + " only ==,/= allowed");
+            throw new UnsupportedOperationException(_plus_1);
           }
           boolean _notEquals = (!Objects.equal(slice, null));
           if (_notEquals) {
-            EList<BoolExpr> _args_2 = and.getArgs();
-            _args_2.add(slice);
+            and.getArgs().add(slice);
           }
         }
       }
@@ -198,13 +174,10 @@ public class RemoveBitVectors {
     AndExpr _xblockexpression = null;
     {
       AndExpr and = FSMDSLFactory.eINSTANCE.createAndExpr();
-      EList<BoolExpr> _args = and.getArgs();
-      EList<BoolExpr> _args_1 = e.getArgs();
       final Function1<BoolExpr, BoolExpr> _function = (BoolExpr arg) -> {
         return this.slice(arg, offset);
       };
-      List<BoolExpr> _map = ListExtensions.<BoolExpr, BoolExpr>map(_args_1, _function);
-      _args.addAll(_map);
+      and.getArgs().addAll(ListExtensions.<BoolExpr, BoolExpr>map(e.getArgs(), _function));
       _xblockexpression = and;
     }
     return _xblockexpression;
@@ -230,13 +203,10 @@ public class RemoveBitVectors {
     OrExpr _xblockexpression = null;
     {
       OrExpr or = FSMDSLFactory.eINSTANCE.createOrExpr();
-      EList<BoolExpr> _args = or.getArgs();
-      EList<BoolExpr> _args_1 = e.getArgs();
       final Function1<BoolExpr, BoolExpr> _function = (BoolExpr arg) -> {
         return this.slice(arg, offset);
       };
-      List<BoolExpr> _map = ListExtensions.<BoolExpr, BoolExpr>map(_args_1, _function);
-      _args.addAll(_map);
+      or.getArgs().addAll(ListExtensions.<BoolExpr, BoolExpr>map(e.getArgs(), _function));
       _xblockexpression = or;
     }
     return _xblockexpression;
@@ -246,13 +216,10 @@ public class RemoveBitVectors {
     NotExpr _xblockexpression = null;
     {
       NotExpr not = FSMDSLFactory.eINSTANCE.createNotExpr();
-      EList<BoolExpr> _args = not.getArgs();
-      EList<BoolExpr> _args_1 = e.getArgs();
       final Function1<BoolExpr, BoolExpr> _function = (BoolExpr arg) -> {
         return this.slice(arg, offset);
       };
-      List<BoolExpr> _map = ListExtensions.<BoolExpr, BoolExpr>map(_args_1, _function);
-      _args.addAll(_map);
+      not.getArgs().addAll(ListExtensions.<BoolExpr, BoolExpr>map(e.getArgs(), _function));
       _xblockexpression = not;
     }
     return _xblockexpression;
@@ -260,8 +227,7 @@ public class RemoveBitVectors {
   
   protected BoolExpr _slice(final Constant e, final int offset) {
     Constant _xifexpression = null;
-    String _value = e.getValue();
-    int _length = _value.length();
+    int _length = e.getValue().length();
     int _minus = (_length - 2);
     boolean _lessEqualsThan = (offset <= _minus);
     if (_lessEqualsThan) {
@@ -270,9 +236,8 @@ public class RemoveBitVectors {
         Constant c = FSMDSLFactory.eINSTANCE.createConstant();
         StringConcatenation _builder = new StringConcatenation();
         _builder.append("\"");
-        String _value_1 = e.getValue();
-        char _charAt = _value_1.charAt((offset + 1));
-        _builder.append(_charAt, "");
+        char _charAt = e.getValue().charAt((offset + 1));
+        _builder.append(_charAt);
         _builder.append("\"");
         c.setValue(_builder.toString());
         _xblockexpression = c;
@@ -285,9 +250,7 @@ public class RemoveBitVectors {
   }
   
   protected BoolExpr _slice(final ConstRef e, final int offset) {
-    ConstantDef _const = e.getConst();
-    BoolExpr _value = _const.getValue();
-    return this.slice(_value, offset);
+    return this.slice(e.getConst().getValue(), offset);
   }
   
   protected BoolExpr _slice(final PortRef e, final int offset) {
@@ -297,60 +260,38 @@ public class RemoveBitVectors {
     if (_notEquals) {
       PortRef _xblockexpression = null;
       {
-        boolean _and = false;
-        Range _range_1 = e.getRange();
-        int _ub = _range_1.getUb();
-        boolean _notEquals_1 = (_ub != (-1));
-        if (!_notEquals_1) {
-          _and = false;
-        } else {
-          Range _range_2 = e.getRange();
-          int _lb = _range_2.getLb();
-          int _plus = (offset + _lb);
-          Range _range_3 = e.getRange();
-          int _ub_1 = _range_3.getUb();
-          boolean _greaterThan = (_plus > _ub_1);
-          _and = _greaterThan;
-        }
-        if (_and) {
+        if (((e.getRange().getUb() != (-1)) && ((offset + e.getRange().getLb()) > e.getRange().getUb()))) {
           Port _port = e.getPort();
-          String _plus_1 = ((("Offset " + Integer.valueOf(offset)) + " is out of bound w.r.t to port ") + _port);
-          throw new IndexOutOfBoundsException(_plus_1);
+          String _plus = ((("Offset " + Integer.valueOf(offset)) + " is out of bound w.r.t to port ") + _port);
+          throw new IndexOutOfBoundsException(_plus);
         }
         PortRef pref = FSMDSLFactory.eINSTANCE.createPortRef();
-        Port _port_1 = e.getPort();
-        pref.setPort(_port_1);
-        Range _createRange = FSMDSLFactory.eINSTANCE.createRange();
-        pref.setRange(_createRange);
-        Range _range_4 = pref.getRange();
-        Range _range_5 = e.getRange();
-        int _lb_1 = _range_5.getLb();
+        pref.setPort(e.getPort());
+        pref.setRange(FSMDSLFactory.eINSTANCE.createRange());
+        Range _range_1 = pref.getRange();
+        int _lb = e.getRange().getLb();
+        int _plus_1 = (offset + _lb);
+        _range_1.setLb(_plus_1);
+        Range _range_2 = pref.getRange();
+        int _lb_1 = e.getRange().getLb();
         int _plus_2 = (offset + _lb_1);
-        _range_4.setLb(_plus_2);
-        Range _range_6 = pref.getRange();
-        Range _range_7 = e.getRange();
-        int _lb_2 = _range_7.getLb();
-        int _plus_3 = (offset + _lb_2);
-        _range_6.setUb(_plus_3);
+        _range_2.setUb(_plus_2);
         _xblockexpression = pref;
       }
       _xifexpression = _xblockexpression;
     } else {
       PortRef _xblockexpression_1 = null;
       {
-        Port _port = e.getPort();
-        int _width = _port.getWidth();
+        int _width = e.getPort().getWidth();
         boolean _greaterEqualsThan = (offset >= _width);
         if (_greaterEqualsThan) {
-          Port _port_1 = e.getPort();
-          String _plus = ((("Offset " + Integer.valueOf(offset)) + " is out of bound w.r.t to port ") + _port_1);
+          Port _port = e.getPort();
+          String _plus = ((("Offset " + Integer.valueOf(offset)) + " is out of bound w.r.t to port ") + _port);
           throw new IndexOutOfBoundsException(_plus);
         }
         PortRef pref = FSMDSLFactory.eINSTANCE.createPortRef();
-        Port _port_2 = e.getPort();
-        pref.setPort(_port_2);
-        Range _createRange = FSMDSLFactory.eINSTANCE.createRange();
-        pref.setRange(_createRange);
+        pref.setPort(e.getPort());
+        pref.setRange(FSMDSLFactory.eINSTANCE.createRange());
         Range _range_1 = pref.getRange();
         _range_1.setLb(offset);
         Range _range_2 = pref.getRange();

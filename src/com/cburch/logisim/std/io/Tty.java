@@ -47,6 +47,8 @@ import com.cburch.logisim.instance.InstancePainter;
 import com.cburch.logisim.instance.InstanceState;
 import com.cburch.logisim.instance.Port;
 import com.cburch.logisim.instance.StdAttr;
+import com.cburch.logisim.std.io.TtyState.State;
+import com.cburch.logisim.std.memory.Memory;
 import com.cburch.logisim.util.GraphicsUtil;
 
 public class Tty extends InstanceFactory {
@@ -67,8 +69,9 @@ public class Tty extends InstanceFactory {
 	private static final int CLR = 0;
 	private static final int CK = 1;
 
-	private static final int WE = 2;
-	private static final int IN = 3;
+	private static final int REQ = 2;
+	private static final int ACK = 3;
+	private static final int IN = 4;
 	private static final int BORDER = 5;
 	private static final int ROW_HEIGHT = 15;
 
@@ -85,22 +88,24 @@ public class Tty extends InstanceFactory {
 			.forIntegerRange("rows", Strings.getter("ttyRowsAttr"), 1, 48);
 
 	public Tty() {
-		super("TTY", Strings.getter("ttyComponent"));
+		super("TTYPFO", Strings.getter("ttyPFOComponent"));
 		setAttributes(new Attribute[] { ATTR_ROWS, ATTR_COLUMNS,
 				StdAttr.EDGE_TRIGGER, Io.ATTR_COLOR, Io.ATTR_BACKGROUND },
 				new Object[] { Integer.valueOf(8), Integer.valueOf(32),
 						StdAttr.TRIG_RISING, Color.BLACK, DEFAULT_BACKGROUND });
 		setIconName("tty.gif");
 
-		Port[] ps = new Port[4];
+		Port[] ps = new Port[5];
 		ps[CLR] = new Port(20, 10, Port.INPUT, 1);
-		ps[CK] = new Port(0, 0, Port.INPUT, 1);
-		ps[WE] = new Port(10, 10, Port.INPUT, 1);
-		ps[IN] = new Port(0, -10, Port.INPUT, 7);
+		ps[CK] = new Port(0, -60, Port.INPUT, 1);
+		ps[REQ] = new Port(0, -40, Port.INPUT, 1);
+		ps[ACK] = new Port(0, -20, Port.INPUT, 1);
+		ps[IN] = new Port(0, +0, Port.INPUT, 8);
 		ps[CLR].setToolTip(Strings.getter("ttyClearTip"));
 		ps[CK].setToolTip(Strings.getter("ttyClockTip"));
-		ps[WE].setToolTip(Strings.getter("ttyEnableTip"));
-		ps[IN].setToolTip(Strings.getter("ttyInputTip"));
+		ps[REQ].setToolTip(Strings.getter("Req : signal de requête"));
+		ps[ACK].setToolTip(Strings.getter("Ack : signal d'acquittement"));
+		ps[IN].setToolTip(Strings.getter("Input date"));
 		setPorts(ps);
 	}
 
@@ -168,7 +173,8 @@ public class Tty extends InstanceFactory {
 				bds.getHeight(), 2 * BORDER, 2 * BORDER);
 		GraphicsUtil.switchToWidth(g, 1);
 		painter.drawPort(CLR);
-		painter.drawPort(WE);
+		painter.drawPort(REQ);
+		painter.drawPort(ACK);
 		painter.drawPort(IN);
 
 		int rows = getRowCount(painter.getAttributeValue(ATTR_ROWS));
@@ -221,23 +227,42 @@ public class Tty extends InstanceFactory {
 		TtyState state = getTtyState(circState);
 		Value clear = circState.getPortValue(CLR);
 		Value clock = circState.getPortValue(CK);
-		Value enable = circState.getPortValue(WE);
-		Value in = circState.getPortValue(IN);
+		Value req = circState.getPortValue(REQ);
+		Value in = circState.getPortValue(IN); 
 
 		synchronized (state) {
 			Value lastClock = state.setLastClock(clock);
 			if (clear == Value.TRUE) {
 				state.clear();
-			} else if (enable != Value.FALSE) {
+				circState.setPort(ACK, Value.FALSE, 1);
+				state.setState(State.IDLE);
+			} else  {
 				boolean go;
 				if (trigger == StdAttr.TRIG_FALLING) {
 					go = lastClock == Value.TRUE && clock == Value.FALSE;
 				} else {
 					go = lastClock == Value.FALSE && clock == Value.TRUE;
 				}
-				if (go)
-					state.add(in.isFullyDefined() ? (char) in.toIntValue()
-							: '?');
+				if (go) {
+					switch(state.getState()) {
+					case IDLE : 
+						if (req != Value.FALSE) {
+							state.add(in.isFullyDefined() ? (char) in.toIntValue()
+									: '?');
+							state.setState(State.SENDACK);	
+							circState.setPort(ACK, Value.TRUE, 1);
+						}
+						break;
+					
+					case SENDACK : 
+						if (req.isFullyDefined() && req.toIntValue()==0) {
+							circState.setPort(ACK, Value.FALSE, 1);
+							state.setState(State.IDLE);
+						}
+						break;
+					}
+					
+				}
 			}
 		}
 	}

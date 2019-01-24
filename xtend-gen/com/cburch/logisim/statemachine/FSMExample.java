@@ -72,7 +72,6 @@ public class FSMExample {
   }
   
   public static void main(final String[] args) {
-    FSM _ex0 = FSMExample.getEx0();
-    InputOutput.<FSM>print(_ex0);
+    InputOutput.<FSM>print(FSMExample.getEx0());
   }
 }

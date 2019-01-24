@@ -6,7 +6,6 @@ import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.Port;
 import java.util.ArrayList;
 import java.util.List;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.xtend2.lib.StringConcatenation;
 import org.eclipse.xtext.xbase.lib.Functions.Function1;
 import org.eclipse.xtext.xbase.lib.IntegerRange;
@@ -21,11 +20,10 @@ public class InputVectorGenerator {
   private final static boolean QUOTE = false;
   
   public InputVectorGenerator(final FSM fsm) {
-    EList<Port> _in = fsm.getIn();
     final Function1<Port, Integer> _function = (Port p) -> {
       return Integer.valueOf(p.getWidth());
     };
-    List<Integer> _map = ListExtensions.<Port, Integer>map(_in, _function);
+    List<Integer> _map = ListExtensions.<Port, Integer>map(fsm.getIn(), _function);
     ArrayList<Integer> wl = new ArrayList<Integer>(_map);
     int _width = fsm.getWidth();
     wl.add(Integer.valueOf(_width));
@@ -49,7 +47,7 @@ public class InputVectorGenerator {
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("\"");
     String _binaryValue = this.getBinaryValue(i);
-    _builder.append(_binaryValue, "");
+    _builder.append(_binaryValue);
     _builder.append("\"");
     return _builder.toString();
   }
@@ -60,8 +58,7 @@ public class InputVectorGenerator {
       final Integer v = this.current.get(i);
       final Integer w = this.widths.get(i);
       final String str = Integer.toBinaryString((v).intValue());
-      String _format = String.format((("%" + w) + "s"), str);
-      _xblockexpression = _format.replace(" ", "0");
+      _xblockexpression = String.format((("%" + w) + "s"), str).replace(" ", "0");
     }
     return _xblockexpression;
   }
@@ -106,10 +103,7 @@ public class InputVectorGenerator {
       IntegerRange _upTo = new IntegerRange(0, _minus);
       for (final Integer i : _upTo) {
         {
-          Integer _get = this.widths.get((i).intValue());
-          BitWidth _create = BitWidth.create((_get).intValue());
-          Integer _get_1 = this.current.get((i).intValue());
-          final Value v = Value.createKnown(_create, (_get_1).intValue());
+          final Value v = Value.createKnown(BitWidth.create((this.widths.get((i).intValue())).intValue()), (this.current.get((i).intValue())).intValue());
           if (InputVectorGenerator.QUOTE) {
             if (((i).intValue() > 0)) {
               String _res = res;

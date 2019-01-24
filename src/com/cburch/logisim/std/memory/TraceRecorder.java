@@ -153,8 +153,8 @@ public class TraceRecorder extends InstanceFactory {
 		);
 		setKeyConfigurator(new BitWidthConfigurator(StdAttr.WIDTH));
 		setOffsetBounds(Bounds.create(0, 0, Xsize, Ysize));
-		setIconName("register.gif");
-		
+		setIconName("traceRecorder.gif");
+		setInstancePoker(TraceRecorderPoker.class);
 
 		Port[] ps = new Port[4];
 		ps[IN] = new Port(0, 30, Port.INPUT, StdAttr.WIDTH);

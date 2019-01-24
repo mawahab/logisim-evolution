@@ -5,11 +5,9 @@ import com.cburch.logisim.statemachine.editor.FSMPopupMenu;
 import com.cburch.logisim.statemachine.editor.view.FSMSelectionZone;
 import com.cburch.logisim.statemachine.fSMDSL.FSM;
 import com.cburch.logisim.statemachine.fSMDSL.LayoutInfo;
-import com.cburch.logisim.std.fsm.FSMContent;
 import com.cburch.logisim.std.fsm.IFSMEditor;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -42,8 +40,7 @@ public class FSMView extends JPanel implements MouseListener, MouseMotionListene
   public FSMView(final IFSMEditor parent) {
     super();
     this.editor = parent;
-    FSMContent _content = this.editor.getContent();
-    FSM fsm = _content.getFsm();
+    FSM fsm = this.editor.getContent().getFsm();
     FSMEditorController _fSMEditorController = new FSMEditorController(this, fsm);
     this.controller = _fSMEditorController;
     this.addMouseListener(this);
@@ -59,9 +56,8 @@ public class FSMView extends JPanel implements MouseListener, MouseMotionListene
         FSMView.this.scale = (_scale + delta);
         StringConcatenation _builder = new StringConcatenation();
         _builder.append("Scale=");
-        _builder.append(FSMView.this.scale, "");
-        String _string = _builder.toString();
-        System.out.println(_string);
+        _builder.append(FSMView.this.scale);
+        System.out.println(_builder.toString());
         FSMView.this.revalidate();
         FSMView.this.repaint();
       }
@@ -79,18 +75,13 @@ public class FSMView extends JPanel implements MouseListener, MouseMotionListene
   @Override
   public void paint(final Graphics page) {
     try {
-      FSMEditorController _controller = this.getController();
-      FSM _fSM = _controller.getFSM();
-      LayoutInfo l = _fSM.getLayout();
-      int _width = l.getWidth();
-      int _max = Math.max(500, _width);
-      int _height = l.getHeight();
-      int _max_1 = Math.max(500, _height);
+      LayoutInfo l = this.getController().getFSM().getLayout();
+      int _max = Math.max(500, l.getWidth());
+      int _max_1 = Math.max(500, l.getHeight());
       Dimension _dimension = new Dimension(_max, _max_1);
       this.setPreferredSize(_dimension);
     } catch (final Throwable _t) {
       if (_t instanceof Exception) {
-        final Exception e = (Exception)_t;
         InputOutput.<String>println("layout issue");
       } else {
         throw Exceptions.sneakyThrow(_t);
@@ -107,13 +98,12 @@ public class FSMView extends JPanel implements MouseListener, MouseMotionListene
     int y = ((int) this.scaledPos.y);
     StringConcatenation _builder = new StringConcatenation();
     _builder.append("[");
-    _builder.append(x, "");
+    _builder.append(x);
     _builder.append(",");
-    _builder.append(y, "");
+    _builder.append(y);
     _builder.append("]");
     String label = _builder.toString();
-    FontMetrics _fontMetrics = page.getFontMetrics();
-    int sw = _fontMetrics.stringWidth(label);
+    int sw = page.getFontMetrics().stringWidth(label);
     g.setColor(Color.blue);
     g.drawString(label, (x - (sw / 2)), y);
     page.drawOval((x - 10), (y - 10), 20, 20);
@@ -159,24 +149,21 @@ public class FSMView extends JPanel implements MouseListener, MouseMotionListene
   @Override
   public void mousePressed(final MouseEvent event) {
     this.updatePosition(event);
-    FSMEditorController _controller = this.getController();
-    _controller.executePress(this.scaledPos);
+    this.getController().executePress(this.scaledPos);
     this.repaint();
   }
   
   @Override
   public void mouseDragged(final MouseEvent event) {
     this.updatePosition(event);
-    FSMEditorController _controller = this.getController();
-    _controller.executeDragged(this.scaledPos);
+    this.getController().executeDragged(this.scaledPos);
     this.repaint();
   }
   
   @Override
   public void mouseReleased(final MouseEvent event) {
     this.updatePosition(event);
-    FSMEditorController _controller = this.getController();
-    _controller.executeRelease(this.scaledPos);
+    this.getController().executeRelease(this.scaledPos);
     this.repaint();
   }
   

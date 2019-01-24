@@ -66,7 +66,10 @@ class FSMEditorController {
 	
 	Map<State,State> copyMap = new HashMap<State,State>;
 	
-		FSMSelectionZone zones
+	FSMSelectionZone zones
+	
+	Point contextSelection
+	
 	/** 
 	 * Constructor. Initialize the color to the default color and create the
 	 * ArrayList to hold the shapes.
@@ -97,11 +100,17 @@ class FSMEditorController {
 	}
 
 	def void showContextMenu() {
+		contextSelection = view.scaledPosition
 		view.showContextMenu(zones.getAreaType(fsm,view.scaledPosition))
 	}
 
 	def List<FSMElement> getCurrentSelection() {
 		return zones.getSelectedElements(fsm,view.scaledPosition)
+	}
+
+	def getContextSelection() {
+		// Handles some bugs in W7 
+		return zones.getSelectedElements(fsm,contextSelection);
 	}
 
 
@@ -128,14 +137,14 @@ class FSMEditorController {
 
 	def addNewState(int x, int y) {
 		val code = findUnassignedStateCode;
-		if(code!=null)
+		if(code!==null)
 			fsm.states.add(FSMCustomFactory.state("S"+fsm.states.size,code,x,y))
 		
 	}
 
 	def addNewTransition(State src,int x, int y) {
 		val t= FSMCustomFactory.transition(src,null,x,y)
-		if(t.src==null && src!=null) {
+		if(t.src===null && src!==null) {
 			(t.src=src)
 		}
 		t
@@ -235,7 +244,7 @@ class FSMEditorController {
 
 	def executeDelete(Point p) {
 		if (DEBUG) println ("[Delete] command "+state+ " state");
-		val List<FSMElement> selection = currentSelection;
+		val List<FSMElement> selection = getContextSelection();
 		if (selection.size()>0) {
 			for (i:0..selection.size-1) {
 				val first = selection.get(i)
@@ -245,6 +254,7 @@ class FSMEditorController {
 			}
 		}
 	}
+	
 
 
 	def executeCopy(Point p) {

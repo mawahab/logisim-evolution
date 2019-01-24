@@ -57,7 +57,7 @@ public class TableExport {
             } else {
               _builder.appendImmediate(";", "");
             }
-            _builder.append(n, "");
+            _builder.append(n);
           }
         }
       }
@@ -74,7 +74,7 @@ public class TableExport {
           _builder.appendImmediate(";", "");
         }
         _builder.append("cs_");
-        _builder.append(i, "");
+        _builder.append(i);
       }
     }
     _builder.append(";;");
@@ -96,7 +96,7 @@ public class TableExport {
             } else {
               _builder.appendImmediate(";", "");
             }
-            _builder.append(n_1, "");
+            _builder.append(n_1);
           }
         }
       }
@@ -113,14 +113,14 @@ public class TableExport {
           _builder.appendImmediate(";", "");
         }
         _builder.append("ns_");
-        _builder.append(i_1, "");
+        _builder.append(i_1);
       }
     }
     _builder.newLineIfNotEmpty();
     {
       ArrayList<String> _buildTruthTable = this.buildTruthTable(fsm);
       for(final String l : _buildTruthTable) {
-        _builder.append(l, "");
+        _builder.append(l);
         _builder.newLineIfNotEmpty();
       }
     }
@@ -136,22 +136,17 @@ public class TableExport {
       sim.refreshInputPorts();
       do {
         {
-          EList<Port> _in = fsm.getIn();
-          int _size = _in.size();
+          int _size = fsm.getIn().size();
           int _minus = (_size - 1);
           IntegerRange _upTo = new IntegerRange(0, _minus);
           for (final int i : _upTo) {
             {
-              EList<Port> _in_1 = fsm.getIn();
-              Port _get = _in_1.get(i);
+              Port _get = fsm.getIn().get(i);
               final InputPort ip = ((InputPort) _get);
-              String _quotedBinaryValue = ic.getQuotedBinaryValue(i);
-              sim.updateInput(ip, _quotedBinaryValue);
+              sim.updateInput(ip, ic.getQuotedBinaryValue(i));
             }
           }
-          EList<Port> _in_1 = fsm.getIn();
-          int _size_1 = _in_1.size();
-          final String currentCode = ic.getQuotedBinaryValue(_size_1);
+          final String currentCode = ic.getQuotedBinaryValue(fsm.getIn().size());
           sim.setCurrentState(null);
           EList<State> _states = fsm.getStates();
           for (final State s : _states) {
@@ -167,8 +162,8 @@ public class TableExport {
             throw new RuntimeException("Error not matching state in FSM");
           }
           String line = "";
-          int _size_2 = ic.getSize();
-          int _minus_1 = (_size_2 - 1);
+          int _size_1 = ic.getSize();
+          int _minus_1 = (_size_1 - 1);
           IntegerRange _upTo_1 = new IntegerRange(0, _minus_1);
           for (final int i_1 : _upTo_1) {
             String _line = line;
@@ -180,24 +175,18 @@ public class TableExport {
           sim.updateState();
           sim.updateCommands();
           String _line_2 = line;
-          State _currentState_1 = sim.getCurrentState();
-          String _code_1 = _currentState_1.getCode();
-          String _replace = _code_1.replace("\"", "");
+          String _replace = sim.getCurrentState().getCode().replace("\"", "");
           line = (_line_2 + _replace);
-          EList<Port> _out = fsm.getOut();
-          int _size_3 = _out.size();
-          int _minus_2 = (_size_3 - 1);
+          int _size_2 = fsm.getOut().size();
+          int _minus_2 = (_size_2 - 1);
           IntegerRange _upTo_2 = new IntegerRange(0, _minus_2);
           for (final Integer i_2 : _upTo_2) {
             String _line_3 = line;
-            String _output = sim.getOutput((i_2).intValue());
-            String _replace_1 = _output.replace("\"", "");
+            String _replace_1 = sim.getOutput((i_2).intValue()).replace("\"", "");
             line = (_line_3 + _replace_1);
           }
-          String _replace_2 = line.replace("0", "0;");
-          line = _replace_2;
-          String _replace_3 = line.replace("1", "1;");
-          line = _replace_3;
+          line = line.replace("0", "0;");
+          line = line.replace("1", "1;");
           buffer.add(line);
         }
       } while(ic.inc());
@@ -315,8 +304,7 @@ public class TableExport {
       String _plus = (_name + ".csv");
       File _file = new File(_plus);
       final PrintStream ps = new PrintStream(_file);
-      CharSequence _genSIS = tt.genSIS(fsm);
-      ps.append(_genSIS);
+      ps.append(tt.genSIS(fsm));
       ps.close();
     } catch (Throwable _e) {
       throw Exceptions.sneakyThrow(_e);

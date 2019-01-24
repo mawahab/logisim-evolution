@@ -17,29 +17,30 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.cburch.logisim.std.fsm.FSMContent;
+import com.cburch.logisim.std.fsm.FSMContentVisualEditor;
 import com.cburch.logisim.std.fsm.IFSMEditor;
 
-public class FSMEditorWindow extends Panel implements IFSMEditor, ChangeListener{
+public class FSMEditorWindow extends Panel implements  ChangeListener{
 
 	// This is not a Command Design Pattern : must be fixed
-	private FSMContent content;
+	private FSMContentVisualEditor visualEditor;
 	private FSMView view;
 	private ScrollPane scroller;
 	//private JSlider slider;
 	
 
-	public FSMEditorWindow(FSMContent content) {
+	public FSMEditorWindow(FSMContentVisualEditor visualEditor) {
 		super();
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		System.out.println(this.toString()+":"+getWidth()+"x"+getHeight());		
-		this.content=content;
+		//this.content=content;
 		setMinimumSize(new Dimension(500, 500));
 		
 		Panel shapePanel = new Panel(); // holds buttons for adding shapes
 		shapePanel.setLayout(new FlowLayout());
 		add(shapePanel);	
 
-		view =new FSMView(this);
+		view =new FSMView(visualEditor);
 		scroller = new ScrollPane(ScrollPane.SCROLLBARS_ALWAYS);
 		scroller.setMinimumSize(new Dimension(300, 300));
 		scroller.setSize(new Dimension(500, 500));
@@ -50,17 +51,6 @@ public class FSMEditorWindow extends Panel implements IFSMEditor, ChangeListener
 		add(scroller);
 	}
 	
-	@Override
-	public FSMContent getContent() {
-		return content;
-	}
-
-	@Override
-	public void setContent(FSMContent content) {
-		this.content=content;
-		repaint();
-		revalidate();
-	}
 	
 	@Override
 	public void stateChanged(ChangeEvent e) {

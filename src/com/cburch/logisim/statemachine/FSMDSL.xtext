@@ -7,7 +7,8 @@ TOP:
 //	ShortFSM |
 	ConstantDefList |
 	CommandStmt | 
-	PredicateStmt
+	PredicateStmt |
+	EQNSpec 
 ;
 
 CommandStmt :
@@ -25,6 +26,65 @@ PredicateStmt :
 	'[' (in+=ShortInputPort (',' in+=ShortInputPort )*)? ']' predicate=Predicate ';'
 ;
 
+
+EQNSpec :
+	
+	'INORDER' '=' (in+=ShortInputPort (',' in+=ShortInputPort )*)?  ';'
+	'OUTORDER' '=' (outNames+=ID(',' outNames+=ID )*)?  ';'
+	(eqns+=EQNAssignement)+
+
+;
+EQNAssignement:
+ 	lhs=ShortOutputPort '=' rhs=OrPla ';'
+ ; 
+ 
+
+OrPla returns BoolExpr:
+	AndPla (({OrExpr.args+=current})'+' args+=And)*;
+	
+AndPla returns BoolExpr:
+	PrimaryPla (({AndExpr.args+=current})'*' args+=PrimaryPla)*;
+	
+PrimaryPla returns BoolExpr:
+	('(' OrPla ')')
+	| NotPla
+	| PortRefPla
+	;
+	 
+NotPla returns BoolExpr:
+	{NotExpr}'!' args+=PrimaryPla;
+	
+PortRefPla returns BoolExpr:
+	{PortRef} port=[Port];
+
+
+ /*
+ INORDER = keypad_3 keypad_2 keypad_1 keypad_0 A_0 cs_0 cs_1;
+OUTORDER = X_2 X_1 X_0 ns_0 ns_1 ns_2;
+n15 = A_0 * cs_1;
+n16 = keypad_3 * keypad_2;
+n17 = !keypad_1 * !keypad_0;
+n18 = n16 * n17;
+n19 = !cs_0 * n15;
+n20 = !n18 * n19;
+n21 = keypad_3 * !keypad_2;
+n22 = keypad_1 * !keypad_0;
+n23 = cs_0 * !cs_1;
+n24 = n22 * n23;
+n25 = n21 * n24;
+X_2 = n20 + n25;
+n27 = !cs_0 * !n15;
+n28 = !cs_0 * !n18;
+n29 = cs_1 * !n28;
+X_1 = n27 + n29;
+X_0 = 0;
+ns_0 = 0;
+ns_1 = X_2;
+ns_2 = X_1;
+ 
+ 
+ * 
+ */	
 
 
 FSM returns FSM:
@@ -71,6 +131,9 @@ ShortInputPort returns Port:
 ;
 ShortOutputPort returns Port:
 	{OutputPort} name =ID ('[' width=INT']')? 
+;
+ShortTmpPort returns Port:
+	{TemporayPort} name =ID ('[' width=INT']')? 
 ;
 
 InputPort returns Port:

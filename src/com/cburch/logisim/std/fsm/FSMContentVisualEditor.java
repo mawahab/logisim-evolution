@@ -75,7 +75,6 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 
 	public void setContent(FSMContent content) {
 		this.content = content;
-		editor.setContent(content);
 		editor.repaint();
 	}
 
@@ -249,11 +248,13 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 	public FSMContentVisualEditor(Dialog parent, Project proj, FSMContent model) {
 		super(parent, Strings.get("hdlFrameTitle"), true);
 		configure(proj, model);
+		setContent(content);
 	}
 
 	public FSMContentVisualEditor(Frame parent, Project proj, FSMContent model) {
 		super(parent, Strings.get("hdlFrameTitle"), true);
 		configure(proj, model);
+		setContent(content);
 	}
 
 	private void configure(Project proj, FSMContent model) {
@@ -282,7 +283,7 @@ public class FSMContentVisualEditor extends JDialog implements JInputDialog, IFS
 		validate.addActionListener(frameListener);
 		
 
-		editor = new FSMEditorWindow(model);
+		editor = new FSMEditorWindow(this);
 
 		add(buttonsPanel, BorderLayout.SOUTH);
 		add(editor, BorderLayout.CENTER);

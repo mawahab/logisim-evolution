@@ -87,6 +87,8 @@ public class FSMEditorController {
   
   private FSMSelectionZone zones;
   
+  private Point contextSelection;
+  
   /**
    * Constructor. Initialize the color to the default color and create the
    * ArrayList to hold the shapes.
@@ -106,8 +108,7 @@ public class FSMEditorController {
   }
   
   public int getNbState() {
-    EList<State> _states = this.fsm.getStates();
-    return _states.size();
+    return this.fsm.getStates().size();
   }
   
   public List<FSMElement> getActiveSelection() {
@@ -119,14 +120,16 @@ public class FSMEditorController {
   }
   
   public void showContextMenu() {
-    Point _scaledPosition = this.view.getScaledPosition();
-    FSMSelectionZone.AreaType _areaType = this.zones.getAreaType(this.fsm, _scaledPosition);
-    this.view.showContextMenu(_areaType);
+    this.contextSelection = this.view.getScaledPosition();
+    this.view.showContextMenu(this.zones.getAreaType(this.fsm, this.view.getScaledPosition()));
   }
   
   public List<FSMElement> getCurrentSelection() {
-    Point _scaledPosition = this.view.getScaledPosition();
-    return this.zones.getSelectedElements(this.fsm, _scaledPosition);
+    return this.zones.getSelectedElements(this.fsm, this.view.getScaledPosition());
+  }
+  
+  public List<FSMElement> getContextSelection() {
+    return this.zones.getSelectedElements(this.fsm, this.contextSelection);
   }
   
   public List<FSMElement> getElementsWithin(final Zone z) {
@@ -139,8 +142,7 @@ public class FSMEditorController {
       HashMap<String, State> map = new HashMap<String, State>();
       EList<State> _states = this.fsm.getStates();
       for (final State s : _states) {
-        String _code = s.getCode();
-        map.put(_code, s);
+        map.put(s.getCode(), s);
       }
       int _width = this.fsm.getWidth();
       int _doubleLessThan = (1 << _width);
@@ -170,14 +172,10 @@ public class FSMEditorController {
     {
       final String code = this.findUnassignedStateCode();
       boolean _xifexpression = false;
-      boolean _notEquals = (!Objects.equal(code, null));
-      if (_notEquals) {
-        EList<State> _states = this.fsm.getStates();
-        EList<State> _states_1 = this.fsm.getStates();
-        int _size = _states_1.size();
+      if ((code != null)) {
+        int _size = this.fsm.getStates().size();
         String _plus = ("S" + Integer.valueOf(_size));
-        State _state = FSMCustomFactory.state(_plus, code, x, y);
-        _xifexpression = _states.add(_state);
+        _xifexpression = this.fsm.getStates().add(FSMCustomFactory.state(_plus, code, x, y));
       }
       _xblockexpression = _xifexpression;
     }
@@ -188,16 +186,7 @@ public class FSMEditorController {
     Transition _xblockexpression = null;
     {
       final Transition t = FSMCustomFactory.transition(src, null, x, y);
-      boolean _and = false;
-      State _src = t.getSrc();
-      boolean _equals = Objects.equal(_src, null);
-      if (!_equals) {
-        _and = false;
-      } else {
-        boolean _notEquals = (!Objects.equal(src, null));
-        _and = _notEquals;
-      }
-      if (_and) {
+      if (((t.getSrc() == null) && (src != null))) {
         t.setSrc(src);
       }
       _xblockexpression = t;
@@ -206,26 +195,19 @@ public class FSMEditorController {
   }
   
   public boolean addInputPort(final InputPort ip) {
-    EList<Port> _in = this.fsm.getIn();
-    return _in.add(ip);
+    return this.fsm.getIn().add(ip);
   }
   
   public boolean addNewInputPort(final int x, final int y) {
-    EList<Port> _in = this.fsm.getIn();
-    EList<Port> _in_1 = this.fsm.getIn();
-    int _size = _in_1.size();
+    int _size = this.fsm.getIn().size();
     String _plus = ("I" + Integer.valueOf(_size));
-    InputPort _inport = FSMCustomFactory.inport(_plus, 1, x, y);
-    return _in.add(_inport);
+    return this.fsm.getIn().add(FSMCustomFactory.inport(_plus, 1, x, y));
   }
   
   public boolean addNewOutputPort(final int x, final int y) {
-    EList<Port> _out = this.fsm.getOut();
-    EList<Port> _out_1 = this.fsm.getOut();
-    int _size = _out_1.size();
+    int _size = this.fsm.getOut().size();
     String _plus = ("O" + Integer.valueOf(_size));
-    OutputPort _outport = FSMCustomFactory.outport(_plus, 1, x, y);
-    return _out.add(_outport);
+    return this.fsm.getOut().add(FSMCustomFactory.outport(_plus, 1, x, y));
   }
   
   /**
@@ -236,8 +218,7 @@ public class FSMEditorController {
     boolean _notEquals = (!Objects.equal(this.fsm, null));
     if (_notEquals) {
       this.drawing.drawElement(this.fsm, g, this.activeSelection);
-      String _string = this.state.toString();
-      g.drawString(_string, 20, 20);
+      g.drawString(this.state.toString(), 20, 20);
       boolean _notEquals_1 = (!Objects.equal(this.selectionZone, null));
       if (_notEquals_1) {
         final float[] f = { ((float) 3.0) };
@@ -246,9 +227,7 @@ public class FSMEditorController {
         final Stroke old = g.getStroke();
         final Point p0 = this.selectionZone.getX0();
         final Point p1 = this.selectionZone.getX1();
-        int _abs = Math.abs((p1.x - p0.x));
-        int _abs_1 = Math.abs((p1.y - p0.y));
-        g.drawRect(p0.x, p0.y, _abs, _abs_1);
+        g.drawRect(p0.x, p0.y, Math.abs((p1.x - p0.x)), Math.abs((p1.y - p0.y)));
         g.setStroke(old);
       }
     }
@@ -267,11 +246,9 @@ public class FSMEditorController {
   }
   
   public void _move(final int dx, final int dy, final FSMElement e) {
-    LayoutInfo _layout = e.getLayout();
-    int _x = _layout.getX();
+    int _x = e.getLayout().getX();
     int _plus = (_x + dx);
-    LayoutInfo _layout_1 = e.getLayout();
-    int _y = _layout_1.getY();
+    int _y = e.getLayout().getY();
     int _plus_1 = (_y + dy);
     this.setLayout(_plus, _plus_1, e);
   }
@@ -298,45 +275,36 @@ public class FSMEditorController {
     EObject _eContainer = cl.eContainer();
     final State state = ((State) _eContainer);
     final LayoutInfo layout = state.getLayout();
-    LayoutInfo _layout = cl.getLayout();
-    int _x = _layout.getX();
+    int _x = cl.getLayout().getX();
     int _plus = (_x + dx);
-    LayoutInfo _layout_1 = cl.getLayout();
-    int _y = _layout_1.getY();
+    int _y = cl.getLayout().getY();
     int _plus_1 = (_y + dy);
     final Point p = new Point(_plus, _plus_1);
-    int _x_1 = layout.getX();
-    int _y_1 = layout.getY();
-    double _distance = this.distance(p.x, p.y, _x_1, _y_1);
+    double _distance = this.distance(p.x, p.y, layout.getX(), layout.getY());
     boolean _lessEqualsThan = (_distance <= 400);
     if (_lessEqualsThan) {
       this.setLayout(p.x, p.y, cl);
     } else {
-      int _x_2 = layout.getX();
-      int _plus_2 = (_x_2 + 45);
-      int _y_2 = layout.getY();
-      int _plus_3 = (_y_2 + 15);
+      int _x_1 = layout.getX();
+      int _plus_2 = (_x_1 + 45);
+      int _y_1 = layout.getY();
+      int _plus_3 = (_y_1 + 15);
       this.setLayout(_plus_2, _plus_3, cl);
     }
     this.view.repaint();
   }
   
   public void _move(final int dx, final int dy, final State s) {
-    LayoutInfo _layout = s.getLayout();
-    int _x = _layout.getX();
+    int _x = s.getLayout().getX();
     int _plus = (_x + dx);
-    LayoutInfo _layout_1 = s.getLayout();
-    int _y = _layout_1.getY();
+    int _y = s.getLayout().getY();
     int _plus_1 = (_y + dy);
     this.setLayout(_plus, _plus_1, s);
-    LayoutInfo _layout_2 = s.getLayout();
-    int _x_1 = _layout_2.getX();
+    int _x_1 = s.getLayout().getX();
     int _plus_2 = (_x_1 + 45);
-    LayoutInfo _layout_3 = s.getLayout();
-    int _y_1 = _layout_3.getY();
+    int _y_1 = s.getLayout().getY();
     int _plus_3 = (_y_1 + 15);
-    CommandList _commandList = s.getCommandList();
-    this.setLayout(_plus_2, _plus_3, _commandList);
+    this.setLayout(_plus_2, _plus_3, s.getCommandList());
     this.view.repaint();
   }
   
@@ -355,7 +323,7 @@ public class FSMEditorController {
     if (FSMEditorController.DEBUG) {
       InputOutput.<String>println((("[Delete] command " + this.state) + " state"));
     }
-    final List<FSMElement> selection = this.getCurrentSelection();
+    final List<FSMElement> selection = this.getContextSelection();
     int _size = selection.size();
     boolean _greaterThan = (_size > 0);
     if (_greaterThan) {
@@ -387,37 +355,26 @@ public class FSMEditorController {
     }
     for (final FSMElement e_1 : this.clipboard) {
       boolean _matched = false;
-      if (!_matched) {
-        if (e_1 instanceof State) {
-          _matched=true;
-          EList<Transition> _transition = ((State)e_1).getTransition();
-          for (final Transition t : _transition) {
-            State _dst = t.getDst();
-            boolean _containsKey = this.copyMap.containsKey(_dst);
-            if (_containsKey) {
-              State _dst_1 = t.getDst();
-              State _get = this.copyMap.get(_dst_1);
-              t.setDst(_get);
-            }
+      if (e_1 instanceof State) {
+        _matched=true;
+        EList<Transition> _transition = ((State)e_1).getTransition();
+        for (final Transition t : _transition) {
+          boolean _containsKey = this.copyMap.containsKey(t.getDst());
+          if (_containsKey) {
+            t.setDst(this.copyMap.get(t.getDst()));
           }
         }
       }
       if (!_matched) {
         if (e_1 instanceof Transition) {
           _matched=true;
-          State _dst = ((Transition)e_1).getDst();
-          boolean _containsKey = this.copyMap.containsKey(_dst);
+          boolean _containsKey = this.copyMap.containsKey(((Transition)e_1).getDst());
           if (_containsKey) {
-            State _dst_1 = ((Transition)e_1).getDst();
-            State _get = this.copyMap.get(_dst_1);
-            ((Transition)e_1).setDst(_get);
+            ((Transition)e_1).setDst(this.copyMap.get(((Transition)e_1).getDst()));
           }
-          State _src = ((Transition)e_1).getSrc();
-          boolean _containsKey_1 = this.copyMap.containsKey(_src);
+          boolean _containsKey_1 = this.copyMap.containsKey(((Transition)e_1).getSrc());
           if (_containsKey_1) {
-            State _src_1 = ((Transition)e_1).getSrc();
-            State _get_1 = this.copyMap.get(_src_1);
-            ((Transition)e_1).setSrc(_get_1);
+            ((Transition)e_1).setSrc(this.copyMap.get(((Transition)e_1).getSrc()));
           }
         }
       }
@@ -440,8 +397,7 @@ public class FSMEditorController {
   }
   
   protected Boolean _copyToClipboard(final Port e) {
-    Port _copy = EcoreUtil.<Port>copy(e);
-    return Boolean.valueOf(this.clipboard.add(_copy));
+    return Boolean.valueOf(this.clipboard.add(EcoreUtil.<Port>copy(e)));
   }
   
   protected Boolean _copyToClipboard(final FSMElement e) {
@@ -458,20 +414,10 @@ public class FSMEditorController {
   }
   
   protected Boolean _paste(final FSMElement e, final int x, final int y) {
-    boolean _and = false;
-    int _size = this.activeSelection.size();
-    boolean _equals = (_size == 1);
-    if (!_equals) {
-      _and = false;
-    } else {
+    if (((this.activeSelection.size() == 1) && (this.activeSelection.get(0) instanceof InputPort))) {
       FSMElement _get = this.activeSelection.get(0);
-      _and = (_get instanceof InputPort);
-    }
-    if (_and) {
-      FSMElement _get_1 = this.activeSelection.get(0);
-      final InputPort ip = ((InputPort) _get_1);
-      EList<Port> _in = this.fsm.getIn();
-      _in.add(ip);
+      final InputPort ip = ((InputPort) _get);
+      this.fsm.getIn().add(ip);
       LayoutInfo _layout = ip.getLayout();
       _layout.setX(x);
       LayoutInfo _layout_1 = ip.getLayout();
@@ -486,15 +432,13 @@ public class FSMEditorController {
     boolean _xblockexpression = false;
     {
       LayoutInfo _layout = e.getLayout();
-      LayoutInfo _layout_1 = e.getLayout();
-      int _y = _layout_1.getY();
+      int _y = e.getLayout().getY();
       int _plus = (dy + _y);
       _layout.setY(_plus);
       String _name = e.getName();
       String _plus_1 = ("copy_of_" + _name);
       e.setName(_plus_1);
-      EList<Port> _in = this.fsm.getIn();
-      _xblockexpression = _in.add(e);
+      _xblockexpression = this.fsm.getIn().add(e);
     }
     return Boolean.valueOf(_xblockexpression);
   }
@@ -503,35 +447,30 @@ public class FSMEditorController {
     boolean _xblockexpression = false;
     {
       LayoutInfo _layout = e.getLayout();
-      LayoutInfo _layout_1 = e.getLayout();
-      int _y = _layout_1.getY();
+      int _y = e.getLayout().getY();
       int _plus = (dy + _y);
       _layout.setY(_plus);
       String _name = e.getName();
       String _plus_1 = ("copy_of_" + _name);
       e.setName(_plus_1);
-      EList<Port> _out = this.fsm.getOut();
-      _xblockexpression = _out.add(e);
+      _xblockexpression = this.fsm.getOut().add(e);
     }
     return Boolean.valueOf(_xblockexpression);
   }
   
   protected Boolean _paste(final State e, final int dx, final int dy) {
     LayoutInfo _layout = e.getLayout();
-    LayoutInfo _layout_1 = e.getLayout();
-    int _x = _layout_1.getX();
+    int _x = e.getLayout().getX();
     int _plus = (_x + dx);
     _layout.setX(_plus);
-    LayoutInfo _layout_2 = e.getLayout();
-    LayoutInfo _layout_3 = e.getLayout();
-    int _y = _layout_3.getY();
+    LayoutInfo _layout_1 = e.getLayout();
+    int _y = e.getLayout().getY();
     int _plus_1 = (_y + dy);
-    _layout_2.setY(_plus_1);
+    _layout_1.setY(_plus_1);
     String _name = e.getName();
     String _plus_2 = ("copy_of_" + _name);
     e.setName(_plus_2);
-    EList<State> _states = this.fsm.getStates();
-    _states.add(e);
+    this.fsm.getStates().add(e);
     EList<Transition> _transition = e.getTransition();
     for (final Transition t : _transition) {
       this.paste(t, dx, dy);
@@ -541,15 +480,13 @@ public class FSMEditorController {
   
   protected Boolean _paste(final Transition e, final int dx, final int dy) {
     LayoutInfo _layout = e.getLayout();
-    LayoutInfo _layout_1 = e.getLayout();
-    int _x = _layout_1.getX();
+    int _x = e.getLayout().getX();
     int _plus = (_x + dx);
     _layout.setX(_plus);
-    LayoutInfo _layout_2 = e.getLayout();
-    LayoutInfo _layout_3 = e.getLayout();
-    int _y = _layout_3.getY();
+    LayoutInfo _layout_1 = e.getLayout();
+    int _y = e.getLayout().getY();
     int _plus_1 = (_y + dy);
-    _layout_2.setY(_plus_1);
+    _layout_1.setY(_plus_1);
     return null;
   }
   
@@ -572,8 +509,7 @@ public class FSMEditorController {
             this.state = FSMEditorController.CtrlState.SELECT_DST;
             FSMElement _get = this.activeSelection.get(0);
             final State state = ((State) _get);
-            Transition _addNewTransition = this.addNewTransition(state, p.x, p.y);
-            this.newTransition = _addNewTransition;
+            this.newTransition = this.addNewTransition(state, p.x, p.y);
             String _name = state.getName();
             String _plus = ("Create Transition from " + _name);
             InputOutput.<String>println(_plus);
@@ -672,8 +608,7 @@ public class FSMEditorController {
           int _size = localSelection.size();
           boolean _greaterThan = (_size > 0);
           if (_greaterThan) {
-            FSMElement _get = localSelection.get(0);
-            boolean _contains = this.activeSelection.contains(_get);
+            boolean _contains = this.activeSelection.contains(localSelection.get(0));
             boolean _not = (!_contains);
             if (_not) {
               this.activeSelection = localSelection;
@@ -764,8 +699,7 @@ public class FSMEditorController {
               final FSMElement first = selection.get(0);
               if ((first instanceof State)) {
                 final LayoutInfo layout = this.newTransition.getLayout();
-                State _src = this.newTransition.getSrc();
-                final LayoutInfo srcLayout = _src.getLayout();
+                final LayoutInfo srcLayout = this.newTransition.getSrc().getLayout();
                 int _x = srcLayout.getX();
                 int _plus = (p.x + _x);
                 int _divide = (_plus / 2);
@@ -774,8 +708,8 @@ public class FSMEditorController {
                 int _plus_1 = (p.y + _y);
                 int _divide_1 = (_plus_1 / 2);
                 layout.setY(_divide_1);
-                State _src_1 = this.newTransition.getSrc();
-                boolean _notEquals_1 = (!Objects.equal(first, _src_1));
+                State _src = this.newTransition.getSrc();
+                boolean _notEquals_1 = (!Objects.equal(first, _src));
                 if (_notEquals_1) {
                   this.newTransition.setDst(((State)first));
                 } else {
@@ -809,8 +743,7 @@ public class FSMEditorController {
           }
           this.zoneStart = null;
           this.zoneEnd = null;
-          List<FSMElement> _elementsWithin = this.getElementsWithin(this.selectionZone);
-          this.activeSelection = _elementsWithin;
+          this.activeSelection = this.getElementsWithin(this.selectionZone);
           this.selectionZone = null;
           break;
         default:

@@ -25,12 +25,16 @@ class FSMSimulator extends ClockState implements InstanceData {
 	
 	
 	new(FSM fsm) {
-		this.fsm=fsm;
-		inputs =  new HashMap<Port,String>();
-		outputs =  new HashMap<Port,String>();
-		current=fsm.start
-		refreshInputPorts
-		restoreOutputPorts
+		if (fsm!=null) {
+			this.fsm=fsm;
+			inputs =  new HashMap<Port,String>();
+			outputs =  new HashMap<Port,String>();
+			current=fsm.start
+			refreshInputPorts
+			restoreOutputPorts
+		} else {
+			throw new RuntimeException("Cannot simulate null FSM");
+		}
 	}
 	
 
